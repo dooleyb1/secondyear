@@ -9,6 +9,7 @@ public class Server extends Node {
 	static final int DEFAULT_PORT = 50001;
 
 	Terminal terminal;
+	int ackNumber = 0;
 	
 	/*
 	 * 
@@ -29,11 +30,15 @@ public class Server extends Node {
 		try {
 			StringContent content= new StringContent(packet);
 
+			terminal.println("Packet recieved at server:");
 			terminal.println(content.toString());
+			
 
 			DatagramPacket response;
-			response= (new StringContent("OK")).toDatagramPacket();
+			response= (new StringContent("ACK1")).toDatagramPacket();
 			response.setSocketAddress(packet.getSocketAddress());
+			
+			terminal.println("Sending acknowledgement response to gateway...");
 			socket.send(response);
 		}
 		catch(Exception e) {e.printStackTrace();}
@@ -41,7 +46,7 @@ public class Server extends Node {
 
 	
 	public synchronized void start() throws Exception {
-		terminal.println("Waiting for contact");
+		terminal.println("Waiting for contact at server...");
 		this.wait();
 	}
 	

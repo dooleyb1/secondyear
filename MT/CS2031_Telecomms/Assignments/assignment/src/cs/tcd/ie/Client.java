@@ -17,22 +17,30 @@ import tcdIO.*;
  *
  */
 public class Client extends Node {
-	static final int DEFAULT_SRC_PORT = 50000;
-	static final int DEFAULT_DST_PORT = 50001;
+	static final int DEFAULT_SRC_PORT = 40789;
+	static final int DEFAULT_DST_PORT = 50000;
+	static final int DEFAULT_GATEWAY_PORT = 40000;
 	static final String DEFAULT_DST_NODE = "localhost";	
+	static final String DEFAULT_GATEWAY_NODE = "localhost";
 	
 	Terminal terminal;
-	InetSocketAddress dstAddress;
+	//Now becomes gateway address
+	InetSocketAddress gatewayAddress;
+	byte sequenceNumber = 0;
 	
 	/**
 	 * Constructor
 	 * 	 
 	 * Attempts to create socket at given port and create an InetSocketAddress for the destinations
 	 */
-	Client(Terminal terminal, String dstHost, int dstPort, int srcPort) {
+	Client(Terminal terminal, String gatewayHost, int srcPort, int gatewayPort) {
 		try {
 			this.terminal= terminal;
-			dstAddress= new InetSocketAddress(dstHost, dstPort);
+			
+			//Creates address for gateway
+			gatewayAddress = new InetSocketAddress(gatewayHost, gatewayPort);
+			
+			//Creates socket at srcPort
 			socket= new DatagramSocket(srcPort);
 			listener.go();
 		}
@@ -69,10 +77,10 @@ public class Client extends Node {
 			System.arraycopy(header, 0, buffer, 0, header.length);
 			System.arraycopy(payload, 0, buffer, header.length, payload.length);
 			
-			terminal.println("Sending packet...");
-			packet= new DatagramPacket(buffer, buffer.length, dstAddress);
+			terminal.println("Sending packet to gateway...");
+			packet= new DatagramPacket(buffer, buffer.length, gatewayAddress);
 			socket.send(packet);
-			terminal.println("Packet sent");
+			terminal.println("Packet sent to gateway");
 			this.wait();
 	}
 
@@ -85,7 +93,7 @@ public class Client extends Node {
 	public static void main(String[] args) {
 		try {					
 			Terminal terminal= new Terminal("Client");		
-			(new Client(terminal, DEFAULT_DST_NODE, DEFAULT_DST_PORT, DEFAULT_SRC_PORT)).start();
+			(new Client(terminal, DEFAULT_GATEWAY_NODE, DEFAULT_SRC_PORT, DEFAULT_GATEWAY_PORT)).start();
 			terminal.println("Program completed");
 		} catch(java.lang.Exception e) {e.printStackTrace();}
 	}
