@@ -21,7 +21,6 @@ public class Client extends Node {
 	static final int DEFAULT_DST_PORT = 50000;
 	static final int DEFAULT_GATEWAY_PORT = 40000;
 	static final String DEFAULT_DST_NODE = "localhost";	
-	static final String DEFAULT_GATEWAY_NODE = "localhost";
 	
 	Terminal terminal;
 	//Now becomes gateway address
@@ -93,7 +92,7 @@ public class Client extends Node {
 	public static void main(String[] args) {
 		try {					
 			Terminal terminal= new Terminal("Client");		
-			(new Client(terminal, DEFAULT_GATEWAY_NODE, DEFAULT_SRC_PORT, DEFAULT_GATEWAY_PORT)).start();
+			(new Client(terminal, DEFAULT_DST_NODE, DEFAULT_SRC_PORT, DEFAULT_GATEWAY_PORT)).start();
 			terminal.println("Program completed");
 		} catch(java.lang.Exception e) {e.printStackTrace();}
 	}

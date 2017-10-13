@@ -12,12 +12,9 @@ public class Gateway extends Node {
 	static final int DEFAULT_GATEWAY_PORT = 40000;
 	static final int DEFAULT_CLIENT_PORT = 40789;
 	static final int DEFAULT_SERVER_PORT = 50000;
-	static final String DEFAULT_SERVER_NODE = "localhost";	
-	static final String DEFAULT_CLIENT_NODE = "localhost";
+	static final String DEFAULT_DST_NODE = "localhost";	
 	
 	Terminal terminal;
-	InetSocketAddress serverAddress;
-	InetSocketAddress clientAddress;
 	
 	/*
 	 * 
@@ -26,12 +23,8 @@ public class Gateway extends Node {
 		try {
 			this.terminal= terminal;
 			
-			//Creates gateway socket at default gateway port
+			//Creates gateway socket at default gateway port (40000)
 			socket= new DatagramSocket(gatewayPort);
-			
-			//Creates both a server & a client address
-			serverAddress = new InetSocketAddress(serverHost, serverPort);
-			clientAddress = new InetSocketAddress(clientHost, clientPort);
 			listener.go();
 		}
 		catch(java.lang.Exception e) {e.printStackTrace();}
@@ -40,7 +33,7 @@ public class Gateway extends Node {
 	public static void main(String[] args) {
 		try {					
 			Terminal terminal= new Terminal("Gateway");
-			(new Gateway(terminal, DEFAULT_SERVER_NODE, DEFAULT_SERVER_PORT, DEFAULT_CLIENT_NODE, DEFAULT_CLIENT_PORT, DEFAULT_GATEWAY_PORT)).start();
+			(new Gateway(terminal, DEFAULT_DST_NODE, DEFAULT_SERVER_PORT, DEFAULT_DST_NODE, DEFAULT_CLIENT_PORT, DEFAULT_GATEWAY_PORT)).start();
 			
 		} catch(java.lang.Exception e) {e.printStackTrace();}
 
@@ -58,24 +51,24 @@ public class Gateway extends Node {
 			terminal.println(content.toString());
 			
 			//If the packet comes from the client, send to server
-			if(packet.getSocketAddress() == clientAddress)
+			if(packet.getPort() == DEFAULT_CLIENT_PORT)
 			{
 				terminal.println("Packet recieved at Gateway");
 				terminal.println("Sending packet to Server...");
 				
-				packet.setSocketAddress(serverAddress);
+				packet.setPort(DEFAULT_SERVER_PORT);
 				socket.send(packet);
 				terminal.println("Packet sent to server");
 				this.wait();
 			}
 			
 			//If the packet comes from the server, send ACK to client
-			else if(packet.getSocketAddress() == serverAddress)
+			else if(packet.getPort() == DEFAULT_SERVER_PORT)
 			{
 				terminal.println("ACK recieved at Gateway");
 				terminal.println("Sending ACK to Client...");
 				
-				packet.setSocketAddress(clientAddress);
+				packet.setPort(DEFAULT_CLIENT_PORT);
 				socket.send(packet);
 				terminal.println("ACK sent to client");
 				this.wait();

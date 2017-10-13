@@ -6,10 +6,9 @@ import java.net.DatagramSocket;
 import tcdIO.Terminal;
 
 public class Server extends Node {
-	static final int DEFAULT_PORT = 50001;
+	static final int DEFAULT_PORT = 50000;
 
 	Terminal terminal;
-	int ackNumber = 0;
 	
 	/*
 	 * 
