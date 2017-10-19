@@ -25,7 +25,6 @@ import java.util.NoSuchElementException;
  *
  * The class offers a toString() method which returns a comma-separated sting of
  * all elements in the data structure.
- * 
  * This is a bare minimum class you would need to completely implement.
  * You can add additional methods to support your code. Each method will need
  * to be tested by your jUnit tests -- for simplicity in jUnit testing
@@ -61,6 +60,7 @@ class DoublyLinkedList<T extends Comparable<T>>
 
     // Fields head and tail point to the first and last nodes of the list.
     private DLLNode head, tail;
+    private int size;
 
     /**
      * Constructor
@@ -70,23 +70,77 @@ class DoublyLinkedList<T extends Comparable<T>>
     {
       head = null;
       tail = null;
+      size = 0;
     }
 
     /**
      * Tests if the doubly linked list is empty
      * @return true if list is empty, and false otherwise
      *
-     * Worst-case asymptotic runtime cost: TODO
+     * Worst-case asymptotic runtime cost: O(1)
      *
      * Justification:
-     *  TODO
+     *  The worst-case runtime is a constant value O(1) since there is only one operation necessary to verify whether the DLL is empty. If the head is empty
+     *  the DLL therefore contains no elements.
      */
     public boolean isEmpty()
     {
-      // TODO
-      return true;
+      if (this.head == null)
+    	   return true;
+      
+      else 
+    	  return false;
     }
 
+    /**
+     * Inserts an element at the end of a doubly linked list
+     * @param data : The new data of class T that needs to be added to the list
+     * @return none
+     *
+     */
+    public void insertLast(T data)
+    {
+      //Instantise new node
+  	  DLLNode newNode = new DLLNode(data, null, null);
+  	  
+  	  //Update pointers of the new node
+  	  newNode.prev = this.tail;
+  	  
+  	  //Update pointers of the old node
+  	  this.tail.next = newNode;
+  	  
+  	  //Update the tail pointer of the DLL
+  	  this.tail = newNode;
+  	  
+  	  //Increments size of the DLL
+  	  this.size++;
+    }
+    
+    
+    /**
+     * Inserts an element at the start of a doubly linked list
+     * @param data : The new data of class T that needs to be added to the list
+     * @return none
+     *
+     */
+    public void insertFirst(T data)
+    {
+      //Instantise new node
+  	  DLLNode newNode = new DLLNode(data, null, null);
+  	  
+  	  //Update pointers of the new node
+  	  newNode.next = this.head;
+  	  
+  	  //Update pointers of the old node
+  	  this.head.prev = newNode;
+  	  
+  	  //Update the head pointer of the DLL
+  	  this.head = newNode;
+  	  
+  	  //Increments size of the DLL
+  	  this.size++;
+    }
+    
     /**
      * Inserts an element in the doubly linked list
      * @param pos : The integer location at which the new data should be
@@ -104,7 +158,43 @@ class DoublyLinkedList<T extends Comparable<T>>
      */
     public void insertBefore( int pos, T data ) 
     {
-      //TODO
+      
+      //Adds element to head of the list, updates others
+      if(pos<=0 || pos>1 && this.size == 0){ 
+    	  insertFirst(data);
+      }
+      
+      //Adds element to the end of the array
+      else if(pos==this.size-1 || pos>this.size){
+    	  insertLast(data);
+      }
+      
+      else{
+    	  
+    	  //Create temp node from head pointer
+    	  DLLNode tmp = this.head;
+    	  
+    	  //Instantise new node
+      	  DLLNode newNode = new DLLNode(data, null, null);
+      	  
+    	  //Find element which newNode is to be placed before
+    	  for(int i=0;i<pos;i++){
+    		 tmp = tmp.next; 
+    	  }
+    	  
+    	  //Update pointers of the newNode
+    	  newNode.next = tmp;
+    	  newNode.prev = tmp.prev;
+    	  
+    	  //Update pointers of the affected nodes
+    	  tmp.prev = newNode;
+    	  tmp.prev.next = newNode;
+    	  
+    	  //Updates size of DLL
+    	  this.size++;
+    	  
+      }
+      
       return;
     }
 
@@ -125,8 +215,32 @@ class DoublyLinkedList<T extends Comparable<T>>
      */
     public T get(int pos) 
     {
-      //TODO
-      return null;
+      //Returns data of head element
+      if(pos==0){
+    	 return this.head.data;
+      }
+      
+      //Returns data of tail element
+      else if (pos==this.size-1){
+    	  return this.tail.data;
+      }
+      
+      //Returns data at desired position
+      else if(pos>0 && pos<this.size-1){
+    	 //Creates temp DLLNode pointing to the head node, to be used to find the data
+          DLLNode tmp = this.head;
+        	
+          //Iterates through list until it gets to node at specified position
+          for(int i=0;i<pos;i++){
+       		 tmp = tmp.next; 
+       	  }
+        	
+          return tmp.data;
+      }
+      
+      else{
+    	  return null;
+      }
     }
 
     /**
@@ -143,8 +257,69 @@ class DoublyLinkedList<T extends Comparable<T>>
      */
     public boolean deleteAt(int pos) 
     {
-      //TODO
-      return false;
+      //Deleting first element (head)
+      if(pos==0){
+    	  
+    	  //Handles a DLL containing 1 element
+    	  if(this.size==1){
+    		  this.head = null;
+    		  this.tail = null;
+    		  this.size--;
+    		  return true;
+    	  }
+    	  
+    	  //Handles a DLL containing elements > 1
+    	  else{
+    		  //Update prev pointer of element in pos+1
+    		  this.head.next.prev = null;
+    		  //Update head pointer for the DLL
+    		  this.head = this.head.next;
+    		  this.size--;
+    		  return true;
+    	  } 
+      }
+      
+      //Deleting last element of a DLL
+      else if(pos == this.size-1){
+    	  
+    	  //Handles a DLL containing only 2 elements
+    	  if(this.size == 2){
+    		  this.head.next = null;
+    		  this.head.prev = null;
+    		  this.tail = this.head;
+    		  this.size--;
+    		  return true;
+    	  }
+    	  
+    	  else{
+    		  //Updates prev pointer of emelement in pos-1
+    		  this.tail.prev.next = null;
+    		  //Updates tail pointer for the DLL
+    		  this.tail = this.tail.prev;
+    		  this.size--;
+    		  return true;
+    	  }
+      }
+      
+      //Deleting element at defined position
+      else if(pos > 0 && pos <this.size){
+    	//Creates temp DLLNode pointing to the head node, to be used to find the data
+          DLLNode tmp = this.head;
+        	
+          //Iterates through list until it gets to node at specified position
+          for(int i=0;i<pos;i++){
+       		 tmp = tmp.next; 
+       	  }
+          
+          //Updates pointers of pos-1 and pos +1 
+          tmp.prev.next = tmp.next;
+          tmp.next.prev = tmp.prev;
+          this.size--;
+    	  return true;
+      }
+      else{
+    	  return false;
+      }
     }
 
     /**
@@ -159,7 +334,21 @@ class DoublyLinkedList<T extends Comparable<T>>
      */
     public void reverse()
     {
-      //TODO
+    	DLLNode tmp = null;
+        DLLNode current = this.head;
+ 
+        //Swap next and prev for all nodes of the DLL 
+        while (current != null) {
+            tmp = current.prev;
+            current.prev = current.next;
+            current.next = tmp;
+            current = current.prev;
+        }
+ 
+        //Before changing head, check for the cases like empty DLL and DLL with only one node
+        if (tmp != null) {
+            head = tmp.prev;
+        }
     }
 
 
@@ -177,7 +366,22 @@ class DoublyLinkedList<T extends Comparable<T>>
      */
     public void push(T item) 
     {
-      //TODO
+    	DLLNode newNode = new DLLNode(item, null, null);
+    	 
+        //Since at beginning, prev is always null
+        newNode.prev = null;
+ 
+        //Link the new node to the old head
+        newNode.next = this.head;
+ 
+        //Change prev of old head
+        if (this.head != null) {
+            this.head.prev = newNode;
+        }
+ 
+        //Update new head
+        this.head = newNode;
+        this.size++;
     }
 
     /**
@@ -193,8 +397,34 @@ class DoublyLinkedList<T extends Comparable<T>>
      */
     public T pop() 
     {
-      //TODO
-      return null;
+    	DLLNode nodeToBePopped = this.head;
+
+    	//Handles DLL of size 1
+    	if(this.size == 1){
+    		this.head = null;
+    		this.tail = null;
+    		this.size--;
+    		return nodeToBePopped.data;
+    	}
+    	
+    	//Handles DLL of size 2
+    	else if(this.size == 2){
+    		this.head = this.tail;
+    		this.size--;
+    		return nodeToBePopped.data;
+    	}
+    	
+    	//Handles DLL of size > 2
+    	else if(this.size > 2){
+    		this.head = this.head.next;
+    		this.size--;
+    		return nodeToBePopped.data;
+    	}
+    	
+    	//Handles empty DLL
+    	else{
+    		return null;
+    	}
     }
 
     /*----------------------- QUEUE */
