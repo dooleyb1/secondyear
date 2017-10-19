@@ -36,6 +36,7 @@
 
 #include "cs2014coin.h"
 #include "cs2014coin-int.h"
+#include "mbedtls-2.6.0
 
 /*!
  * @brief make a coin
@@ -47,10 +48,57 @@
  * Make me a coin of the required quality/strength
  *
  */
+
+
 int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 {
-	printf("I'm a stub!\n");
-	return(CS2014COIN_GENERR);
+	cs2014coin_t my coin;
+
+	mycoin.ciphersuite==CS2014COIN_CS_0;		//ciphersuite = 0
+	mycoin.bits = bits;				//bits (difficulty) = bits 
+	mycoin.keylen==CS2014COIN_KEYLENGTH;		//keylen = 4
+	mycoin.noncelen==CS2014COIN_NONCELENGTH;	//noncelen = 4
+	mycoin.hashlen==CS2014COIN_HASHLENGTH;		//hashlen = 4
+	mycoin.siglen==CS2014COIN_SIGNATURELENGTH;	//siglen = 4
+
+	gen_key type=rsa rsa_keysize=4096 filename=private.key format=pem
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
