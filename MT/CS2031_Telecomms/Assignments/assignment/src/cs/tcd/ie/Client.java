@@ -22,10 +22,10 @@ public class Client extends Node {
 	static final int DEFAULT_DST_PORT = 50000;
 	static final int DEFAULT_GATEWAY_PORT = 40000;
 	static final String DEFAULT_DST_NODE = "localhost";	
-	int seqNumber;
+	byte[] seqNumber;
 	
 	//Flag = 0 if coming from client, flag = 1 if coming from server
-	int flag; 
+	byte[] flag; 
 	
 	Terminal terminal;
 	//Now becomes gateway address
@@ -45,8 +45,8 @@ public class Client extends Node {
 			
 			//Creates socket at srcPort
 			socket= new DatagramSocket(srcPort);
-			this.seqNumber = 0;
-			this.flag = 0;
+			this.seqNumber = ByteBuffer.allocate(4).putInt(0).array();
+			this.flag = ByteBuffer.allocate(4).putInt(0).array();
 			
 			listener.go();
 		}
@@ -80,25 +80,25 @@ public class Client extends Node {
 		
 			dstAddress = new byte[PacketContent.DST_ADDRESS_LENGTH];
 			srcAddress = new byte[PacketContent.SRC_ADDRESS_LENGTH];
-			sequenceNum = new byte[PacketContent.SEQ_NUMBER_LENGTH];
-			flag = new byte[PacketContent.FLAG_LENGTH];
+			sequenceNum = this.seqNumber;
+			flag = this.flag;
 		
 			//Reads and sorts the relevant information into byte arrays
 			payload = (terminal.readString("String to send: ")).getBytes();
-			dstAddress = (terminal.readString("Destination address: ")).getBytes();
+			int dst = terminal.readInt("Destination address: ");
+			dstAddress = ByteBuffer.allocate(4).putInt(dst).array();
+			System.out.print(ByteBuffer.wrap(dstAddress).getInt());
 			srcAddress = ByteBuffer.allocate(8).putInt(DEFAULT_SRC_PORT).array();
-			sequenceNum = ByteBuffer.allocate(1).putInt(this.seqNumber).array();
-			flag = ByteBuffer.allocate(1).putInt(this.flag).array();
 			
 			//Creates a buffer to contain the information
-			buffer= new byte[dstAddress.length + srcAddress.length + sequenceNum.length + + flag.length + payload.length];
+			buffer= new byte[dstAddress.length + srcAddress.length + PacketContent.SEQ_NUMBER_LENGTH + PacketContent.FLAG_LENGTH + payload.length];
 			
 			//Encloses the above information into a buffer containing an array of bytes
 			System.arraycopy(dstAddress, 0, buffer, 0, dstAddress.length);
 			System.arraycopy(srcAddress, 0, buffer, dstAddress.length, srcAddress.length);
-			System.arraycopy(sequenceNum, 0, buffer, (dstAddress.length+srcAddress.length), sequenceNum.length);
-			System.arraycopy(flag, 0, buffer, (dstAddress.length+srcAddress.length+sequenceNum.length), flag.length);
-			System.arraycopy(payload, 0, buffer, (dstAddress.length+srcAddress.length+sequenceNum.length+flag.length), payload.length);
+			System.arraycopy(sequenceNum, 0, buffer, (dstAddress.length+srcAddress.length), PacketContent.SEQ_NUMBER_LENGTH);
+			System.arraycopy(flag, 0, buffer, (dstAddress.length+srcAddress.length+PacketContent.SEQ_NUMBER_LENGTH), PacketContent.FLAG_LENGTH);
+			System.arraycopy(payload, 0, buffer, (dstAddress.length+srcAddress.length+PacketContent.SEQ_NUMBER_LENGTH+PacketContent.FLAG_LENGTH), payload.length);
 			
 			terminal.println("Sending packet to gateway...");
 			packet= new DatagramPacket(buffer, buffer.length, gatewayAddress);
@@ -107,7 +107,8 @@ public class Client extends Node {
 			this.wait();
 	}
 
-
+	
+	
 	/**
 	 * Test method
 	 * 
