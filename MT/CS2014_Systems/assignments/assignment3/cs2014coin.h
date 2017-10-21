@@ -79,11 +79,6 @@ typedef struct cs2014coin_t_defn {
 } cs2014coin_t;
 
 # define CS2014COIN_CS_0 0 /// ciphersuite zero, ecdsa/p256/sha256/
-# define CS2014COIN_DIFFICULTY 20 // difficulty = 20
-# define CS2014COIN_KEYLENGTH 4 // length of public key = 4
-# define CS2014COIN_NONCELENGTH 4 // length of nonce = 4
-# define CS2014COIN_HASHLENGTH 4 // hash length = 4
-# define CS2014COIN_SIGNATURELENGTH 4 // signature length = 4
 
 /*!
  * @brief return out best guess error string

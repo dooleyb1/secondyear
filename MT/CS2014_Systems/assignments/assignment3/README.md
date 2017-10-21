@@ -27,9 +27,9 @@ some other directory structure you'll need to figure out what to change.
 
 The basic idea is similar to, but a lot simpler than, the bitcoin idea of
 mining ["difficulty"](https://en.bitcoin.it/wiki/Difficulty).  We require that
-each "CS2014 coin" includes the inputs to a SHA256 hash whose output value has
+each "CS2014 coin" be unique and include the inputs to a SHA256 hash whose output value has
 a selected number of the low order (rightmost) bits with zero values. Since the
-output of a hash funcion like SHA256 is essentially random, one has to try many
+output of a hash function like SHA256 is essentially random, one has to try many
 times before one sees such an output, and the longer the run of zeros required,
 the more attempts one needs.
 
@@ -147,7 +147,7 @@ Breaking the above sample down into these fields we get...
 		            00,00,00,14,
 		Length of public key (4)
 		                        00,00,00,9e,
-		Public key value (138, DER encoded)
+		Public key value (158, DER encoded)
 		                                    30,81,9b,30
 		10,06,07,2a,86,48,ce,3d,02,01,06,05,2b,81,04,00
 		23,03,81,86,00,04,01,c8,46,55,6b,4e,26,bb,6e,22
