@@ -36,6 +36,16 @@
 
 #include "cs2014coin.h"
 #include "cs2014coin-int.h"
+#include "mbedtls/entropy.h"
+#include "mbedtls/ctr_drbg.h"
+#include "mbedtls/ecdsa.h"
+#include "mbedtls/sha256.h"
+
+#define ECPARAMS    MBEDTLS_ECP_DP_SECP192R1
+
+#if !defined(ECPARAMS)
+#define ECPARAMS    mbedtls_ecp_curve_list()->grp_id
+#endif
 
 /*!
  * @brief make a coin
@@ -49,8 +59,106 @@
  */
 int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 {
+	int length_spacing = 4;				//Space for all length values (bytes)	
+	
+	int ciphersuite = 0;				//Ciphersuite value, default 0
+	int bits = 5;					//Difficulty value (in bits) 
+
+	int keylen = 158;				//Length of public key (in bytes) - 9E
+	unsigned char *keyval;				//Key value
+
+	int noncelen = 32;				//Length of nonce (in bytes) - 20
+	unsigned char *nonceval;			//Nonce value
+
+	int hashlen = 32;				//Hash length (in bytes) - 20
+	unsigned char *hashval;				//Hash value
+
+	int siglen = 138;				//Length of signature (in bytes) - 8A
+	unsigned char *sigval;				//Signature value
+
+	mbedtls_ecdsa_context ctx_sign, ctx_verify;	//Signiture and verification variables
+   	mbedtls_entropy_context entropy;		//entropy variable
+    	mbedtls_ctr_drbg_context ctr_drbg;		//random number generator
+	mbedtls_sha256_context sha256_ctx;		//sha256 context
+	
+	unsigned char public_key[public_key_length];	//public key
+	unsigned char nonce[nonce_length];		//nonce
+    	unsigned char hash[pow_hash_length];		//hash
+    	unsigned char sig[siglength];			//signature
+    	size_t sig_len;
+    	const char *pers = "ecdsa";
+    	((void) argv);
+
+   	mbedtls_ecdsa_init( &ctx_sign );		//initialise ecdsa with signature context
+   	mbedtls_ctr_drbg_init( &ctr_drbg );		//initialise random number gen
+   	mbedtls_sha256_init( &sha256_ctx );		//initialise sha256 with sha256 context
+	mbedtls_entropy_init( &entropy );
+
+   	ret = 1;					//return result verifier
+
+	//Initialises random key generator
+        if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy,
+                             (const unsigned char *) pers,
+                               strlen( pers ) ) ) != 0 )
+	{
+ 	     	  mbedtls_printf( " failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
+  	    	  goto exit;
+	}
+
+	//Runs random key generator
+	if( ( ret = mbedtls_ecdsa_genkey( &ctx_sign, ECPARAMS,
+                              mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 )
+	{
+	        mbedtls_printf( " failed\n  ! mbedtls_ecdsa_genkey returned %d\n", ret );	
+ 	       goto exit;
+	}
+	
+	//Extracts public key from generator
+	public_key = &ctx_sign
+
+	
+
 	printf("I'm a stub!\n");
 	return(CS2014COIN_GENERR);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
