@@ -6,6 +6,7 @@ package cs.tcd.ie;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 
 import tcdIO.*;
 
@@ -21,11 +22,14 @@ public class Client extends Node {
 	static final int DEFAULT_DST_PORT = 50000;
 	static final int DEFAULT_GATEWAY_PORT = 40000;
 	static final String DEFAULT_DST_NODE = "localhost";	
+	int seqNumber;
+	
+	//Flag = 0 if coming from client, flag = 1 if coming from server
+	int flag; 
 	
 	Terminal terminal;
 	//Now becomes gateway address
 	InetSocketAddress gatewayAddress;
-	byte sequenceNumber = 0;
 	
 	/**
 	 * Constructor
@@ -41,6 +45,9 @@ public class Client extends Node {
 			
 			//Creates socket at srcPort
 			socket= new DatagramSocket(srcPort);
+			this.seqNumber = 0;
+			this.flag = 0;
+			
 			listener.go();
 		}
 		catch(java.lang.Exception e) {e.printStackTrace();}
@@ -65,16 +72,33 @@ public class Client extends Node {
 		DatagramPacket packet= null;
 
 		byte[] payload= null;
-		byte[] header= null;
+		byte[] dstAddress = null;
+		byte[] srcAddress = null;
+		byte[] sequenceNum = null;
+		byte[] flag = null;
 		byte[] buffer= null;
 		
-			payload= (terminal.readString("String to send: ")).getBytes();
-
-			header= new byte[PacketContent.HEADERLENGTH];
-
-			buffer= new byte[header.length + payload.length];
-			System.arraycopy(header, 0, buffer, 0, header.length);
-			System.arraycopy(payload, 0, buffer, header.length, payload.length);
+			dstAddress = new byte[PacketContent.DST_ADDRESS_LENGTH];
+			srcAddress = new byte[PacketContent.SRC_ADDRESS_LENGTH];
+			sequenceNum = new byte[PacketContent.SEQ_NUMBER_LENGTH];
+			flag = new byte[PacketContent.FLAG_LENGTH];
+		
+			//Reads and sorts the relevant information into byte arrays
+			payload = (terminal.readString("String to send: ")).getBytes();
+			dstAddress = (terminal.readString("Destination address: ")).getBytes();
+			srcAddress = ByteBuffer.allocate(8).putInt(DEFAULT_SRC_PORT).array();
+			sequenceNum = ByteBuffer.allocate(1).putInt(this.seqNumber).array();
+			flag = ByteBuffer.allocate(1).putInt(this.flag).array();
+			
+			//Creates a buffer to contain the information
+			buffer= new byte[dstAddress.length + srcAddress.length + sequenceNum.length + + flag.length + payload.length];
+			
+			//Encloses the above information into a buffer containing an array of bytes
+			System.arraycopy(dstAddress, 0, buffer, 0, dstAddress.length);
+			System.arraycopy(srcAddress, 0, buffer, dstAddress.length, srcAddress.length);
+			System.arraycopy(sequenceNum, 0, buffer, (dstAddress.length+srcAddress.length), sequenceNum.length);
+			System.arraycopy(flag, 0, buffer, (dstAddress.length+srcAddress.length+sequenceNum.length), flag.length);
+			System.arraycopy(payload, 0, buffer, (dstAddress.length+srcAddress.length+sequenceNum.length+flag.length), payload.length);
 			
 			terminal.println("Sending packet to gateway...");
 			packet= new DatagramPacket(buffer, buffer.length, gatewayAddress);

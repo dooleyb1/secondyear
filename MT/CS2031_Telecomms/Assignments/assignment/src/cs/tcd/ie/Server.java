@@ -30,11 +30,12 @@ public class Server extends Node {
 			StringContent content= new StringContent(packet);
 
 			terminal.println("Packet recieved at server:");
+			terminal.println("Sequence number = " + content.getSequnceNumber());
 			terminal.println(content.toString());
 			
 
 			DatagramPacket response;
-			response= (new StringContent("ACK1")).toDatagramPacket();
+			response= (new StringContent("ACK" + content.getSequnceNumber())).toDatagramPacket();
 			response.setSocketAddress(packet.getSocketAddress());
 			
 			terminal.println("Sending acknowledgement response to gateway...");
