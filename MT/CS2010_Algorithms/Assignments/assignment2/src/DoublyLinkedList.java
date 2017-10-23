@@ -201,7 +201,7 @@ class DoublyLinkedList<T extends Comparable<T>>
       }
       
       //Returns data of tail element
-      else if (pos==this.size-1){
+      else if (pos==this.size-1 && this.size!=0){
     	  return this.tail.data;
       }
       
@@ -261,7 +261,7 @@ class DoublyLinkedList<T extends Comparable<T>>
       }
       
       //Deleting last element of a DLL
-      else if(pos == this.size-1){
+      else if(pos == this.size-1 && this.size!=0){
     	  
     	  //Handles a DLL containing only 2 elements
     	  if(this.size == 2){
