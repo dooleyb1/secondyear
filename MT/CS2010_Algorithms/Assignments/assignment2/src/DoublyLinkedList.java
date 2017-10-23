@@ -92,54 +92,6 @@ class DoublyLinkedList<T extends Comparable<T>>
     	  return false;
     }
 
-    /**
-     * Inserts an element at the end of a doubly linked list
-     * @param data : The new data of class T that needs to be added to the list
-     * @return none
-     *
-     */
-    public void insertLast(T data)
-    {
-      //Instantise new node
-  	  DLLNode newNode = new DLLNode(data, null, null);
-  	  
-  	  //Update pointers of the new node
-  	  newNode.prev = this.tail;
-  	  
-  	  //Update pointers of the old node
-  	  this.tail.next = newNode;
-  	  
-  	  //Update the tail pointer of the DLL
-  	  this.tail = newNode;
-  	  
-  	  //Increments size of the DLL
-  	  this.size++;
-    }
-    
-    
-    /**
-     * Inserts an element at the start of a doubly linked list
-     * @param data : The new data of class T that needs to be added to the list
-     * @return none
-     *
-     */
-    public void insertFirst(T data)
-    {
-      //Instantise new node
-  	  DLLNode newNode = new DLLNode(data, null, null);
-  	  
-  	  //Update pointers of the new node
-  	  newNode.next = this.head;
-  	  
-  	  //Update pointers of the old node
-  	  this.head.prev = newNode;
-  	  
-  	  //Update the head pointer of the DLL
-  	  this.head = newNode;
-  	  
-  	  //Increments size of the DLL
-  	  this.size++;
-    }
     
     /**
      * Inserts an element in the doubly linked list
@@ -160,13 +112,40 @@ class DoublyLinkedList<T extends Comparable<T>>
     {
       
       //Adds element to head of the list, updates others
-      if(pos<=0 || pos>1 && this.size == 0){ 
-    	  insertFirst(data);
+      if(pos<=0 || (pos>1 && this.size == 0)){ 
+    	//Instantise new node
+      	  DLLNode newNode = new DLLNode(data, null, null);
+      	  
+      	  //Update pointers of the new node
+      	  newNode.next = this.head;
+      	  if(this.size!=0)
+      		  this.head.prev = newNode;
+      	  
+    
+      	
+      	  //Update the head pointer of the DLL
+      	  this.head = newNode;
+      	  
+      	  if(this.size==0){
+     		  this.tail=this.head;
+     	  }
+      	  
+      	  //Increments size of the DLL
+      	  this.size++;;
       }
       
       //Adds element to the end of the array
-      else if(pos==this.size-1 || pos>this.size){
-    	  insertLast(data);
+      else if(pos==this.size || pos>this.size){
+    	//Instantise new node
+      	  DLLNode newNode = new DLLNode(data, null, null);
+      	  
+      	  //Update pointers of the new node
+      	  newNode.prev = this.tail;
+      	  this.tail.next = newNode;
+      	  this.tail = newNode;
+      	  
+      	  //Increments size of the DLL
+      	  this.size++;
       }
       
       else{
@@ -176,7 +155,7 @@ class DoublyLinkedList<T extends Comparable<T>>
     	  
     	  //Instantise new node
       	  DLLNode newNode = new DLLNode(data, null, null);
-      	  
+      	 
     	  //Find element which newNode is to be placed before
     	  for(int i=0;i<pos;i++){
     		 tmp = tmp.next; 
@@ -187,8 +166,9 @@ class DoublyLinkedList<T extends Comparable<T>>
     	  newNode.prev = tmp.prev;
     	  
     	  //Update pointers of the affected nodes
-    	  tmp.prev = newNode;
     	  tmp.prev.next = newNode;
+    	  tmp.prev = newNode;
+    	  
     	  
     	  //Updates size of DLL
     	  this.size++;
@@ -216,7 +196,7 @@ class DoublyLinkedList<T extends Comparable<T>>
     public T get(int pos) 
     {
       //Returns data of head element
-      if(pos==0){
+      if(pos==0 && this.size!=0){
     	 return this.head.data;
       }
       
@@ -335,21 +315,20 @@ class DoublyLinkedList<T extends Comparable<T>>
      */
     public void reverse()
     {
-    	DLLNode tmp = null;
-        DLLNode current = this.head;
- 
-        //Swap next and prev for all nodes of the DLL 
-        while (current != null) {
-            tmp = current.prev;
-            current.prev = current.next;
-            current.next = tmp;
-            current = current.prev;
-        }
- 
-        //Before changing head, check for the cases like empty DLL and DLL with only one node
-        if (tmp != null) {
-            head = tmp.prev;
-        }
+    	DLLNode current = this.head;
+		DLLNode temp = null;
+		
+		while(current!=null){
+			temp = current.prev;  			 //swap the next and prev pointer
+			current.prev = current.next;
+			current.next = temp;
+			current = current.prev;
+		}
+		
+		temp = this.head;
+		this.head = this.tail;
+		this.tail = temp;
+	
     }
 
 
@@ -398,7 +377,7 @@ class DoublyLinkedList<T extends Comparable<T>>
      */
     public T pop() 
     {
-    	DLLNode nodeToBePopped = this.head;
+    	DLLNode nodeToBePopped = this.tail;
 
     	//Handles DLL of size 1
     	if(this.size == 1){
@@ -417,7 +396,7 @@ class DoublyLinkedList<T extends Comparable<T>>
     	
     	//Handles DLL of size > 2
     	else if(this.size > 2){
-    		this.head = this.head.next;
+    		this.tail = this.tail.prev;
     		this.size--;
     		return nodeToBePopped.data;
     	}
