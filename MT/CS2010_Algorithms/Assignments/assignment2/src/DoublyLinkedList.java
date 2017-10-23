@@ -151,10 +151,10 @@ class DoublyLinkedList<T extends Comparable<T>>
      * @param data : The new data of class T that needs to be added to the list
      * @return none
      *
-     * Worst-case asymptotic runtime cost: TODO
+     * Worst-case asymptotic runtime cost: O(n-1)
      *
-     * Justification:
-     *  TODO
+     * Justification: Worst case scenario is that the element will have to be placed second last, in this case the program will have
+     * 					to iterate through the entire DLL from 0 to n-1 and then place the element accordingly.
      */
     public void insertBefore( int pos, T data ) 
     {
@@ -203,10 +203,10 @@ class DoublyLinkedList<T extends Comparable<T>>
      * @param pos : the position
      * @return the data at pos, if pos is within the bounds of the list, and null otherwise.
      *
-     * Worst-case asymptotic runtime cost: TODO
+     * Worst-case asymptotic runtime cost: O(n-1)
      *
-     * Justification:
-     *  TODO
+     * Justification: Worst case scenario is that the desired element is the second last element. As a result the program then needs to iterate through the 
+     * 					DLL from element 0 to element n-1 (second last) and then return such element.
      *
      * Worst-case precise runtime cost: TODO
      *
@@ -250,10 +250,11 @@ class DoublyLinkedList<T extends Comparable<T>>
      * @param pos : the position to delete in the list.
      * @return true : on successful deletion, false : list has not been modified. 
      *
-     * Worst-case asymptotic runtime cost: TODO
+     * Worst-case asymptotic runtime cost: O(n-1)
      *
-     * Justification:
-     *  TODO
+     * Justification: If deleting an element is considered to be a constant time, then the Worst-case asymptotic runtime cost is O(n-1). This
+     * 					would occur if the element to be deleted was the second last element of a DLL. The program would have to iterate 
+     * 					through the DLL from 0 to n-1 and then perform the deletion.
      */
     public boolean deleteAt(int pos) 
     {
@@ -327,10 +328,10 @@ class DoublyLinkedList<T extends Comparable<T>>
      * If the list contains "A", "B", "C", "D" before the method is called
      * Then it should contain "D", "C", "B", "A" after it returns.
      *
-     * Worst-case asymptotic runtime cost: TODO
+     * Worst-case asymptotic runtime cost: O(n)
      *
-     * Justification:
-     *  TODO
+     * Justification: If the operation of performing one element swap is considered to be a constant time, then the worst case runtime 
+     * 					for this function depends entirely on the amount of elements in the DLL i.e O(n).
      */
     public void reverse()
     {
@@ -359,10 +360,10 @@ class DoublyLinkedList<T extends Comparable<T>>
      * How exactly this will be represented in the Doubly Linked List is up to the programmer.
      * @param item : the item to push on the stack
      *
-     * Worst-case asymptotic runtime cost: TODO
+     * Worst-case asymptotic runtime cost: O(1)
      *
-     * Justification:
-     *  TODO
+     * Justification: This operation will have a constant worst-case asymptotic runtime cost since the element is always being placed at the 
+     * 					start of the DLL and as a result no iterations/variable outcomes occur.
      */
     public void push(T item) 
     {
@@ -390,10 +391,10 @@ class DoublyLinkedList<T extends Comparable<T>>
      * How exactly this will be represented in the Doubly Linked List is up to the programmer.
      * @return the last item inserted with a push; or null when the list is empty.
      *
-     * Worst-case asymptotic runtime cost: TODO
+     * Worst-case asymptotic runtime cost: O(1)
      *
-     * Justification:
-     *  TODO
+     * Justification: This operation will have a constant worst-case asymptotic runtime cost since the element is always being popped from 
+     * 						the start of the DLL and as a result no iterations/variable outcomes occur.
      */
     public T pop() 
     {
@@ -435,14 +436,26 @@ class DoublyLinkedList<T extends Comparable<T>>
      * How exactly this will be represented in the Doubly Linked List is up to the programmer.
      * @param item : the item to be enqueued to the stack
      *
-     * Worst-case asymptotic runtime cost: TODO
+     * Worst-case asymptotic runtime cost: O(1)
      *
-     * Justification:
-     *  TODO
+     * Justification: This operation will have a constant worst-case asymptotic runtime cost since the element is always being placed at the 
+     * 					end of the DLL, thus creating a FIFO queue. As a result no iterations/variable outcomes occur.
      */
     public void enqueue(T item) 
     {
-      //TODO
+    	//Extracts the old tail
+    	DLLNode oldLast = this.tail;
+    	//Inserts the new tail
+        this.tail = new DLLNode(item, oldLast, null);
+
+        //Checks if list was originally empty
+        if (this.size == 0) 
+        	this.head = this.tail;
+        
+        else          
+        	oldLast.next = this.tail;
+        	this.size++;
+        
     }
 
      /**
@@ -451,15 +464,32 @@ class DoublyLinkedList<T extends Comparable<T>>
      * How exactly this will be represented in the Doubly Linked List is up to the programmer.
      * @return the earliest item inserted with a push; or null when the list is empty.
      *
-     * Worst-case asymptotic runtime cost: TODO
+     * Worst-case asymptotic runtime cost: O(1)
      *
-     * Justification:
-     *  TODO
+     * Justification: This operation will have a constant worst-case asymptotic runtime cost since the element is always being returned from
+     * 					the beginning of the DLL, thus creating a FIFO queue. As a result no iterations/variable outcomes occur.
      */
     public T dequeue() 
     {
-      //TODO
-      return null;
+    	T item;
+    	
+    	//If empty return null
+    	if(size==0)
+    	  return null;
+      
+    	else{
+    	  //Extract head of DLL
+    	  item = this.head.data;
+    	  //Adjust new head pointer
+    	  this.head = this.head.next;
+    	  this.size--;
+    	  
+    	  //If DLL is now empty set tail == null
+    	  if(this.size==0)
+    		  this.tail = null;
+    	  
+    	  return item;
+    	}
     }
  
 
