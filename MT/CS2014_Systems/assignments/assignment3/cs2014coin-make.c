@@ -109,8 +109,30 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	int siglen = 138;				//Length of signature (in bytes) - 8A
 	unsigned char *sigval;				//Signature value
 
-	//Random number generation
+  //Generating a keypair & public key
+  mbedtls_ecp_keypair *key;
+  mbedtls_ecp_group_id *grpID =  MBEDTLS_ECP_DP_SECP256R1;
   int ret;
+
+  mbedtls_ecp_keypair_init( &key );
+  ret = mbedtls_ecp_gen_key( &grpID, &key, mbedtls_ctr_drbg_random, &ctr_drbg );
+  if( ret != 0 )
+  {
+      mbedtls_printf( " failed\n  ! mbedtls_ecp_gen_key returned %d\n", ret );
+      goto exit;
+  }
+
+  //Extracting public key from keypair
+  size_t keysize = 158;
+  if( mbedtls_ecp_point_write_binary( &key->grp, &key->Q,
+         MBEDTLS_ECP_PF_UNCOMPRESSED, &keylen, &keyval, &keysize ) != 0 )
+     {
+         mbedtls_printf("internal error\n");
+         return;
+     }
+
+	//Random number generation
+
 	mbedtls_ctr_drbg_context ctr_drbg;
 	mbedtls_entropy_context entropy;
 	mbedtls_aes_context aes_ctx;
@@ -125,7 +147,8 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	mbedtls_ctr_drbg_init( &ctr_drbg );
 	mbedtls_entropy_init( &entropy );
 
-  ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char *) "RANDOM_GEN", 10 );
+  //Seeding random number generator
+  ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy, NULL, 0 );
   if( ret != 0 )
   {
   	mbedtls_printf( "failed in mbedtls_ctr_drbg_seed: %d\n", ret );
@@ -133,7 +156,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   }
 
 	//Produces nonce
-	ret = mbedtls_ctr_drbg_random( &ctr_drbg, *nonceval, noncelen );
+	ret = mbedtls_ctr_drbg_random( &ctr_drbg, &nonceval, &noncelen );
 	if( ret != 0 )
 	{
 		mbedtls_printf("failed!\n");
@@ -158,9 +181,9 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 		//start hash
 		mbedtls_md_starts( &sha_ctx );
 		//SHA-256(nonceval)
-		mbedtls_md_update( &sha_ctx, *nonce, noncelen );
+		mbedtls_md_update( &sha_ctx, &nonce, &noncelen );
 		//hashval = SHA-256(nonceval)
-		mbedtls_md_finish( &sha_ctx, *hashval );
+		mbedtls_md_finish( &sha_ctx, &hashval );
 
 
 
