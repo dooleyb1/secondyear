@@ -107,13 +107,12 @@ public class DoublyLinkedListTest
         testDLL.deleteAt(2);
         assertTrue("Checking if element in middle of a DLL deleted successfully", testResult5);
         
-        boolean testResult6 = true;
         testDLL = new DoublyLinkedList<Integer>();
         testDLL.insertBefore(0,1);
         testDLL.insertBefore(1,2);
         testDLL.insertBefore(2,3);
         testDLL.insertBefore(3,4);
-        testDLL.deleteAt(8);
+        boolean testResult6 = testDLL.deleteAt(8);
         assertFalse("Checking if function returns false when desired index is out of bounds", testResult6);
     
     }
@@ -187,6 +186,111 @@ public class DoublyLinkedListTest
       boolean testResult4 = (testDLL.get(0)==null);
       assertTrue("Checking if get method successfully returns null for empty DLL get() call", testResult4);
     
+    }
+   
+    
+  //Tests isEmpty() method from DoublyLinkedList.java
+    @Test
+    public void testIsEmpty()
+    {
+    	DoublyLinkedList<Integer> testDLL = new DoublyLinkedList<Integer>();
+       
+    	 testDLL.enqueue(6);
+         testDLL.enqueue(1);
+         testDLL.enqueue(9);
+         boolean testResult1 = testDLL.isEmpty();
+        assertFalse("Checking if method successfully returns non-empty result", testResult1);
+    
+        testDLL = new DoublyLinkedList<Integer>();
+        boolean testResult2 = testDLL.isEmpty();
+       assertTrue("Checking if method successfully returns empty result", testResult2);
+    }
+    
+  //Tests pop() method from DoublyLinkedList.java
+    @Test
+    public void testPop()
+    {
+    	DoublyLinkedList<Integer> testDLL = new DoublyLinkedList<Integer>();
+       
+    	 testDLL.insertBefore(0,1);
+    	 testDLL.insertBefore(1,2);
+    	 testDLL.insertBefore(2,3);
+    	 boolean testResult1 = (testDLL.pop() == 3);
+        assertTrue("Checking if method successfully pops 3 from DLL of elements > 2", testResult1);
+    
+        testDLL = new DoublyLinkedList<Integer>();
+        testDLL.insertBefore(0,1);
+        testDLL.insertBefore(1,2);
+        boolean testResult2 = (testDLL.pop() == 2);
+       assertTrue("Checking if method successfully pops 1 from DLL of 2 elements", testResult2);
+       
+       testDLL = new DoublyLinkedList<Integer>();
+       testDLL.insertBefore(0,1);
+       boolean testResult3 = (testDLL.pop() == 1);
+      assertTrue("Checking if method successfully pops 1 from DLL of 1 element", testResult3);
+      
+      testDLL = new DoublyLinkedList<Integer>();
+      boolean testResult4 = (testDLL.pop() == null);
+     assertTrue("Checking if method successfully returns null for attempted pop of an empty set", testResult4);
+    }
+    
+  //Tests pop() method from DoublyLinkedList.java
+    @Test
+    public void testPush()
+    {
+    	DoublyLinkedList<Integer> testDLL = new DoublyLinkedList<Integer>();
+       
+    	 testDLL.insertBefore(0,1);
+    	 testDLL.insertBefore(1,2);
+    	 testDLL.insertBefore(2,3);
+    	 testDLL.push(9);
+        assertEquals("Checking if method successfully pushes 9 onto DLL of elements > 2", "9,1,2,3", testDLL.toString());
+    
+        testDLL = new DoublyLinkedList<Integer>();
+        testDLL.insertBefore(0,1);
+        testDLL.insertBefore(1,2);
+        testDLL.push(9);
+       assertEquals("Checking if method successfully pushes 9 onto DLL of 2 elements", "9,1,2", testDLL.toString());
+       
+       testDLL = new DoublyLinkedList<Integer>();
+       testDLL.insertBefore(0,1);
+       testDLL.push(9);
+      assertEquals("Checking if method successfully pushes 9 onto DLL of 1 element", "9,1", testDLL.toString());
+      
+      testDLL = new DoublyLinkedList<Integer>();
+      boolean testResult1 = (testDLL.pop() == null);
+      testDLL.push(9);
+     assertTrue("Checking if method successfully pushes 9 onto empty DLL", testResult1);
+    }
+    
+    //Tests reverse() method from DoublyLinkedList.java
+    @Test
+    public void testReverse()
+    {
+    	DoublyLinkedList<Integer> testDLL = new DoublyLinkedList<Integer>();
+       
+    	 testDLL.insertBefore(0,1);
+    	 testDLL.insertBefore(1,2);
+    	 testDLL.insertBefore(2,3);
+    	 testDLL.insertBefore(3,4);
+    	 testDLL.reverse();
+        assertEquals("Checking if method successfully reverses DLL '1,2,3,4' to '4,3,2,1'", "4,3,2,1", testDLL.toString());
+    
+        
+    }
+    
+  //Tests toString() method from DoublyLinkedList.java
+    @Test
+    public void testToString()
+    {
+    	DoublyLinkedList<Integer> testDLL = new DoublyLinkedList<Integer>();
+       
+    	 testDLL.insertBefore(0,1);
+    	 testDLL.insertBefore(1,2);
+    	 testDLL.insertBefore(2,3);
+    	 testDLL.insertBefore(3,4);
+        assertEquals("Checking if method successfully converts a DLL of '1,2,3,4' to a string containing '1,2,3,4'", "1,2,3,4", testDLL.toString());
+     
     }
 
 }
