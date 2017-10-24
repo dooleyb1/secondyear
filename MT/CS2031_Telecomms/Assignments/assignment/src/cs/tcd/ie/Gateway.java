@@ -60,7 +60,6 @@ public class Gateway extends Node {
 				packet.setPort(content.getDestination());
 				socket.send(packet);
 				terminal.println("Packet sent to server");
-				this.wait();
 			}
 			
 			//If the packet comes from the server, send ACK to client
@@ -68,12 +67,11 @@ public class Gateway extends Node {
 			{
 				content.changeFlag();
 				terminal.println("ACK" + content.getSequnceNumber() + " recieved at Gateway");
-				terminal.println("Sending ACK" + content.getSequnceNumber() + "to Client...");
+				terminal.println("Sending ACK" + content.getSequnceNumber() + " to Client...");
 				
 				packet.setPort(content.getSource());
 				socket.send(packet);
-				terminal.println("ACK"+ content.getSequnceNumber() + "sent to client");
-				this.wait();
+				terminal.println("ACK"+ content.getSequnceNumber() + " sent to client");
 			}
 			
 			else

@@ -42,15 +42,15 @@ public class StringContent implements PacketContent {
 	}
 	
 	public String toString() {
-		return string;
+		return this.string;
 	}
 	
 	public int getDestination(){
-		return ByteBuffer.wrap(destination).getInt();
+		return ByteBuffer.wrap(this.destination).getInt();
 	}
 	
 	public int getSource(){
-		return ByteBuffer.wrap(source).getInt();
+		return ByteBuffer.wrap(this.source).getInt();
 	}
 	
 	public int getSequnceNumber(){
@@ -59,6 +59,10 @@ public class StringContent implements PacketContent {
 
 	public int getFlag(){
 		return ByteBuffer.wrap(this.flag).getInt();
+	}
+	
+	public void setString(String x){
+		this.string = x;
 	}
 	
 	public void changeFlag(){

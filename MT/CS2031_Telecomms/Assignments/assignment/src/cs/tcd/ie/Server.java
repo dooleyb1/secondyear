@@ -27,19 +27,21 @@ public class Server extends Node {
 	 */
 	public void onReceipt(DatagramPacket packet) {
 		try {
-			StringContent content= new StringContent(packet);
-
-			terminal.println("Packet recieved at server:");
-			terminal.println("Sequence number = " + content.getSequnceNumber());
-			terminal.println(content.toString());
+			StringContent recievedPacket = new StringContent(packet);
 			
-
-			DatagramPacket response;
-			response= (new StringContent("ACK" + content.getSequnceNumber())).toDatagramPacket();
-			response.setSocketAddress(packet.getSocketAddress());
+			String sequenceNumber = Integer.toString(recievedPacket.getSequnceNumber());
+			terminal.println("Packet recieved at server:");
+			terminal.println("Sequence number of packet = " + sequenceNumber);
+			terminal.println("Contents of packet = " + recievedPacket.toString());
+			
+			String responseString = ("ACK" + sequenceNumber);
+			StringContent response = recievedPacket;
+			response.setString(responseString);
+			DatagramPacket responsePacket = response.toDatagramPacket();
+			responsePacket.setSocketAddress(packet.getSocketAddress());
 			
 			terminal.println("Sending acknowledgement response to gateway...");
-			socket.send(response);
+			socket.send(responsePacket);
 		}
 		catch(Exception e) {e.printStackTrace();}
 	}

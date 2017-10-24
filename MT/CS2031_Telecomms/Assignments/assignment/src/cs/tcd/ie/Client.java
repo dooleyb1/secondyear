@@ -59,8 +59,8 @@ public class Client extends Node {
 	 */
 	public synchronized void onReceipt(DatagramPacket packet) {
 		StringContent content= new StringContent(packet);
-		this.notify();
 		terminal.println(content.toString());
+		this.notify();
 	}
 
 	
@@ -86,9 +86,9 @@ public class Client extends Node {
 			//Reads and sorts the relevant information into byte arrays
 			payload = (terminal.readString("String to send: ")).getBytes();
 			int dst = terminal.readInt("Destination address: ");
-			dstAddress = ByteBuffer.allocate(4).putInt(dst).array();
+			dstAddress = ByteBuffer.allocate(6).putInt(dst).array();
 			System.out.print(ByteBuffer.wrap(dstAddress).getInt());
-			srcAddress = ByteBuffer.allocate(8).putInt(DEFAULT_SRC_PORT).array();
+			srcAddress = ByteBuffer.allocate(6).putInt(DEFAULT_SRC_PORT).array();
 			
 			//Creates a buffer to contain the information
 			buffer= new byte[dstAddress.length + srcAddress.length + PacketContent.SEQ_NUMBER_LENGTH + PacketContent.FLAG_LENGTH + payload.length];
@@ -106,8 +106,6 @@ public class Client extends Node {
 			terminal.println("Packet sent to gateway");
 			this.wait();
 	}
-
-	
 	
 	/**
 	 * Test method
