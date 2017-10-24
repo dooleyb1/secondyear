@@ -107,55 +107,58 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	int siglen = 138;				//Length of signature (in bytes) - 8A
 	unsigned char *sigval;				//Signature value
 
-  //Generating a keypair & public key
-  mbedtls_ecp_keypair *key;
-  mbedtls_ecp_group_id *grpID =  MBEDTLS_ECP_DP_SECP256R1;
-  int ret;
+  mbedtls_pk_context key;
+  mbedtls_entropy_context entropy;
+  mbedtls_ctr_drbg_context ctr_drbg;
+  char buf[1024];
+  const char *pers = "gen_key";
 
-  mbedtls_ecp_keypair_init( &key );
-  ret = mbedtls_ecp_gen_key( &grpID, &key, mbedtls_ctr_drbg_random, &ctr_drbg );
-  if( ret != 0 )
+  mbedtls_pk_init( &key );
+  mbedtls_ctr_drbg_init( &ctr_drbg );
+  mbedtls_entropy_init( &entropy );
+
+  //Seeding random number generator
+  if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy,
+                             (const unsigned char *) pers,
+                             strlen( pers ) ) ) != 0 )
   {
-      mbedtls_printf( " failed\n  ! mbedtls_ecp_gen_key returned %d\n", ret );
+      mbedtls_printf( " failed\n  ! mbedtls_ctr_drbg_seed returned -0x%04x\n", -ret );
       goto exit;
   }
 
-  //Extracting public key from keypair
-  if( mbedtls_ecp_point_write_binary( &key->grp, &key->Q,
-         MBEDTLS_ECP_PF_UNCOMPRESSED, &keylen, &keyval, &keylen ) != 0 )
-     {
-         mbedtls_printf("internal error\n");
-         return;
-     }
-
-
-	//Random number generation
-	mbedtls_ctr_drbg_context ctr_drbg;
-	mbedtls_entropy_context entropy;
-	mbedtls_aes_context aes_ctx;
-	mbedtls_md_context_t sha_ctx;
-
-	//Initialising random number generator
-	mbedtls_ctr_drbg_init( &ctr_drbg );
-	mbedtls_entropy_init( &entropy );
-
-  //Seeding random number generator
-  ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy, NULL, 0 );
-  if( ret != 0 )
+  //Setting up generating a key
+  if( ( ret = mbedtls_pk_setup( &key, mbedtls_pk_info_from_type(MBEDTLS_PK_ECKEY) ) ) != 0 )
   {
-  	mbedtls_printf( "failed in mbedtls_ctr_drbg_seed: %d\n", ret );
-   	goto cleanup;
+      mbedtls_printf( " failed\n  !  mbedtls_pk_setup returned -0x%04x", -ret );
+      goto exit;
   }
 
+  //Generating actual key
+  ret = mbedtls_ecp_gen_key( opt.ec_curve, mbedtls_pk_ec( key ),
+                    mbedtls_ctr_drbg_random, &ctr_drbg );
+  if( ret != 0 )
+  {
+      mbedtls_printf( " failed\n  !  mbedtls_rsa_gen_key returned -0x%04x", -ret );
+      goto exit;
+  }
+
+  //Writing public key
+  unsigned char output_buf[keylen];
+  unsigned char *c = output_buf;
+  if( ( ret = mbedtls_pk_write_pubkey_der( key, output_buf, keylen ) ) < 0 )
+      return( ret );
+
+  len = ret;
+  c = output_buf + sizeof(output_buf) - len - 1;
+  //Copy keyval over to variable
+  keyval = c;
+
+	//Random number generation for nonce
 	//Produces nonce
-	ret = mbedtls_ctr_drbg_random( &ctr_drbg, &nonceval, &noncelen );
-	if( ret != 0 )
-	{
-		mbedtls_printf("failed!\n");
-		goto cleanup;
-	}
 
 	//Initialising SHA256 Hash
+  mbedtls_aes_context aes_ctx;
+	mbedtls_md_context_t sha_ctx;
 	mbedtls_aes_init( &aes_ctx );
 	mbedtls_md_init( &sha_ctx );
 
@@ -170,24 +173,27 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	boolean finished = false;
 
 	while(!finished){
+    //Generate nonce
+    ret = mbedtls_ctr_drbg_random( &ctr_drbg, &nonceval, &noncelen );
+  	if( ret != 0 )
+  	{
+  		mbedtls_printf("failed!\n");
+  		goto cleanup;
+  	}
 		//start hash
 		mbedtls_md_starts( &sha_ctx );
-		//SHA-256(nonceval)
+		//SHA-256(bits 0...)
 		mbedtls_md_update( &sha_ctx, &nonce, &noncelen );
 		//hashval = SHA-256(nonceval)
 		mbedtls_md_finish( &sha_ctx, &hashval );
 
 
-
-		//check if hashval ending zeros equal difficulty
+		//check if hashval (powhash) ending zeros equal difficulty
 		//if true, finished = true
 	}
 
-  //Signing key
-  mbedtls_pk_context pk;
-  mbedtls_pk_init( &pk );
-
-  if( ( ret = mbedtls_pk_sign( &pk, MBEDTLS_MD_SHA256, &hashval, &hashlen, &sigval, &siglen,
+  //Signing key using pow hash
+  if( ( ret = mbedtls_pk_sign( &key, MBEDTLS_MD_SHA256, &hashval, &hashlen, &sigval, &siglen,
                        mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 )
   {
       mbedtls_printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
