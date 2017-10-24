@@ -7,6 +7,7 @@ import tcdIO.Terminal;
 
 public class Server extends Node {
 	static final int DEFAULT_PORT = 50000;
+	static int expectedSequenceNumber;
 
 	Terminal terminal;
 	
@@ -16,6 +17,7 @@ public class Server extends Node {
 	Server(Terminal terminal, int port) {
 		try {
 			this.terminal= terminal;
+			this.expectedSequenceNumber = 0;
 			socket= new DatagramSocket(port);
 			listener.go();
 		}
@@ -29,21 +31,56 @@ public class Server extends Node {
 		try {
 			StringContent recievedPacket = new StringContent(packet);
 			
-			String sequenceNumber = Integer.toString(recievedPacket.getSequnceNumber());
-			terminal.println("Packet recieved at server:");
-			terminal.println("Sequence number of packet = " + sequenceNumber);
-			terminal.println("Contents of packet = " + recievedPacket.toString());
+			String recievedSequenceNumber = Integer.toString(recievedPacket.getSequnceNumber());
+			terminal.println("Packet recieved at server:\n");
+			terminal.println("Sequence number of packet = " + recievedSequenceNumber);
 			
-			String responseString = ("ACK" + sequenceNumber);
-			StringContent response = recievedPacket;
-			response.setString(responseString);
-			DatagramPacket responsePacket = response.toDatagramPacket();
-			responsePacket.setSocketAddress(packet.getSocketAddress());
+			//Verify if sequence number is expected sequence number
+			if(recievedPacket.getSequnceNumber() == this.getExpectedSequenceNumber()){
+
+				terminal.println("Correct expected sequence number.\n");
+				terminal.println("Contents of packet = '" + recievedPacket.toString() + "'\n");
+				
+				this.updateExpectedSequenceNumber();
+				String responseString = ("ACK" + this.getExpectedSequenceNumber());
+				StringContent response = recievedPacket;
+				response.setString(responseString);
+				DatagramPacket responsePacket = response.toDatagramPacket();
+				responsePacket.setSocketAddress(packet.getSocketAddress());
+				
+				terminal.println("Sending acknowledgement response to gateway ('" + responseString +"')...");
+				socket.send(responsePacket);
+			}
 			
-			terminal.println("Sending acknowledgement response to gateway...");
-			socket.send(responsePacket);
+			else{
+				
+				terminal.println("Incorrect sequence number.");
+				terminal.println("Expected sequence number '" + this.getExpectedSequenceNumber() + "'.");
+				terminal.println("Recieved sequence number '" + recievedPacket.getSequnceNumber() + "'.");
+				
+				String responseString = ("NAK");
+				StringContent response = recievedPacket;
+				response.setString(responseString);
+				DatagramPacket responsePacket = response.toDatagramPacket();
+				responsePacket.setSocketAddress(packet.getSocketAddress());
+				
+				terminal.println("Sending negative acknowledgement response to gateway ('" + responseString +"')...");
+				socket.send(responsePacket);
+			}
+			
 		}
 		catch(Exception e) {e.printStackTrace();}
+	}
+	
+	public int getExpectedSequenceNumber(){
+		return expectedSequenceNumber;
+	}
+	
+	public void resetExpectedSequenceNumber(){
+		expectedSequenceNumber=0;
+	}
+	public void updateExpectedSequenceNumber(){
+		expectedSequenceNumber++;
 	}
 
 	

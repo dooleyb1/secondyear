@@ -48,30 +48,29 @@ public class Gateway extends Node {
 		try {
 			
 			StringContent content = new StringContent(packet);
-			terminal.println(content.toString());
 			
 			//If the packet comes from the client, send to server
 			if(content.getFlag() == 0)
 			{
 				content.changeFlag();
-				terminal.println("Packet recieved at Gateway");
+				terminal.println("\nPacket recieved at Gateway");
 				terminal.println("Sending packet to Server...");
 				
 				packet.setPort(content.getDestination());
 				socket.send(packet);
-				terminal.println("Packet sent to server");
+				terminal.println("\nPacket sent to server");
 			}
 			
 			//If the packet comes from the server, send ACK to client
 			else if(content.getFlag() == 1)
 			{
 				content.changeFlag();
-				terminal.println("ACK" + content.getSequnceNumber() + " recieved at Gateway");
-				terminal.println("Sending ACK" + content.getSequnceNumber() + " to Client...");
+				terminal.println("\nResponse recieved at Gateway");
+				terminal.println("Sending response to Client...\n");
 				
 				packet.setPort(content.getSource());
 				socket.send(packet);
-				terminal.println("ACK"+ content.getSequnceNumber() + " sent to client");
+				terminal.println("Respone sent to client");
 			}
 			
 			else

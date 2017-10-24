@@ -4,6 +4,7 @@
 package cs.tcd.ie;
 
 import java.net.DatagramSocket;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -56,17 +57,65 @@ public class Client extends Node {
 	
 	/**
 	 * Assume that incoming packets contain a String and print the string.
+	 * @throws InterruptedException 
+	 * @throws IOException 
 	 */
-	public synchronized void onReceipt(DatagramPacket packet) {
+	public synchronized void onReceipt(DatagramPacket packet) throws IOException, InterruptedException {
 		StringContent content= new StringContent(packet);
-		terminal.println(content.toString());
+		terminal.println("Respone recieved from gateway...");
+		
+		//Process response to see if ACK or NAK
+		if(content.string != "NAK"){
+			this.carryOn(packet);
+		}
+		
+		else{
+			
+		}
 		this.notify();
 	}
 
-	
+	/**
+	 * carryOn Method - Allows system to continue communication if correct ACK recieved from Gateway
+	 * @throws IOException 
+	 * @throws InterruptedException 
+	 * 
+	 * @throws Exception
+	 */
+	public synchronized void carryOn(DatagramPacket packet) throws IOException, InterruptedException{
+		byte[] newPayload = null;
+		byte[] newBuffer = null;
+		byte[] newFlag = new byte[PacketContent.FLAG_LENGTH];
+		byte[] oldBuffer = null;
+		byte[] headerData = new byte[PacketContent.HEADER_LENGTH];
+		
+		newPayload = (terminal.readString("New string to send: ")).getBytes();
+		oldBuffer = packet.getData();
+		newFlag = ByteBuffer.allocate(4).putInt(0).array();
+		
+		//Creates a buffer to contain the information
+		newBuffer= new byte[PacketContent.HEADER_LENGTH + newPayload.length];
+		//Transfer old header data from old buffer
+		System.arraycopy(oldBuffer, 0, headerData, 0, PacketContent.HEADER_LENGTH);
+		System.arraycopy(headerData, 0, newBuffer, 0 , PacketContent.HEADER_LENGTH);
+		//Transfer in new payload
+		System.arraycopy(newPayload, 0, newBuffer, PacketContent.HEADER_LENGTH, newPayload.length);
+		
+		//Reset flag to 0 
+		System.arraycopy(newFlag, 0, newBuffer, (PacketContent.HEADER_LENGTH-PacketContent.FLAG_LENGTH), PacketContent.FLAG_LENGTH);
+		
+		terminal.println("\nSending new packet to gateway...");
+		packet= new DatagramPacket(newBuffer, newBuffer.length, gatewayAddress);
+		socket.send(packet);
+		terminal.println("Packet sent to gateway\n");
+		this.wait();
+	}
 	/**
 	 * Sender Method
 	 * 
+	 */
+	/**
+	 * @throws Exception
 	 */
 	public synchronized void start() throws Exception {
 		DatagramPacket packet= null;
@@ -91,7 +140,7 @@ public class Client extends Node {
 			srcAddress = ByteBuffer.allocate(6).putInt(DEFAULT_SRC_PORT).array();
 			
 			//Creates a buffer to contain the information
-			buffer= new byte[dstAddress.length + srcAddress.length + PacketContent.SEQ_NUMBER_LENGTH + PacketContent.FLAG_LENGTH + payload.length];
+			buffer= new byte[PacketContent.HEADER_LENGTH + payload.length];
 			
 			//Encloses the above information into a buffer containing an array of bytes
 			System.arraycopy(dstAddress, 0, buffer, 0, dstAddress.length);
@@ -100,10 +149,10 @@ public class Client extends Node {
 			System.arraycopy(flag, 0, buffer, (dstAddress.length+srcAddress.length+PacketContent.SEQ_NUMBER_LENGTH), PacketContent.FLAG_LENGTH);
 			System.arraycopy(payload, 0, buffer, (dstAddress.length+srcAddress.length+PacketContent.SEQ_NUMBER_LENGTH+PacketContent.FLAG_LENGTH), payload.length);
 			
-			terminal.println("Sending packet to gateway...");
+			terminal.println("\nSending packet to gateway...");
 			packet= new DatagramPacket(buffer, buffer.length, gatewayAddress);
 			socket.send(packet);
-			terminal.println("Packet sent to gateway");
+			terminal.println("Packet sent to gateway\n");
 			this.wait();
 	}
 	
