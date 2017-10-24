@@ -92,8 +92,6 @@ int main( void )
 #else
 int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 {
-	int length_spacing = 4;				//Space for all length values (bytes)
-
 	int ciphersuite = 0;				//Ciphersuite value, default 0
 	int bits = 5;					//Difficulty value (in bits)
 
@@ -123,25 +121,19 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   }
 
   //Extracting public key from keypair
-  size_t keysize = 158;
   if( mbedtls_ecp_point_write_binary( &key->grp, &key->Q,
-         MBEDTLS_ECP_PF_UNCOMPRESSED, &keylen, &keyval, &keysize ) != 0 )
+         MBEDTLS_ECP_PF_UNCOMPRESSED, &keylen, &keyval, &keylen ) != 0 )
      {
          mbedtls_printf("internal error\n");
          return;
      }
 
-	//Random number generation
 
+	//Random number generation
 	mbedtls_ctr_drbg_context ctr_drbg;
 	mbedtls_entropy_context entropy;
 	mbedtls_aes_context aes_ctx;
 	mbedtls_md_context_t sha_ctx;
-
-	memset( IV,     0, sizeof( IV ) );
-	memset( key,    0, sizeof( key ) );
-	memset( digest, 0, sizeof( digest ) );
-	memset( buffer, 0, sizeof( buffer ) );
 
 	//Initialising random number generator
 	mbedtls_ctr_drbg_init( &ctr_drbg );
@@ -191,6 +183,14 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 		//if true, finished = true
 	}
 
+  //Signing key
+  mbedtls_pk_context pk;
+  mbedtls_pk_init( &pk );
 
-
+  if( ( ret = mbedtls_pk_sign( &pk, MBEDTLS_MD_SHA256, &hashval, &hashlen, &sigval, &siglen,
+                       mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 )
+  {
+      mbedtls_printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
+      goto exit;
+  }
 }
