@@ -152,7 +152,8 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   c = output_buf + sizeof(output_buf) - len - 1;
   //Copy keyval over to variable
   keyval = c;
-
+  printf("%u", keyval);
+/**
 	//Random number generation for nonce
 	//Produces nonce
 
@@ -198,5 +199,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   {
       mbedtls_printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
       goto exit;
-  }
+  }*/
+  int xxxx = 0;
+  return xxxx;
 }
