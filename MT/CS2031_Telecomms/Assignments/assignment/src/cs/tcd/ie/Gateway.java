@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 
 import tcdIO.Terminal;
 
@@ -57,6 +58,7 @@ public class Gateway extends Node {
 				terminal.println("Sending packet to Server...");
 				
 				packet.setPort(content.getDestination());
+				terminal.println(Arrays.toString(packet.getData()));
 				socket.send(packet);
 				terminal.println("\nPacket sent to server");
 			}
@@ -69,6 +71,7 @@ public class Gateway extends Node {
 				terminal.println("Sending response to Client...\n");
 				
 				packet.setPort(content.getSource());
+				terminal.println(Arrays.toString(packet.getData()));
 				socket.send(packet);
 				terminal.println("Respone sent to client");
 			}

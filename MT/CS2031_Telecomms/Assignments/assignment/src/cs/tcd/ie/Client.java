@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import tcdIO.*;
 
@@ -57,20 +58,19 @@ public class Client extends Node {
 	
 	/**
 	 * Assume that incoming packets contain a String and print the string.
-	 * @throws InterruptedException 
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public synchronized void onReceipt(DatagramPacket packet) throws IOException, InterruptedException {
+	public synchronized void onReceipt(DatagramPacket packet) throws Exception {
 		StringContent content= new StringContent(packet);
 		terminal.println("Respone recieved from gateway...");
 		
-		//Process response to see if ACK or NAK
-		if(content.string != "NAK"){
+		//If ACK
+		if(content.getResponseFlag()==1){
 			this.carryOn(packet);
 		}
-		
+		//If NAK re-send packet
 		else{
-			
+			this.resendPacket(packet);
 		}
 		this.notify();
 	}
@@ -86,12 +86,21 @@ public class Client extends Node {
 		byte[] newPayload = null;
 		byte[] newBuffer = null;
 		byte[] newFlag = new byte[PacketContent.FLAG_LENGTH];
+		byte[] oldSequenceNumber = new byte[PacketContent.SEQ_NUMBER_LENGTH];
+		byte[] newSequenceNumber = new byte[PacketContent.SEQ_NUMBER_LENGTH];
 		byte[] oldBuffer = null;
 		byte[] headerData = new byte[PacketContent.HEADER_LENGTH];
 		
 		newPayload = (terminal.readString("New string to send: ")).getBytes();
 		oldBuffer = packet.getData();
+		//Reset flag
 		newFlag = ByteBuffer.allocate(4).putInt(0).array();
+		
+		//Update sequence number
+		System.arraycopy(oldBuffer, (PacketContent.DST_ADDRESS_LENGTH + PacketContent.SRC_ADDRESS_LENGTH), oldSequenceNumber, 0, PacketContent.SEQ_NUMBER_LENGTH);
+		int oldSeqNum = ByteBuffer.wrap(oldSequenceNumber).getInt();;
+		int newSeqNum = oldSeqNum++;
+		newSequenceNumber = ByteBuffer.allocate(4).putInt(newSeqNum).array();
 		
 		//Creates a buffer to contain the information
 		newBuffer= new byte[PacketContent.HEADER_LENGTH + newPayload.length];
@@ -101,14 +110,51 @@ public class Client extends Node {
 		//Transfer in new payload
 		System.arraycopy(newPayload, 0, newBuffer, PacketContent.HEADER_LENGTH, newPayload.length);
 		
-		//Reset flag to 0 
-		System.arraycopy(newFlag, 0, newBuffer, (PacketContent.HEADER_LENGTH-PacketContent.FLAG_LENGTH), PacketContent.FLAG_LENGTH);
+		//Tranfer in updated flag
+		System.arraycopy(newFlag, 0, newBuffer, 
+				(PacketContent.HEADER_LENGTH-PacketContent.FLAG_LENGTH-PacketContent.RESPONSE_FLAG_LENGTH-PacketContent.RESPONSE_NUMBER_LENGTH),
+				PacketContent.FLAG_LENGTH);
+		
+		//Transfer in new sequence number
+		System.arraycopy(newSequenceNumber, 0, newBuffer, (PacketContent.DST_ADDRESS_LENGTH + PacketContent.SRC_ADDRESS_LENGTH), PacketContent.SEQ_NUMBER_LENGTH);
 		
 		terminal.println("\nSending new packet to gateway...");
 		packet= new DatagramPacket(newBuffer, newBuffer.length, gatewayAddress);
 		socket.send(packet);
-		terminal.println("Packet sent to gateway\n");
-		this.wait();
+		terminal.println("New packet sent to gateway\n");
+	}
+	
+	/**
+	 * resendPacket Method - Allows system to re-send packet if NAK is received
+	 * @throws IOException 
+	 * @throws InterruptedException 
+	 * 
+	 * @throws Exception
+	 */
+	public synchronized void resendPacket(DatagramPacket packet) throws IOException, InterruptedException{
+		
+		byte[] newFlag = new byte[PacketContent.FLAG_LENGTH];
+		byte[] newResponseFlag = new byte[PacketContent.RESPONSE_FLAG_LENGTH];
+		byte[] oldBuffer = null;
+		
+		terminal.println("Generating packet to re-send...");
+		oldBuffer = packet.getData();
+		//Reset flag
+		newFlag = ByteBuffer.allocate(4).putInt(0).array();
+		//Reset response flag
+		newFlag = ByteBuffer.allocate(4).putInt(1).array();
+		
+		//Transfer new flag to header data from old buffer
+		System.arraycopy(newFlag, 0, oldBuffer, PacketContent.HEADER_LENGTH-(PacketContent.FLAG_LENGTH + PacketContent.RESPONSE_FLAG_LENGTH+
+				PacketContent.RESPONSE_NUMBER_LENGTH), PacketContent.FLAG_LENGTH);
+		//Transfer new responeFlag to header data from old buffer
+		System.arraycopy(newResponseFlag, 0, oldBuffer, PacketContent.HEADER_LENGTH-(PacketContent.RESPONSE_FLAG_LENGTH+ PacketContent.RESPONSE_NUMBER_LENGTH)
+		, PacketContent.RESPONSE_FLAG_LENGTH);
+		
+		terminal.println("\nRe-sending packet to gateway...");
+		packet= new DatagramPacket(oldBuffer, oldBuffer.length, gatewayAddress);
+		socket.send(packet);
+		terminal.println("Packet re-sent to gateway\n");
 	}
 	/**
 	 * Sender Method
@@ -125,19 +171,27 @@ public class Client extends Node {
 		byte[] srcAddress = null;
 		byte[] sequenceNum = null;
 		byte[] flag = null;
+		byte[] responseFlag = null;
+		byte[] responseNumber = null;
 		byte[] buffer= null;
 		
 			dstAddress = new byte[PacketContent.DST_ADDRESS_LENGTH];
 			srcAddress = new byte[PacketContent.SRC_ADDRESS_LENGTH];
+			responseFlag = new byte[PacketContent.RESPONSE_FLAG_LENGTH];
+			responseNumber = new byte[PacketContent.RESPONSE_NUMBER_LENGTH];
 			sequenceNum = this.seqNumber;
 			flag = this.flag;
 		
 			//Reads and sorts the relevant information into byte arrays
 			payload = (terminal.readString("String to send: ")).getBytes();
 			int dst = terminal.readInt("Destination address: ");
-			dstAddress = ByteBuffer.allocate(6).putInt(dst).array();
+			dstAddress = ByteBuffer.allocate(PacketContent.DST_ADDRESS_LENGTH).putInt(dst).array();
+			//Response flag = 1 for ACK, 0 for NAK
+			responseFlag = ByteBuffer.allocate(PacketContent.RESPONSE_FLAG_LENGTH).putInt(1).array();
+			//Initialise response number at 0
+			responseNumber = ByteBuffer.allocate(PacketContent.RESPONSE_NUMBER_LENGTH).putInt(0).array();
 			System.out.print(ByteBuffer.wrap(dstAddress).getInt());
-			srcAddress = ByteBuffer.allocate(6).putInt(DEFAULT_SRC_PORT).array();
+			srcAddress = ByteBuffer.allocate(PacketContent.SRC_ADDRESS_LENGTH).putInt(DEFAULT_SRC_PORT).array();
 			
 			//Creates a buffer to contain the information
 			buffer= new byte[PacketContent.HEADER_LENGTH + payload.length];
@@ -147,7 +201,10 @@ public class Client extends Node {
 			System.arraycopy(srcAddress, 0, buffer, dstAddress.length, srcAddress.length);
 			System.arraycopy(sequenceNum, 0, buffer, (dstAddress.length+srcAddress.length), PacketContent.SEQ_NUMBER_LENGTH);
 			System.arraycopy(flag, 0, buffer, (dstAddress.length+srcAddress.length+PacketContent.SEQ_NUMBER_LENGTH), PacketContent.FLAG_LENGTH);
-			System.arraycopy(payload, 0, buffer, (dstAddress.length+srcAddress.length+PacketContent.SEQ_NUMBER_LENGTH+PacketContent.FLAG_LENGTH), payload.length);
+			System.arraycopy(responseFlag, 0, buffer, (PacketContent.HEADER_LENGTH-(PacketContent.RESPONSE_FLAG_LENGTH+PacketContent.RESPONSE_NUMBER_LENGTH)),
+					PacketContent.RESPONSE_FLAG_LENGTH);
+			System.arraycopy(responseNumber, 0, buffer, PacketContent.HEADER_LENGTH-PacketContent.RESPONSE_NUMBER_LENGTH, PacketContent.RESPONSE_NUMBER_LENGTH);
+			System.arraycopy(payload, 0, buffer, PacketContent.HEADER_LENGTH, payload.length);
 			
 			terminal.println("\nSending packet to gateway...");
 			packet= new DatagramPacket(buffer, buffer.length, gatewayAddress);

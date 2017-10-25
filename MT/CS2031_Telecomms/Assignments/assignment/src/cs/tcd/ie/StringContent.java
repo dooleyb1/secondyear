@@ -9,6 +9,8 @@ public class StringContent implements PacketContent {
 	byte[] source;
 	byte[] sequenceNum;
 	byte[] flag;
+	byte[] responseFlag;
+	byte[] responseNum;
 	
 	
 	public StringContent(DatagramPacket packet) {
@@ -22,6 +24,8 @@ public class StringContent implements PacketContent {
 		source = new byte[SRC_ADDRESS_LENGTH];
 		sequenceNum = new byte[SEQ_NUMBER_LENGTH];
 		flag = new byte[FLAG_LENGTH];
+		responseFlag = new byte[RESPONSE_FLAG_LENGTH];
+		responseNum = new byte[RESPONSE_NUMBER_LENGTH];
 		
 		//Extract payload
 		System.arraycopy(buffer, HEADER_LENGTH, payload, 0, packet.getLength()-HEADER_LENGTH);
@@ -30,9 +34,13 @@ public class StringContent implements PacketContent {
 		//Extract source address
 		System.arraycopy(buffer, DST_ADDRESS_LENGTH, source, 0, SRC_ADDRESS_LENGTH);
 		//Extract sequence number
-		System.arraycopy(buffer, (DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH), this.sequenceNum, 0, SEQ_NUMBER_LENGTH);
+		System.arraycopy(buffer, (DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH), sequenceNum, 0, SEQ_NUMBER_LENGTH);
 		//Extract flag
 		System.arraycopy(buffer, (DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH+SEQ_NUMBER_LENGTH), flag, 0, FLAG_LENGTH);
+		//Extract response flag
+		System.arraycopy(buffer, (HEADER_LENGTH-RESPONSE_FLAG_LENGTH-RESPONSE_NUMBER_LENGTH), responseFlag, 0, RESPONSE_FLAG_LENGTH);
+		//Extract response number
+		System.arraycopy(buffer, (HEADER_LENGTH-RESPONSE_NUMBER_LENGTH), responseNum, 0, RESPONSE_NUMBER_LENGTH);
 		
 		string = new String(payload);
 	}
@@ -56,13 +64,32 @@ public class StringContent implements PacketContent {
 	public int getSequnceNumber(){
 		return ByteBuffer.wrap(this.sequenceNum).getInt();
 	}
+	
+	public int getResponseNumber(){
+		return ByteBuffer.wrap(this.responseNum).getInt();
+	}
 
 	public int getFlag(){
 		return ByteBuffer.wrap(this.flag).getInt();
 	}
 	
-	public void setString(String x){
-		this.string = x;
+	public int getResponseFlag(){
+		return ByteBuffer.wrap(this.responseFlag).getInt();
+	}
+	
+	public void setResponseFlagPositive(){
+			this.responseFlag = ByteBuffer.allocate(4).putInt(1).array();
+	}
+	
+	public void setResponseFlagNegative(){
+	
+			this.responseFlag = ByteBuffer.allocate(4).putInt(0).array();
+	}
+	
+	public void incrementResponseNumber(){
+			int x = this.getResponseNumber();
+			x++;
+			this.responseNum = ByteBuffer.allocate(4).putInt(x).array();
 	}
 	
 	public void changeFlag(){
@@ -95,6 +122,8 @@ public class StringContent implements PacketContent {
 			System.arraycopy(source, 0, buffer, source.length, source.length);
 			System.arraycopy(sequenceNum, 0, buffer, (destination.length+source.length), SEQ_NUMBER_LENGTH);
 			System.arraycopy(flag, 0, buffer, (destination.length+source.length+SEQ_NUMBER_LENGTH), FLAG_LENGTH);
+			System.arraycopy(responseFlag, 0, buffer, (destination.length+source.length+SEQ_NUMBER_LENGTH+FLAG_LENGTH), RESPONSE_FLAG_LENGTH);
+			System.arraycopy(responseNum, 0, buffer, (destination.length+source.length+SEQ_NUMBER_LENGTH+FLAG_LENGTH+RESPONSE_FLAG_LENGTH), RESPONSE_NUMBER_LENGTH);
 			packet= new DatagramPacket(buffer, buffer.length);
 		}
 		catch(Exception e) {e.printStackTrace();}

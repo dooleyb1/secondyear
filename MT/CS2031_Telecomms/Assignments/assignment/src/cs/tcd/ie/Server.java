@@ -2,6 +2,7 @@ package cs.tcd.ie;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.Arrays;
 
 import tcdIO.Terminal;
 
@@ -27,7 +28,7 @@ public class Server extends Node {
 	/**
 	 * Assume that incoming packets contain a String and print the string.
 	 */
-	public void onReceipt(DatagramPacket packet) {
+	public synchronized void onReceipt(DatagramPacket packet) {
 		try {
 			StringContent recievedPacket = new StringContent(packet);
 			
@@ -42,29 +43,30 @@ public class Server extends Node {
 				terminal.println("Contents of packet = '" + recievedPacket.toString() + "'\n");
 				
 				this.updateExpectedSequenceNumber();
-				String responseString = ("ACK" + this.getExpectedSequenceNumber());
+				
 				StringContent response = recievedPacket;
-				response.setString(responseString);
+				//Indicate ACK
+				response.setResponseFlagPositive();
+				response.incrementResponseNumber();
 				DatagramPacket responsePacket = response.toDatagramPacket();
 				responsePacket.setSocketAddress(packet.getSocketAddress());
 				
-				terminal.println("Sending acknowledgement response to gateway ('" + responseString +"')...");
+				terminal.println("Sending acknowledgement response to gateway ('ACK" + response.getResponseNumber() +"')...");
 				socket.send(responsePacket);
 			}
 			
 			else{
-				
 				terminal.println("Incorrect sequence number.");
 				terminal.println("Expected sequence number '" + this.getExpectedSequenceNumber() + "'.");
 				terminal.println("Recieved sequence number '" + recievedPacket.getSequnceNumber() + "'.");
 				
-				String responseString = ("NAK");
-				StringContent response = recievedPacket;
-				response.setString(responseString);
+				StringContent response = recievedPacket;;
+				//Indicate NAK
+				response.setResponseFlagNegative();
 				DatagramPacket responsePacket = response.toDatagramPacket();
 				responsePacket.setSocketAddress(packet.getSocketAddress());
 				
-				terminal.println("Sending negative acknowledgement response to gateway ('" + responseString +"')...");
+				terminal.println("Sending negative acknowledgement response to gateway ('NAK" + response.getResponseNumber() +"')...");
 				socket.send(responsePacket);
 			}
 			

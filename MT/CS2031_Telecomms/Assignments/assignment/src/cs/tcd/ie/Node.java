@@ -21,7 +21,7 @@ public abstract class Node {
 	}
 	
 	
-	public abstract void onReceipt(DatagramPacket packet) throws IOException, InterruptedException;
+	public abstract void onReceipt(DatagramPacket packet) throws IOException, InterruptedException, Exception;
 	
 	/**
 	 *
