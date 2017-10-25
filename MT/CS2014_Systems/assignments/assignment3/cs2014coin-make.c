@@ -32,6 +32,7 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "cs2014coin.h"
 #include "cs2014coin-int.h"
@@ -105,7 +106,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   }
 
   //Generating actual key
-  ret = mbedtls_ecp_gen_key( 0, mbedtls_pk_ec( key ),
+  ret = mbedtls_ecp_gen_key( MBEDTLS_ECP_DP_SECP521R1, mbedtls_pk_ec( key ),
                     mbedtls_ctr_drbg_random, &ctr_drbg );
   if( ret != 0 )
   {
@@ -114,9 +115,12 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 
   //Writing public key
   unsigned char key_output_buf[keylen];
-  ret = mbedtls_pk_write_pubkey_der( &key, key_output_buf, keylen);
+  size_t key_buf_size = keylen;
+  memset(key_output_buf,0xAA,keylen);
 
-  printf("%s",key_output_buf);
+  ret = mbedtls_pk_write_pubkey_der( &key, key_output_buf, key_buf_size);
+
+  dumpbuf("Public key dump", key_output_buf, key_buf_size);
 
   
   //Initialising SHA256 Hash
@@ -172,7 +176,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   {
       mbedtls_printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
   }
- 
+  */
   int xxxx = 0;
   return xxxx;
 }
