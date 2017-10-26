@@ -30,54 +30,25 @@
  * THE SOFTWARE.
  *
  */
-
- #if !defined(MBEDTLS_CONFIG_FILE)
- #include "mbedtls/config.h"
- #else
- #include MBEDTLS_CONFIG_FILE
- #endif
-
- #if defined(MBEDTLS_PLATFORM_C)
- #include "mbedtls/platform.h"
- #else
- #include <stdio.h>
- #define mbedtls_fprintf    fprintf
- #define mbedtls_printf     printf
- #endif
-
- #include "mbedtls/aes.h"
- #include "mbedtls/md.h"
-
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-
- #if defined(_WIN32)
- #include <windows.h>
- #if !defined(_WIN32_WCE)
- #include <io.h>
- #endif
- #else
- #include <sys/types.h>
- #include <unistd.h>
- #endif
+#include <stdio.h>
+#include <string.h>
 
 #include "cs2014coin.h"
 #include "cs2014coin-int.h"
+
+#if defined(MBEDTLS_PLATFORM_C)
+#include "mbedtls/platform.h"
+#else
+#include <stdio.h>
+#define mbedtls_printf     printf
+#endif
+
 #include "mbedtls/entropy.h"
 #include "mbedtls/ctr_drbg.h"
 #include "mbedtls/ecdsa.h"
 #include "mbedtls/sha256.h"
-
-#if !defined(MBEDTLS_AES_C) || !defined(MBEDTLS_SHA256_C) || \
-    !defined(MBEDTLS_FS_IO) || !defined(MBEDTLS_MD_C)
-int main( void )
-{
-    mbedtls_printf("MBEDTLS_AES_C and/or MBEDTLS_SHA256_C "
-                    "and/or MBEDTLS_FS_IO and/or MBEDTLS_MD_C "
-                    "not defined.\n");
-    return( 0 );
-}
+#include "mbedtls/ecp.h"
+#include "mbedtls/pk.h"
 
 /*!
  * @brief make a coin
@@ -89,7 +60,6 @@ int main( void )
  * Make me a coin of the required quality/strength
  *
  */
-#else
 int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 {
 	int ciphersuite = 0;				//Ciphersuite value, default 0					//Difficulty value (in bits)
@@ -115,6 +85,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   unsigned char powbuf[12+keylen+4+noncelen];
   const char *pers = "gen_key";
 
+  //Initialise mbed tls functions
   mbedtls_pk_init( &key );
   mbedtls_ctr_drbg_init( &ctr_drbg );
   mbedtls_entropy_init( &entropy );
@@ -134,7 +105,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   }
 
   //Generating actual key
-  ret = mbedtls_ecp_gen_key( 0, mbedtls_pk_ec( &key ),
+  ret = mbedtls_ecp_gen_key( 0, mbedtls_pk_ec( key ),
                     mbedtls_ctr_drbg_random, &ctr_drbg );
   if( ret != 0 )
   {
@@ -143,64 +114,65 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 
   //Writing public key
   unsigned char key_output_buf[keylen];
-  ret = mbedtls_pk_write_pubkey_der( &key, &key_output_buf, &keylen ) ) < 0 );
+  ret = mbedtls_pk_write_pubkey_der( &key, key_output_buf, keylen);
 
-	//Initialising SHA256 Hash
+  printf("%s",key_output_buf);
+
+  
+  //Initialising SHA256 Hash
   mbedtls_aes_context aes_ctx;
-	mbedtls_md_context_t sha_ctx;
-	mbedtls_aes_init( &aes_ctx );
-	mbedtls_md_init( &sha_ctx );
+  mbedtls_md_context_t sha_ctx;
+  mbedtls_aes_init( &aes_ctx );
+  mbedtls_md_init( &sha_ctx );
 
-	ret = mbedtls_md_setup( &sha_ctx, mbedtls_md_info_from_type( MBEDTLS_MD_SHA256 ), 1 );
-	if( ret != 0 )
-	{
-			mbedtls_printf( "  ! mbedtls_md_setup() returned -0x%04x\n", -ret );
-	}
+  ret = mbedtls_md_setup( &sha_ctx, mbedtls_md_info_from_type( MBEDTLS_MD_SHA256 ), 1 );
+  if( ret != 0 )
+  {
+  	mbedtls_printf( "  ! mbedtls_md_setup() returned -0x%04x\n", -ret );
+  }
+	
 
-  /*
-	//SHA-256 hashing the nonce and giving pow hash
-	boolean finished = false;
+  unsigned char noncevalue[noncelen]; 	
+  //SHA-256 hashing the nonce and giving pow hash
+  //Generate nonce
+  ret = mbedtls_ctr_drbg_random( &ctr_drbg, noncevalue, noncelen );
+  if( ret != 0 )
+  {
+  	mbedtls_printf("failed!\n");
+  }
 
-	while(!finished){
-    //Generate nonce
-    ret = mbedtls_ctr_drbg_random( &ctr_drbg, &nonceval, &noncelen );
-  	if( ret != 0 )
-  	{
-  		mbedtls_printf("failed!\n");
-  	}
+  //Add ciphersuite to powbuf
+  memcpy(powbuf, &ciphersuite, 4);
+  //Add bits to powbuf
+  memcpy(powbuf, &bits, 4);
+  //Add public key length to powbuf
+  memcpy(powbuf, &keylen, 4);
+  //Add public key itself to powbuf
+  memcpy(powbuf, &key_output_buf, keylen);
+  //Add nonce into powbuf
+  memcpy(powbuf, &nonceval, noncelen);
 
-    //Add ciphersuite to powbuf
-    memcpy(powbuf, ciphersuite, 4);
-    //Add bits to powbuf
-    memcpy(powbuf, bits, 4);
-    //Add public key length to powbuf
-    memcpy(powbuf, keylen, 4);
-    //Add public key itself to powbuf
-    memcpy(powbuf, key_output_buf, keylen);
-    //Add nonce into powbuf
-    memcpy(powbuf, nonceval, noncelen;)
-
-		//start hash
-		mbedtls_md_starts( &sha_ctx );
-		//SHA-256(bits 0...)
-		mbedtls_md_update( &sha_ctx, &nonce, &noncelen );
-		//hashval = SHA-256(nonceval)
-		mbedtls_md_finish( &sha_ctx, &hashval );
+  unsigned char hashvalue[hashlen];
+  //start hash
+  mbedtls_md_starts( &sha_ctx );
+  //SHA-256(bits 0...)
+  mbedtls_md_update( &sha_ctx, powbuf, sizeof(powbuf) );
+  //hashval = SHA-256(nonceval)
+  mbedtls_md_finish( &sha_ctx, hashvalue );
 
 
-		//check if hashval (powhash) ending zeros equal difficulty
-		//if true, finished = true
-	}
-
+  //check if hashval (powhash) ending zeros equal difficulty
+  //if true, finished = true
+  
+  unsigned char signalvalue[siglen];
+  size_t siglength = siglen;
   //Signing key using pow hash
-  if( ( ret = mbedtls_pk_sign( &key, MBEDTLS_MD_SHA256, &hashval, &hashlen, &sigval, &siglen,
+  if( ( ret = mbedtls_pk_sign( &key, MBEDTLS_MD_SHA256, hashvalue, hashlen, signalvalue, &siglength,
                        mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 )
   {
       mbedtls_printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
-      goto exit;
   }
-
-  */
+ 
   int xxxx = 0;
   return xxxx;
 }
