@@ -51,12 +51,13 @@ public class Server extends Node {
 				DatagramPacket responsePacket = response.toDatagramPacket();
 				responsePacket.setSocketAddress(packet.getSocketAddress());
 				
-				terminal.println("Sending acknowledgement response to gateway ('ACK" + response.getResponseNumber() +"')...");
+				terminal.println("Sending acknowledgement response to gateway ('ACK" + (response.getResponseNumber()-1) +"')...");
 				socket.send(responsePacket);
 			}
 			
 			else{
 				terminal.println("Incorrect sequence number.");
+				terminal.println("Contents of packet = '" + recievedPacket.toString() + "'\n");
 				terminal.println("Expected sequence number '" + this.getExpectedSequenceNumber() + "'.");
 				terminal.println("Recieved sequence number '" + recievedPacket.getSequnceNumber() + "'.");
 				
@@ -66,7 +67,7 @@ public class Server extends Node {
 				DatagramPacket responsePacket = response.toDatagramPacket();
 				responsePacket.setSocketAddress(packet.getSocketAddress());
 				
-				terminal.println("Sending negative acknowledgement response to gateway ('NAK" + response.getResponseNumber() +"')...");
+				terminal.println("Sending negative acknowledgement response to gateway ('NAK" + (response.getResponseNumber()-1) +"')...");
 				socket.send(responsePacket);
 			}
 			

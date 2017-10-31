@@ -86,8 +86,6 @@ public class Client extends Node {
 		byte[] newPayload = null;
 		byte[] newBuffer = null;
 		byte[] newFlag = new byte[PacketContent.FLAG_LENGTH];
-		byte[] oldSequenceNumber = new byte[PacketContent.SEQ_NUMBER_LENGTH];
-		byte[] newSequenceNumber = new byte[PacketContent.SEQ_NUMBER_LENGTH];
 		byte[] oldBuffer = null;
 		byte[] headerData = new byte[PacketContent.HEADER_LENGTH];
 		
@@ -97,10 +95,9 @@ public class Client extends Node {
 		newFlag = ByteBuffer.allocate(4).putInt(0).array();
 		
 		//Update sequence number
-		System.arraycopy(oldBuffer, (PacketContent.DST_ADDRESS_LENGTH + PacketContent.SRC_ADDRESS_LENGTH), oldSequenceNumber, 0, PacketContent.SEQ_NUMBER_LENGTH);
-		int oldSeqNum = ByteBuffer.wrap(oldSequenceNumber).getInt();;
-		int newSeqNum = oldSeqNum++;
-		newSequenceNumber = ByteBuffer.allocate(4).putInt(newSeqNum).array();
+		int sequenceNumber = ByteBuffer.wrap(this.seqNumber).getInt();
+		sequenceNumber++;
+		this.seqNumber = ByteBuffer.allocate(4).putInt(sequenceNumber).array();
 		
 		//Creates a buffer to contain the information
 		newBuffer= new byte[PacketContent.HEADER_LENGTH + newPayload.length];
@@ -116,7 +113,7 @@ public class Client extends Node {
 				PacketContent.FLAG_LENGTH);
 		
 		//Transfer in new sequence number
-		System.arraycopy(newSequenceNumber, 0, newBuffer, (PacketContent.DST_ADDRESS_LENGTH + PacketContent.SRC_ADDRESS_LENGTH), PacketContent.SEQ_NUMBER_LENGTH);
+		System.arraycopy(this.seqNumber, 0, newBuffer, (PacketContent.DST_ADDRESS_LENGTH + PacketContent.SRC_ADDRESS_LENGTH), PacketContent.SEQ_NUMBER_LENGTH);
 		
 		terminal.println("\nSending new packet to gateway...");
 		packet= new DatagramPacket(newBuffer, newBuffer.length, gatewayAddress);
