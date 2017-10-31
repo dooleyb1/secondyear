@@ -85,8 +85,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   mbedtls_ctr_drbg_context ctr_drbg;
   int ret;
 
-<<<<<<< HEAD
-=======
   //printing ciphersuite value
   unsigned char cipherbuf[4];
   size_t cipherbuf_size = 4;
@@ -103,7 +101,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 
   //buffer to be placed through pow hash
   unsigned char powbuf[12+keylen+4+noncelen];
->>>>>>> fe93092530136cc685cb9de82286287593c7892d
   const char *pers = "gen_key";
 
   //Initialise mbed tls functions
@@ -150,7 +147,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 
   dumpbuf("Public key value", key_output_buf, key_buf_size);
 
-
+  
   //Initialising SHA256 Hash
   mbedtls_aes_context aes_ctx;
   mbedtls_md_context_t sha_ctx;
@@ -162,11 +159,8 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   {
   	mbedtls_printf( "  ! mbedtls_md_setup() returned -0x%04x\n", -ret );
   }
+	
 
-<<<<<<< HEAD
-
-  unsigned char noncevalue[noncelen];
-=======
   //Printing noncelength
   unsigned char noncelenbuf[4];
   size_t noncelenbuf_size = 4;
@@ -202,7 +196,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   //Add pow length into powbuf
   memcpy(powbuf+16+keylen, &powlenbuf, 4);
  
->>>>>>> fe93092530136cc685cb9de82286287593c7892d
   //SHA-256 hashing the nonce and giving pow hash
   //Generate nonce until hash LSB zero's == difficulty
   int i=0;
@@ -213,23 +206,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	mbedtls_printf("failed!\n");
   }
 
-<<<<<<< HEAD
-	//buffer to be placed through pow hash
-  unsigned char powbuf[12+keylen+4+noncelen];
-	size_t keylengt = keylen;
-	size_t noncelengt = noncelen;
-
-  //Add ciphersuite to powbuf
-  memcpy(powbuf,ciphersuite,4);
-  //Add bits to powbuf
-  memcpy(powbuf+4, bits, 4);
-  //Add public key length to powbuf
-  memcpy(powbuf+8, keylen, 4);
-  //Add public key itself to powbuf
-  memcpy(powbuf+12, key_output_buf, keylengt);
-  //Add nonce into powbuf
-  memcpy(powbuf+12+keylen, noncevalue, noncelengt);
-=======
   for(i;i<1000000;i++)
   {
 	  if(checker == 1) {
@@ -245,7 +221,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	  //Printing nonce value
 	  size_t noncevalbuf_size = noncelen;
 	  dumpbuf("Nonce vaue:", noncevalue, noncevalbuf_size);
->>>>>>> fe93092530136cc685cb9de82286287593c7892d
 
 	  
 	  //Printing combined pow input
@@ -266,14 +241,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	  dumpbuf("Pow hash outcome:", hashvalue, hashvalue_size);
           */
 
-<<<<<<< HEAD
-	size_t powsize = sizeof(powbuf);
-	dumpbuf("Dumping pow hash", hashvalue, powsize)
-  //check if hashval (powhash) ending zeros equal difficulty
-  //if true, finished = true
-
-  unsigned char signalvalue[siglen];
-=======
 	  //check if hashval (powhash) ending zeros equal difficulty
 	  //if true, finished = true
           checker = zero_bits(bits, hashvalue, hashlen);
@@ -291,7 +258,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   }
 
   unsigned char signvalue[siglen];
->>>>>>> fe93092530136cc685cb9de82286287593c7892d
   size_t siglength = siglen;
   //Signing key using pow hash
   if( ( ret = mbedtls_pk_sign( &key, MBEDTLS_MD_SHA256, hashvalue, hashlen, signvalue, &siglength,
