@@ -7,6 +7,7 @@ import java.net.DatagramSocket;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
+import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -25,6 +26,7 @@ public class Client extends Node {
 	static final int DEFAULT_GATEWAY_PORT = 40000;
 	static final String DEFAULT_DST_NODE = "localhost";	
 	byte[] seqNumber;
+	DatagramPacket previousPacket;
 	
 	//Flag = 0 if coming from client, flag = 1 if coming from server
 	byte[] flag; 
@@ -49,6 +51,7 @@ public class Client extends Node {
 			socket= new DatagramSocket(srcPort);
 			this.seqNumber = ByteBuffer.allocate(4).putInt(0).array();
 			this.flag = ByteBuffer.allocate(4).putInt(0).array();
+			previousPacket = null;
 			
 			listener.go();
 		}
@@ -205,8 +208,11 @@ public class Client extends Node {
 			
 			terminal.println("\nSending packet to gateway...");
 			packet= new DatagramPacket(buffer, buffer.length, gatewayAddress);
+			this.previousPacket = packet;
 			socket.send(packet);
 			terminal.println("Packet sent to gateway\n");
+			
+			
 			this.wait();
 	}
 	
@@ -218,7 +224,8 @@ public class Client extends Node {
 	public static void main(String[] args) {
 		try {					
 			Terminal terminal= new Terminal("Client");		
-			(new Client(terminal, DEFAULT_DST_NODE, DEFAULT_SRC_PORT, DEFAULT_GATEWAY_PORT)).start();
+			int clientPortNumber = terminal.readInt("Client port number: ");
+			(new Client(terminal, DEFAULT_DST_NODE, clientPortNumber, DEFAULT_GATEWAY_PORT)).start();
 			terminal.println("Program completed");
 		} catch(java.lang.Exception e) {e.printStackTrace();}
 	}

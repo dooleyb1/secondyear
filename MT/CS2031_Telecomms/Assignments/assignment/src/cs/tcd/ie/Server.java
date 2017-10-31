@@ -51,7 +51,7 @@ public class Server extends Node {
 				DatagramPacket responsePacket = response.toDatagramPacket();
 				responsePacket.setSocketAddress(packet.getSocketAddress());
 				
-				terminal.println("Sending acknowledgement response to gateway ('ACK" + (response.getResponseNumber()-1) +"')...");
+				terminal.println("Sending acknowledgement response to gateway ('ACK" + response.getResponseNumber() +"')...");
 				socket.send(responsePacket);
 			}
 			
@@ -67,7 +67,7 @@ public class Server extends Node {
 				DatagramPacket responsePacket = response.toDatagramPacket();
 				responsePacket.setSocketAddress(packet.getSocketAddress());
 				
-				terminal.println("Sending negative acknowledgement response to gateway ('NAK" + (response.getResponseNumber()-1) +"')...");
+				terminal.println("Sending negative acknowledgement response to gateway ('NAK" + response.getResponseNumber() +"')...");
 				socket.send(responsePacket);
 			}
 			
