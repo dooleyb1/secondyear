@@ -53,7 +53,22 @@
 #include "mbedtls/sha256.h"
 #include "mbedtls/ecp.h"
 #include "mbedtls/pk.h"
-	
+
+/*!
+ * @brief generates a public key usign mbedtls
+ * @param bits specifies how many bits need to be zero in the hash-output
+ * @param buf is an allocated buffer for the coid
+ * @param buflen is an in/out parameter reflecting the buffer-size/actual-coin-size
+ * @return the random byte
+ *
+ * Make me a coin of the required quality/strength
+ *
+ */
+mbedtls_pk_context generate_pk(int bits, unsigned char *buf, int *buflen)
+{	
+
+}
+
 /*!
  * @brief make a coin
  * @param bits specifies how many bits need to be zero in the hash-output
@@ -80,9 +95,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	int siglen = 138;				//Length of signature (in bytes) - 8A
 	unsigned char *sigval;				//Signature value
 
-  mbedtls_pk_context key;
-  mbedtls_entropy_context entropy;
-  mbedtls_ctr_drbg_context ctr_drbg;
   int ret;
 
   //printing ciphersuite value
@@ -104,6 +116,9 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   const char *pers = "gen_key";
 
   //Initialise mbed tls functions
+  mbedtls_pk_context key;
+  mbedtls_entropy_context entropy;
+  mbedtls_ctr_drbg_context ctr_drbg;
   mbedtls_pk_init( &key );
   mbedtls_ctr_drbg_init( &ctr_drbg );
   mbedtls_entropy_init( &entropy );
@@ -138,20 +153,25 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   memcpy(keylenbuf, &newkeylen, keylenbuf_size);
   dumpbuf("Public key length:", keylenbuf, keylenbuf_size);
 
-  //Writing public key
+  //Writing public key pre-ntohl
   unsigned char key_output_buf[keylen];
   size_t key_buf_size = keylen;
   memset(key_output_buf,0xAA,keylen);
 
   ret = mbedtls_pk_write_pubkey_der( &key, key_output_buf, key_buf_size);
 
-  dumpbuf("Public key value", key_output_buf, key_buf_size);
+  dumpbuf("Public key value (pre-ntohl)", key_output_buf, key_buf_size);
+
+  //Writing public key post-ntohl
+  uint32_t long ntohlout; // scratch var to hold network byte order version of value
+
+  ntohlout=ntohl(key_output_buf); 
+  memcpy(key_outputbuf,&ntohlout,key_buf_size);
+  dumpbuf("Public key value (post-ntohl)", key_output_buf, key_buf_size);
 
   
   //Initialising SHA256 Hash
-  mbedtls_aes_context aes_ctx;
   mbedtls_md_context_t sha_ctx;
-  mbedtls_aes_init( &aes_ctx );
   mbedtls_md_init( &sha_ctx );
 
   ret = mbedtls_md_setup( &sha_ctx, mbedtls_md_info_from_type( MBEDTLS_MD_SHA256 ), 1 );
@@ -194,7 +214,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	  
 
   //Add pow length into powbuf
-  memcpy(powbuf+16+keylen+noncelen, &powlenbuf, 4);
+  memcpy(powbuf+16+keylen, &powlenbuf, 4);
  
   //SHA-256 hashing the nonce and giving pow hash
   //Generate nonce until hash LSB zero's == difficulty
@@ -206,9 +226,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	mbedtls_printf("failed!\n");
   }
 
-  //Add nonce into powbuf
-  memcpy(powbuf+16+keylen, &noncevalue, noncelen);
-  dumpbuf("Pre-hash input:", powbuf, sizeof(powbuf));
   for(i;i<1000000;i++)
   {
 	  if(checker == 1) {
@@ -218,7 +235,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	
  	  
   	  //Add nonce into powbuf
-	  memcpy(powbuf+16+keylen, &noncevalue, noncelen);
+	  memcpy(powbuf+20+keylen, &noncevalue, noncelen);
 	
 	  /*
 	  //Printing nonce value
