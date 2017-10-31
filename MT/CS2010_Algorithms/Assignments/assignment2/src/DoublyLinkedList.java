@@ -249,6 +249,9 @@ class DoublyLinkedList<T extends Comparable<T>>
     		  return true;
     	  }
     	  
+    	  else if(this.size==0){
+    		  return false;
+    	  }
     	  //Handles a DLL containing elements > 1
     	  else{
     		  //Update prev pointer of element in pos+1
@@ -377,34 +380,27 @@ class DoublyLinkedList<T extends Comparable<T>>
      */
     public T pop() 
     {
-    	DLLNode nodeToBePopped = this.tail;
+ 
+    	T data = null;
+    	
+    	if(this.size!=0){
+    		if(this.size == 1){
+    			data = this.head.data;
+    			this.head = null;
+    			this.tail = null;
+    		}
+    		
+    		else{
+    			DLLNode newLastNode = this.tail.prev;
+    			data = this.tail.data;
+    			newLastNode.next = this.tail.next;
+    			this.tail = newLastNode;
+    		}
+    		this.size--;
+    		return data;
+    	}
+    	return data;
 
-    	//Handles DLL of size 1
-    	if(this.size == 1){
-    		this.head = null;
-    		this.tail = null;
-    		this.size--;
-    		return nodeToBePopped.data;
-    	}
-    	
-    	//Handles DLL of size 2
-    	else if(this.size == 2){
-    		this.head = this.tail;
-    		this.size--;
-    		return nodeToBePopped.data;
-    	}
-    	
-    	//Handles DLL of size > 2
-    	else if(this.size > 2){
-    		this.tail = this.tail.prev;
-    		this.size--;
-    		return nodeToBePopped.data;
-    	}
-    	
-    	//Handles empty DLL
-    	else{
-    		return null;
-    	}
     }
 
     /*----------------------- QUEUE */

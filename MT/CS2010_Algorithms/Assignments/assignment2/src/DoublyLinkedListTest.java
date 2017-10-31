@@ -279,27 +279,42 @@ public class DoublyLinkedListTest
     public void testPop()
     {
     	DoublyLinkedList<Integer> testDLL = new DoublyLinkedList<Integer>();
-       
+        Integer expectedResult;
+        
     	 testDLL.insertBefore(0,1);
     	 testDLL.insertBefore(1,2);
     	 testDLL.insertBefore(2,3);
-    	 boolean testResult1 = (testDLL.pop() == 3);
-        assertTrue("Checking if method successfully pops 3 from DLL of elements > 2", testResult1);
+    	 expectedResult = 3;
+         assertEquals("Checking if method successfully pops 1 from DLL of elements > 2", expectedResult, testDLL.pop());
     
         testDLL = new DoublyLinkedList<Integer>();
         testDLL.insertBefore(0,1);
         testDLL.insertBefore(1,2);
-        boolean testResult2 = (testDLL.pop() == 2);
-       assertTrue("Checking if method successfully pops 1 from DLL of 2 elements", testResult2);
+        expectedResult = 2;
+        assertEquals("Checking if method successfully pops 1 from DLL of 2 elements", expectedResult, testDLL.pop());
+       
+       testDLL = new DoublyLinkedList<Integer>();
+       testDLL.insertBefore(0,100);
+       testDLL.insertBefore(1,200);
+       testDLL.insertBefore(2,300);
+       expectedResult = 300;
+       assertEquals("Testing pop on 3 element stack", expectedResult, testDLL.pop());
+       
        
        testDLL = new DoublyLinkedList<Integer>();
        testDLL.insertBefore(0,1);
-       boolean testResult3 = (testDLL.pop() == 1);
-      assertTrue("Checking if method successfully pops 1 from DLL of 1 element", testResult3);
+       testDLL.insertBefore(1,2);
+       expectedResult = 2;
+       assertEquals("Checking if method successfully pops 1 from DLL of 2 elements", expectedResult, testDLL.pop());
+       
+       testDLL = new DoublyLinkedList<Integer>();
+       testDLL.insertBefore(0,1);
+       expectedResult = 1;
+       assertEquals("Checking if method successfully pops 1 from DLL of 1 element", expectedResult, testDLL.pop());
       
       testDLL = new DoublyLinkedList<Integer>();
-      boolean testResult4 = (testDLL.pop() == null);
-     assertTrue("Checking if method successfully returns null for attempted pop of an empty set", testResult4);
+      expectedResult = null;
+      assertEquals("Checking if method successfully returns null for attempted pop of an empty set", expectedResult, testDLL.pop());
     }
     
   //Tests pop() method from DoublyLinkedList.java
@@ -326,9 +341,8 @@ public class DoublyLinkedListTest
       assertEquals("Checking if method successfully pushes 9 onto DLL of 1 element", "9,1", testDLL.toString());
       
       testDLL = new DoublyLinkedList<Integer>();
-      boolean testResult1 = (testDLL.pop() == null);
       testDLL.push(9);
-     assertTrue("Checking if method successfully pushes 9 onto empty DLL", testResult1);
+     assertEquals("Checking if method successfully pushes 9 onto empty DLL","9", testDLL.toString());
     }
     
     //Tests reverse() method from DoublyLinkedList.java
