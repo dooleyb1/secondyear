@@ -82,8 +82,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   mbedtls_ctr_drbg_context ctr_drbg;
   int ret;
 
-  //buffer to be placed through pow hash
-  unsigned char powbuf[12+keylen+4+noncelen];
   const char *pers = "gen_key";
 
   //Initialise mbed tls functions
@@ -122,7 +120,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 
   dumpbuf("Public key dump", key_output_buf, key_buf_size);
 
-  
+
   //Initialising SHA256 Hash
   mbedtls_aes_context aes_ctx;
   mbedtls_md_context_t sha_ctx;
@@ -134,9 +132,9 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   {
   	mbedtls_printf( "  ! mbedtls_md_setup() returned -0x%04x\n", -ret );
   }
-	
 
-  unsigned char noncevalue[noncelen]; 	
+
+  unsigned char noncevalue[noncelen];
   //SHA-256 hashing the nonce and giving pow hash
   //Generate nonce
   ret = mbedtls_ctr_drbg_random( &ctr_drbg, noncevalue, noncelen );
@@ -145,16 +143,21 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   	mbedtls_printf("failed!\n");
   }
 
+	//buffer to be placed through pow hash
+  unsigned char powbuf[12+keylen+4+noncelen];
+	size_t keylengt = keylen;
+	size_t noncelengt = noncelen;
+
   //Add ciphersuite to powbuf
-  memcpy(powbuf, &ciphersuite, 4);
+  memcpy(powbuf,ciphersuite,4);
   //Add bits to powbuf
-  memcpy(powbuf, &bits, 4);
+  memcpy(powbuf+4, bits, 4);
   //Add public key length to powbuf
-  memcpy(powbuf, &keylen, 4);
+  memcpy(powbuf+8, keylen, 4);
   //Add public key itself to powbuf
-  memcpy(powbuf, &key_output_buf, keylen);
+  memcpy(powbuf+12, key_output_buf, keylengt);
   //Add nonce into powbuf
-  memcpy(powbuf, &nonceval, noncelen);
+  memcpy(powbuf+12+keylen, noncevalue, noncelengt);
 
   unsigned char hashvalue[hashlen];
   //start hash
@@ -164,10 +167,11 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   //hashval = SHA-256(nonceval)
   mbedtls_md_finish( &sha_ctx, hashvalue );
 
-
+	size_t powsize = sizeof(powbuf);
+	dumpbuf("Dumping pow hash", hashvalue, powsize)
   //check if hashval (powhash) ending zeros equal difficulty
   //if true, finished = true
-  
+
   unsigned char signalvalue[siglen];
   size_t siglength = siglen;
   //Signing key using pow hash
