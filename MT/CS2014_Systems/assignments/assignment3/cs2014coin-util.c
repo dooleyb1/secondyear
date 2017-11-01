@@ -72,7 +72,8 @@ const char *cs2014coin_err(int errno)
 void dumpbuf(char *msg, unsigned char *buffer, int buflen)
 {
 	printf("\n%s, %x long at %p\n",msg,buflen,buffer);
-	for (int i=0;i<buflen;i++) {
+        int i = 0;
+	for (i;i<buflen;i++) {
 		//printf("i:%03d,v:%02x",i,buffer[i]);
 		printf("%02x",buffer[i]);
 		if (!((i+1)%16)) printf("\n");
