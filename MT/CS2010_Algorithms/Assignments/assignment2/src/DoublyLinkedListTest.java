@@ -89,6 +89,11 @@ public class DoublyLinkedListTest
         testResult3 = testDLL.deleteAt(1);
         assertTrue("Checking if last element deleted successfully in a DLL containing 2 elements", testResult3);
         
+        boolean testResult15 = false;
+        testDLL = new DoublyLinkedList<Integer>();
+        testResult3 = testDLL.deleteAt(1);
+        assertFalse("Checking if returns false when attempted deletion in empty DLL", testResult15);
+        
         boolean testResult10 = true;
         testDLL = new DoublyLinkedList<Integer>();
         testDLL.insertBefore(0,1);
@@ -106,14 +111,14 @@ public class DoublyLinkedListTest
         testDLL.insertBefore(0,1);
         testDLL.insertBefore(1,2);
         testResult12 = testDLL.deleteAt(50);
-        assertFalse("Checking if last element deleted successfully in a DLL containing 2 elements", testResult11);
+        assertFalse("Checking if last element deleted successfully in a DLL containing 2 elements", testResult12);
         
         boolean testResult13 = true;
         testDLL = new DoublyLinkedList<Integer>();
         testDLL.insertBefore(0,1);
         testDLL.insertBefore(1,2);
         testResult13 = testDLL.deleteAt(-10);
-        assertFalse("Checking if last element deleted successfully in a DLL containing 2 elements", testResult11);
+        assertFalse("Checking if last element deleted successfully in a DLL containing 2 elements", testResult13);
         
         boolean testResult4 = true;
         testDLL = new DoublyLinkedList<Integer>();
@@ -140,6 +145,11 @@ public class DoublyLinkedListTest
         testDLL.insertBefore(3,4);
         boolean testResult6 = testDLL.deleteAt(8);
         assertFalse("Checking if function returns false when desired index is out of bounds", testResult6);
+        
+        boolean testResult16 = false;
+        testDLL = new DoublyLinkedList<Integer>();
+        testResult3 = testDLL.deleteAt(0);
+        assertFalse("Testing deleteAt(0) when this.size == 0", testResult16);
     
     }
     
@@ -149,27 +159,23 @@ public class DoublyLinkedListTest
     {
     	DoublyLinkedList<Integer> testDLL = new DoublyLinkedList<Integer>();
        
-    	int returnVal;
+    	Integer returnVal;
     	
-    	boolean testResult1 = true;
-        testResult1 = (testDLL.dequeue()==null);
-        assertTrue("Checking if deque method returns null when called on an empty DLL", testResult1);
+    	returnVal = null;
+        assertEquals("Checking if deque method returns null when called on an empty DLL", returnVal, testDLL.dequeue());
         
 
         testDLL = new DoublyLinkedList<Integer>();
         testDLL.insertBefore(0,1);
         testDLL.insertBefore(1,2);
-        returnVal = testDLL.dequeue();
-        boolean testResult2 = (returnVal==1);
-        assertTrue("Checking deque method returns 1 when deque is called", testResult2);
+        returnVal = 1;
+        assertEquals("Checking deque method returns 1 when deque is called", returnVal, testDLL.dequeue());
         
-   
-        returnVal = 0;
+        
         testDLL = new DoublyLinkedList<Integer>();
         testDLL.insertBefore(0,1);
-        returnVal = testDLL.dequeue();
-        boolean testResult3 = (returnVal==1);
-        assertTrue("Checking deque method returns 1 when deque is called, and DLL is now empty", testResult3);
+        returnVal = 1;
+        assertEquals("Checking deque method returns 1 when deque is called, and DLL is now empty", returnVal, testDLL.dequeue());
     
     }
     
@@ -178,18 +184,19 @@ public class DoublyLinkedListTest
     public void testEnqueue()
     {
     	DoublyLinkedList<Integer> testDLL = new DoublyLinkedList<Integer>();
-       
+        Integer returnVal;
+        
     	testDLL.enqueue(1);
-        boolean testResult1 = (testDLL.dequeue()==1);
-        assertTrue("Checking if enqueue method successfully inserts 1 to DLL", testResult1);
+        returnVal = 1;
+        assertEquals("Checking if enqueue method successfully inserts 1 to DLL", returnVal, testDLL.dequeue());
         
         testDLL = new DoublyLinkedList<Integer>();
         testDLL.enqueue(6);
         testDLL.enqueue(1);
         testDLL.enqueue(9);
         testDLL.dequeue();
-        boolean testResult2 = (testDLL.dequeue()==1);
-        assertTrue("Checking enqueue method successfully inserts 3 elements correctly", testResult2);
+        returnVal = 1;
+        assertEquals("Checking enqueue method successfully inserts 3 elements correctly", returnVal, testDLL.dequeue());
     
     }
     
@@ -198,47 +205,48 @@ public class DoublyLinkedListTest
     public void testGet()
     {
     	DoublyLinkedList<Integer> testDLL = new DoublyLinkedList<Integer>();
-       
+        Integer returnVal;
+        
     	 testDLL.enqueue(6);
          testDLL.enqueue(1);
          testDLL.enqueue(9);
-        boolean testResult1 = (testDLL.get(2)==9);
-        assertTrue("Checking if get method successfully returns index 2 (tail)", testResult1);
+         returnVal = 9;
+        assertEquals("Checking if get method successfully returns index 2 (tail)", returnVal, testDLL.get(2));
         
         testDLL = new DoublyLinkedList<Integer>();
-       boolean testResult10 = (testDLL.get(-1)==null);
-       assertTrue("Checking if get method successfully returns null", testResult10);
+       returnVal = null;
+       assertEquals("Checking if get method successfully returns null", returnVal, testDLL.get(-1));
        
        testDLL = new DoublyLinkedList<Integer>();
        testDLL.enqueue(6);
        testDLL.enqueue(1);
-       boolean testResult11 = (testDLL.get(40)==null);
-       assertTrue("Checking if get method successfully returns null", testResult11);
+       returnVal = null;
+       assertEquals("Checking if get method successfully returns null", returnVal, testDLL.get(40));
        
        testDLL = new DoublyLinkedList<Integer>();
        testDLL.enqueue(6);
        testDLL.enqueue(1);
-       boolean testResult12 = (testDLL.get(50)==null);
-       assertTrue("Checking if get method successfully returns null", testResult12);
+       returnVal = null;
+       assertEquals("Checking if get method successfully returns null", returnVal, testDLL.get(50));
        
        testDLL = new DoublyLinkedList<Integer>();
        testDLL.enqueue(6);
        testDLL.enqueue(1);
-       boolean testResult13 = (testDLL.get(-10)==null);
-       assertTrue("Checking if get method successfully returns null", testResult13);
+       returnVal = null;
+       assertEquals("Checking if get method successfully returns null", returnVal, testDLL.get(-10));
        
         testDLL = new DoublyLinkedList<Integer>();
         testDLL.enqueue(6);
-       boolean testResult2 = (testDLL.get(0)==6);
-       assertTrue("Checking if get method successfully returns index 0 from 1 element DLL", testResult2);
+       returnVal = 6;
+       assertEquals("Checking if get method successfully returns index 0 from 1 element DLL",returnVal, testDLL.get(0));
        
        
        testDLL = new DoublyLinkedList<Integer>();
        testDLL.enqueue(6);
        testDLL.enqueue(1);
        testDLL.enqueue(9);
-      boolean testResult3 = (testDLL.get(0)==6);
-      assertTrue("Checking if get method successfully returns index 0 (head)", testResult3);
+       returnVal = 6;
+      assertEquals("Checking if get method successfully returns index 0 (head)", returnVal, testDLL.get(0));
       
       testDLL = new DoublyLinkedList<Integer>();
       testDLL.enqueue(6);
@@ -247,12 +255,12 @@ public class DoublyLinkedListTest
       testDLL.enqueue(6);
       testDLL.enqueue(1);
       testDLL.enqueue(9);
-     boolean testResult15 = (testDLL.get(2)==9);
-     assertTrue("Checking if get method successfully returns index 2", testResult15);
+      returnVal = 9;
+     assertEquals("Checking if get method successfully returns index 2", returnVal, testDLL.get(2));
       
       testDLL = new DoublyLinkedList<Integer>();
-      boolean testResult4 = (testDLL.get(0)==null);
-      assertTrue("Checking if get method successfully returns null for empty DLL get() call", testResult4);
+      returnVal = null;
+      assertEquals("Checking if get method successfully returns null for empty DLL get() call", returnVal, testDLL.get(0));
     
     }
    
@@ -297,7 +305,9 @@ public class DoublyLinkedListTest
        testDLL.insertBefore(0,100);
        testDLL.insertBefore(1,200);
        testDLL.insertBefore(2,300);
-       expectedResult = 300;
+       expectedResult = 100;
+       testDLL.pop();
+       testDLL.pop();
        assertEquals("Testing pop on 3 element stack", expectedResult, testDLL.pop());
        
        
