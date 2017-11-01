@@ -361,10 +361,16 @@ class DoublyLinkedList<T extends Comparable<T>>
         if (this.head != null) {
             this.head.prev = newNode;
         }
- 
+        
         //Update new head
         this.head = newNode;
         this.size++;
+        
+        if(this.size==2)
+        	this.tail = newNode.next;
+        
+        else if(this.size==1)
+        	this.tail = this.head;
     }
 
     /**
@@ -391,10 +397,9 @@ class DoublyLinkedList<T extends Comparable<T>>
     		}
     		
     		else{
-    			DLLNode newLastNode = this.tail.prev;
-    			data = this.tail.data;
-    			newLastNode.next = this.tail.next;
-    			this.tail = newLastNode;
+    			DLLNode newFirstNode = this.head.next;
+    			data = this.head.data;
+    			this.head = newFirstNode;
     		}
     		this.size--;
     		return data;

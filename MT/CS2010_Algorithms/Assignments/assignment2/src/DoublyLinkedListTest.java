@@ -292,30 +292,31 @@ public class DoublyLinkedListTest
     	 testDLL.insertBefore(0,1);
     	 testDLL.insertBefore(1,2);
     	 testDLL.insertBefore(2,3);
-    	 expectedResult = 3;
+    	 expectedResult = 1;
          assertEquals("Checking if method successfully pops 1 from DLL of elements > 2", expectedResult, testDLL.pop());
     
         testDLL = new DoublyLinkedList<Integer>();
         testDLL.insertBefore(0,1);
         testDLL.insertBefore(1,2);
-        expectedResult = 2;
+        expectedResult = 1;
         assertEquals("Checking if method successfully pops 1 from DLL of 2 elements", expectedResult, testDLL.pop());
        
-       testDLL = new DoublyLinkedList<Integer>();
-       testDLL.insertBefore(0,100);
-       testDLL.insertBefore(1,200);
-       testDLL.insertBefore(2,300);
-       expectedResult = 100;
-       testDLL.pop();
-       testDLL.pop();
-       assertEquals("Testing pop on 3 element stack", expectedResult, testDLL.pop());
+	       testDLL = new DoublyLinkedList<Integer>();
+	       testDLL.insertBefore(0,100);
+	       testDLL.insertBefore(1,200);
+	       testDLL.insertBefore(2,300);
+	       expectedResult = 300;
+	       testDLL.pop();
+	       testDLL.pop();
+	       assertEquals("Testing pop on 3 element stack", expectedResult, testDLL.pop());
        
-       
-       testDLL = new DoublyLinkedList<Integer>();
-       testDLL.insertBefore(0,1);
-       testDLL.insertBefore(1,2);
-       expectedResult = 2;
-       assertEquals("Checking if method successfully pops 1 from DLL of 2 elements", expectedResult, testDLL.pop());
+	       testDLL = new DoublyLinkedList<Integer>();
+	       testDLL.push(100);
+	       testDLL.push(200);
+	       testDLL.push(300);
+	       expectedResult = 300;
+	       assertEquals("Testing pop on 3 element stack", expectedResult, testDLL.pop());
+
        
        testDLL = new DoublyLinkedList<Integer>();
        testDLL.insertBefore(0,1);
