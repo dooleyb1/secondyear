@@ -58,7 +58,7 @@
 #define KEYLENGTH 158
 #define NONCELENGTH 32
 #define HASHLENGTH 32
-#define SIGLENGTH 138
+#define SIGLENGTH CC_BUFSIZ
 #define CIPHERSUITEVAL 0
 #define POWBUFLENGTH 242
 #define MAX_ITERATIONS 1000000
@@ -122,21 +122,22 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   int ret;
 
   //Inserting ciphersuite val to coin buffer
-  memcpy(coinbuf, &mycoin.ciphersuite, STANDARDLENGTH);
+  int value = ntohl(mycoin.ciphersuite);
+  memcpy(coinbuf, &value, STANDARDLENGTH);
   dumpbuf("Added ciphersuite:", coinbuf, 4);
  
 
   //Inserting bits(difficulty) to coin buffer
   int newbits = ntohl(mycoin.bits);
   mycoin.bits = newbits;
-  memcpy(coinbuf+4, &mycoin.bits, STANDARDLENGTH);
+  memcpy(coinbuf+4, &newbits, STANDARDLENGTH);
 
   dumpbuf("Added difficulty:", coinbuf, 8);
 
   //Inserting keylen to coin buffer
   int newkeylen = ntohl(mycoin.keylen);
   mycoin.keylen = newkeylen;
-  memcpy(coinbuf+8, &mycoin.keylen, STANDARDLENGTH);
+  memcpy(coinbuf+8, &newkeylen, STANDARDLENGTH);
   dumpbuf("Added keylength:", coinbuf, 12);
 
   //Initialise mbed tls functions
@@ -172,11 +173,11 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   
   unsigned char key_output_buf[KEYLENGTH];
   size_t key_buf_size = KEYLENGTH;
-  memset(key_output_buf,0xAA,KEYLENGTH);
+  memset(key_output_buf,0,KEYLENGTH);
 
   ret = mbedtls_pk_write_pubkey_der( &key, key_output_buf, key_buf_size);
-  memcpy(&mycoin.keyval, &key_output_buf, KEYLENGTH);
-  memcpy(coinbuf+12, &mycoin.keyval, KEYLENGTH);
+  mycoin.keyval = key_output_buf;
+  memcpy(coinbuf+12, &key_output_buf, KEYLENGTH);
   dumpbuf("Added keyval:", coinbuf, 12+KEYLENGTH);
   
  
@@ -192,7 +193,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	
   int newnoncelen = ntohl(NONCELENGTH);
   mycoin.noncelen = newnoncelen;
-  memcpy(coinbuf+12+KEYLENGTH, &mycoin.noncelen, STANDARDLENGTH);
+  memcpy(coinbuf+12+KEYLENGTH, &newnoncelen, STANDARDLENGTH);
   dumpbuf("Added nonce length:", coinbuf, 16+KEYLENGTH);
 
 
@@ -205,14 +206,14 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   }
 
   //Inserting nonce into coin buf
-  memcpy(&mycoin.nonceval, &noncevalue, NONCELENGTH);
-  memcpy(coinbuf+16+KEYLENGTH, &mycoin.nonceval, NONCELENGTH);
+  mycoin.nonceval = noncevalue;
+  memcpy(coinbuf+16+KEYLENGTH, &noncevalue, NONCELENGTH);
   dumpbuf("Added nonce value:", coinbuf, 16+KEYLENGTH+NONCELENGTH);
 
   //Inserting reversed hash length into coin buf
   int newhashlen = ntohl(HASHLENGTH);
   mycoin.hashlen = newhashlen;
-  memcpy(coinbuf+16+KEYLENGTH+NONCELENGTH, &mycoin.hashlen, STANDARDLENGTH);
+  memcpy(coinbuf+16+KEYLENGTH+NONCELENGTH, &newhashlen, STANDARDLENGTH);
   dumpbuf("Added hash length:", coinbuf, 20+KEYLENGTH+NONCELENGTH);
 
   //Add 0x00 pow value into coinbuf
@@ -223,7 +224,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   dumpbuf("Added empty hash value:", coinbuf, 20+KEYLENGTH+NONCELENGTH+HASHLENGTH);
  
   //SHA-256 hashing the nonce and giving pow hash
-  //Generate nonce
   //if checker == 1 LS0's are correct (equal to difficulty)
   int checker = 0;
 
@@ -244,7 +244,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	  mbedtls_md_finish( &sha_ctx, hashbuf );
 
 	  //check if hashval (powhash) ending zeros equal difficulty
-      checker = zero_bits(bits, hashbuf, HASHLENGTH);
+          checker = zero_bits(bits, hashbuf, HASHLENGTH);
 
  	  if(checker == 1) {
 		  printf("Success! Found correct nonce.\n");
@@ -256,8 +256,8 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 		  incr_nonce(ptr, guard_ptr);
   
 		  //Store nonce int back into buffer
-		  memcpy(&mycoin.nonceval, &noncevalue, NONCELENGTH);
-		  memcpy(coinbuf+16+KEYLENGTH, &mycoin.nonceval, NONCELENGTH);
+		  mycoin.nonceval = noncevalue;
+		  memcpy(coinbuf+16+KEYLENGTH, &noncevalue, NONCELENGTH);
       }
   }
   
@@ -269,42 +269,55 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 
 
   //Inserting correct hash value into coin buf
-  memcpy(&mycoin.hashval, &hashbuf, HASHLENGTH);
-  memcpy(coinbuf+20+KEYLENGTH+NONCELENGTH, &mycoin.hashval, HASHLENGTH);
+  mycoin.hashval = hashbuf;
+  memcpy(coinbuf+20+KEYLENGTH+NONCELENGTH, &hashbuf, HASHLENGTH);
   dumpbuf("Added correct hash value:", coinbuf, 20+KEYLENGTH+NONCELENGTH+HASHLENGTH);
 
 
+  mbedtls_md_starts( &sha_ctx );
+  mbedtls_md_update( &sha_ctx, coinbuf, 242 );
+  mbedtls_md_finish( &sha_ctx, hashbuf );
+
+
   //Signing key using pow hash
-  size_t siglength = SIGLENGTH;
-  unsigned char sigbuf[SIGLENGTH];
-  if( ( ret = mbedtls_pk_sign( &key, MBEDTLS_MD_SHA256, hashbuf, HASHLENGTH, sigbuf, &siglength,
+  size_t siglength = 150;
+  unsigned char sigbuf[150];
+  
+  if( ( ret = mbedtls_pk_sign( &key, MBEDTLS_MD_SHA256, hashbuf, 0, sigbuf, &siglength,
                        mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 )
   {
       mbedtls_printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
   }
-  
+
   //Inserting siglen to coin buf
-  int newsiglen = ntohl(SIGLENGTH);
-  mycoin.siglen = newsiglen;
-  memcpy(coinbuf+20+KEYLENGTH+NONCELENGTH+HASHLENGTH, &mycoin.siglen, STANDARDLENGTH);
+  long int k;
+  k = ntohl(siglength);
+
+  mycoin.siglen = siglength;
+  memcpy(coinbuf+242, &k, STANDARDLENGTH);
   dumpbuf("Added signature length:", coinbuf, 24+KEYLENGTH+NONCELENGTH+HASHLENGTH);
 
-
   //Inserting sigval to coin buf
-  memcpy(&mycoin.sigval, &sigbuf, SIGLENGTH);
-  memcpy(coinbuf+24+KEYLENGTH+NONCELENGTH+HASHLENGTH, &mycoin.sigval, SIGLENGTH);
-  dumpbuf("Added signature value:", coinbuf, 24+KEYLENGTH+NONCELENGTH+HASHLENGTH+SIGLENGTH);
+  mycoin.sigval = sigbuf;
+  memcpy(coinbuf+246, &sigbuf, siglength);
+  dumpbuf("Added signature value:", coinbuf, 24+KEYLENGTH+NONCELENGTH+HASHLENGTH+siglength);
+
+  //Populating actual input buffer
+  memcpy(buf, coinbuf, 246 + siglength);
+  *buflen = 246 + siglength;
+  dumpbuf("buf", buf, 246 + siglength);
 
 
  //Verifying signature
   int rv;
-  rv = mbedtls_pk_verify(&key, MBEDTLS_MD_SHA256, hashbuf, HASHLENGTH, sigbuf, SIGLENGTH);
+
+  rv = mbedtls_pk_verify(&key, MBEDTLS_MD_SHA256, hashbuf, HASHLENGTH, sigbuf, siglength);
   if (rv!=0) {
   	printf("Failed to verify signature\n");
   }
   else {
 	printf("Successfully verified signature!\n");
   }
-  int xxxx = 0;
-  return xxxx;
+
+  return (0);
 }
