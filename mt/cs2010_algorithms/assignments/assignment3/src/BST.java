@@ -30,14 +30,19 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
     // is the symbol table empty?
-    public boolean isEmpty() { return size() == 0; }
+    public boolean isEmpty() { 
+    	return size() == 0; 
+    }
 
     // return number of key-value pairs in BST
-    public int size() { return size(root); }
+    public int size() {
+    	return size(root); 
+    }
 
     // return number of key-value pairs in BST rooted at x
     private int size(Node x) {
-        if (x == null) return 0;
+        if (x == null)
+        	return 0;
         else return x.N;
     }
 
@@ -59,14 +64,25 @@ public class BST<Key extends Comparable<Key>, Value> {
      *  @param key the search key
      *  @return value associated with the given key if found, or null if no such key exists.
      */
-    public Value get(Key key) { return get(root, key); }
+    public Value get(Key key) { 
+    	return get(root, key); 
+    }
 
     private Value get(Node x, Key key) {
-        if (x == null) return null;
+        if(x == null) 
+        	return null;
+        
         int cmp = key.compareTo(x.key);
-        if      (cmp < 0) return get(x.left, key);
-        else if (cmp > 0) return get(x.right, key);
-        else              return x.val;
+        
+        
+        if(cmp < 0) 
+        	return get(x.left, key);
+        
+        else if(cmp > 0)
+        	return get(x.right, key);
+        
+        else              
+        	return x.val;
     }
 
     /**
@@ -77,20 +93,61 @@ public class BST<Key extends Comparable<Key>, Value> {
      *  @param val the value associated with key
      */
     public void put(Key key, Value val) {
-        if (val == null) { delete(key); return; }
+    	
+        if (val == null){
+        	delete(key); 
+        	return; 
+        }
+        
         root = put(root, key, val);
     }
 
     private Node put(Node x, Key key, Value val) {
-        if (x == null) return new Node(key, val, 1);
+    	
+        if (x == null) 
+        	return new Node(key, val, 1);
+        
         int cmp = key.compareTo(x.key);
-        if      (cmp < 0) x.left  = put(x.left,  key, val);
-        else if (cmp > 0) x.right = put(x.right, key, val);
-        else              x.val   = val;
+        
+        if(cmp < 0) 
+        	x.left  = put(x.left,  key, val);
+        
+        else if(cmp > 0) 
+        	x.right = put(x.right, key, val);
+        
+        else             
+        	x.val   = val;
+        
         x.N = 1 + size(x.left) + size(x.right);
         return x;
     }
 
+    /**
+     * Tree height from given node t, using recursion
+     *
+     * @param t -  node from which height below is to be calculated
+     * @return maxHeight - the highest height below node t
+     *
+     
+     */
+    public int heightOfNode(Node t){
+    	if(t==null)
+    		return -1;
+    	
+    	int heightLeft = heightOfNode(t.left);
+    	int heightRight =  heightOfNode(t.right);
+    	
+    	int maxHeight;
+    	
+    	if(heightLeft>=heightRight)
+    		maxHeight = heightLeft;
+    	
+    	else 
+    		maxHeight = heightRight;
+    	
+    	return maxHeight+1;
+    	
+    }
     /**
      * Tree height.
      *
@@ -108,8 +165,12 @@ public class BST<Key extends Comparable<Key>, Value> {
      *       D
      */
     public int height() {
-      //TODO fill in the correct implementation.
-      return -1;
+      
+    	if(root == null)
+    		return -1;
+    	
+    	int h = heightOfNode(root);
+    	return h;
     }
 
     /**
@@ -120,9 +181,12 @@ public class BST<Key extends Comparable<Key>, Value> {
      * @return the median key, or null if the tree is empty.
      */
     public Key median() {
-      if (isEmpty()) return null;
-      //TODO fill in the correct implementation. The running time should be Theta(h), where h is the height of the tree.
-      return null;
+      if (isEmpty()) 
+    	  return null;
+      
+      int medianPos = (root.N+1)/2;
+      Node returnNode = getNode(medianPos);
+     
     }
 
 
