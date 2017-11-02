@@ -64,6 +64,41 @@
 #define MAX_ITERATIONS 1000000
 
 /*!
+	 * @brief increment nonce by one, wrap around if needed
+	 * @param ptr is a pointer to just beyond the end of the nonce
+	 * @param guard_ptr is a pointer to the LHS of the buffer, beyond which we mustn't go
+	 * @return void, we make it work:-)
+	 *
+	 * This'll incrememnt the nonce starting from the end of the
+	 * buffer and walking backwards as incremented bytes wrap
+	 * around. We never fail here and do want go faster stripes.
+	 * If you provide bad input, bad things may happen!
+	 * We do depend here on the limit on iterations in the calling
+	 * code.
+	 * We'll recurse - stack hit in 1/256 calls not too bad
+	 * for this.
+	 * Guard pointer will be hit with probability ~2^248
+	 * But if it were (e.g. by a bad caller) then we'd be
+	 * sad and scribble on memory so let's not do that.
+	 * Note that if guard pointer is hit, then we'll return
+	 * an unmodified buffer (well, 2nd time), so this code
+	 * depends on the higher layer CS2014COIN_MAXITER limit
+	 * being enforced.
+	 */
+	void incr_nonce(unsigned char *ptr, unsigned char* guard_ptr)
+	{
+		if ((ptr-1)==guard_ptr) return;
+		unsigned char ch=*(ptr-1);
+		if (ch==255) {
+			incr_nonce(ptr-1,guard_ptr);
+			*(ptr-1)=0;
+		} else {
+			*(ptr-1)=(ch+1);
+		}
+		return;
+	}
+
+/*!
  * @brief make a coin
  * @param bits specifies how many bits need to be zero in the hash-output
  * @param buf is an allocated buffer for the coid
@@ -170,11 +205,9 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   }
 
   //Inserting nonce into coin buf
-  int nonceint = atoi(noncevalue);
   memcpy(&mycoin.nonceval, &noncevalue, NONCELENGTH);
   memcpy(coinbuf+16+KEYLENGTH, &mycoin.nonceval, NONCELENGTH);
   dumpbuf("Added nonce value:", coinbuf, 16+KEYLENGTH+NONCELENGTH);
-
 
   //Inserting reversed hash length into coin buf
   int newhashlen = ntohl(HASHLENGTH);
@@ -199,6 +232,8 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   int i=0;
   int newnonceint;
   unsigned char hashbuf[HASHLENGTH];
+  unsigned char *ptr = noncevalue+NONCELENGTH;
+  unsigned char *guard_ptr = noncevalue;
   for(i;i<CS2014COIN_MAXITER;i++)
   {
 	  //start hash
@@ -217,15 +252,12 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	  }
       
 	  else{
-		  //Extract nonce int and increment
-		  nonceint = atoi(noncevalue);
-		  nonceint++;
-		
+		  //Increment nonce
+		  incr_nonce(ptr, guard_ptr);
+  
 		  //Store nonce int back into buffer
-          memcpy(noncevalue, &nonceint, NONCELENGTH);
 		  memcpy(&mycoin.nonceval, &noncevalue, NONCELENGTH);
 		  memcpy(coinbuf+16+KEYLENGTH, &mycoin.nonceval, NONCELENGTH);
-		  memcpy(noncevalue, &nonceint, NONCELENGTH);
       }
   }
   
@@ -234,6 +266,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 	printf("Error, unable to produce correct nonce.");
 	return(0);
   }
+
 
   //Inserting correct hash value into coin buf
   memcpy(&mycoin.hashval, &hashbuf, HASHLENGTH);
@@ -272,7 +305,6 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   else {
 	printf("Successfully verified signature!\n");
   }
-  
   int xxxx = 0;
   return xxxx;
 }
