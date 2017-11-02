@@ -44,7 +44,7 @@
 #include "mbedtls/platform.h"
 #else
 #include <stdio.h>
-#define mbedtls_printf     printf
+#define mbedtls_//printf     //printf
 #endif
 
 #include "mbedtls/entropy.h"
@@ -112,8 +112,8 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 {
     unsigned char coinbuf[CS2014COIN_BUFSIZE];
 	cs2014coin_t mycoin;
- 	mycoin.bits = bits;				//Inserting bits 
-	mycoin.ciphersuite=CS2014COIN_CS_0;		//Ciphersuite value, default 0					
+ 	mycoin.bits = bits;				//Inserting bits
+	mycoin.ciphersuite=CS2014COIN_CS_0;		//Ciphersuite value, default 0
 	mycoin.keylen = KEYLENGTH;			        //Length of public key (in bytes) - 9E
 	mycoin.noncelen = NONCELENGTH;			//Length of nonce (in bytes) - 20
 	mycoin.hashlen = HASHLENGTH;			//Hash length (in bytes) - 20
@@ -124,21 +124,21 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   //Inserting ciphersuite val to coin buffer
   int value = ntohl(mycoin.ciphersuite);
   memcpy(coinbuf, &value, STANDARDLENGTH);
-  dumpbuf("Added ciphersuite:", coinbuf, 4);
- 
+  //dumpbuf("Added ciphersuite:", coinbuf, 4);
+
 
   //Inserting bits(difficulty) to coin buffer
   int newbits = ntohl(mycoin.bits);
   mycoin.bits = newbits;
   memcpy(coinbuf+4, &newbits, STANDARDLENGTH);
 
-  dumpbuf("Added difficulty:", coinbuf, 8);
+  //dumpbuf("Added difficulty:", coinbuf, 8);
 
   //Inserting keylen to coin buffer
   int newkeylen = ntohl(mycoin.keylen);
   mycoin.keylen = newkeylen;
   memcpy(coinbuf+8, &newkeylen, STANDARDLENGTH);
-  dumpbuf("Added keylength:", coinbuf, 12);
+  //dumpbuf("Added keylength:", coinbuf, 12);
 
   //Initialise mbed tls functions
   mbedtls_pk_context key;
@@ -154,13 +154,13 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
                              (const unsigned char *) pers,
                              strlen( pers ) ) ) != 0 )
   {
-      mbedtls_printf( " failed\n  ! mbedtls_ctr_drbg_seed returned -0x%04x\n", -ret );
+      mbedtls_//printf( " failed\n  ! mbedtls_ctr_drbg_seed returned -0x%04x\n", -ret );
   }
 
   //Setting up generating a key
   if( ( ret = mbedtls_pk_setup( &key, mbedtls_pk_info_from_type(MBEDTLS_PK_ECKEY) ) ) != 0 )
   {
-      mbedtls_printf( " failed\n  !  mbedtls_pk_setup returned -0x%04x", -ret );
+      mbedtls_//printf( " failed\n  !  mbedtls_pk_setup returned -0x%04x", -ret );
   }
 
   //Generating actual key
@@ -168,9 +168,9 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
                     mbedtls_ctr_drbg_random, &ctr_drbg );
   if( ret != 0 )
   {
-      mbedtls_printf( " failed\n  !  mbedtls_rsa_gen_key returned -0x%04x", -ret );
+      mbedtls_//printf( " failed\n  !  mbedtls_rsa_gen_key returned -0x%04x", -ret );
   }
-  
+
   unsigned char key_output_buf[KEYLENGTH];
   size_t key_buf_size = KEYLENGTH;
   memset(key_output_buf,0,KEYLENGTH);
@@ -178,9 +178,9 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   ret = mbedtls_pk_write_pubkey_der( &key, key_output_buf, key_buf_size);
   mycoin.keyval = key_output_buf;
   memcpy(coinbuf+12, &key_output_buf, KEYLENGTH);
-  dumpbuf("Added keyval:", coinbuf, 12+KEYLENGTH);
-  
- 
+  //dumpbuf("Added keyval:", coinbuf, 12+KEYLENGTH);
+
+
   //Initialising SHA256 Hash
   mbedtls_md_context_t sha_ctx;
   mbedtls_md_init( &sha_ctx );
@@ -188,41 +188,41 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   ret = mbedtls_md_setup( &sha_ctx, mbedtls_md_info_from_type( MBEDTLS_MD_SHA256 ), 1 );
   if( ret != 0 )
   {
-  	mbedtls_printf( "  ! mbedtls_md_setup() returned -0x%04x\n", -ret );
+  	mbedtls_//printf( "  ! mbedtls_md_setup() returned -0x%04x\n", -ret );
   }
-	
+
   int newnoncelen = ntohl(NONCELENGTH);
   mycoin.noncelen = newnoncelen;
   memcpy(coinbuf+12+KEYLENGTH, &newnoncelen, STANDARDLENGTH);
-  dumpbuf("Added nonce length:", coinbuf, 16+KEYLENGTH);
+  //dumpbuf("Added nonce length:", coinbuf, 16+KEYLENGTH);
 
 
-  //GenerateNonce	
-  unsigned char noncevalue[NONCELENGTH]; 
+  //GenerateNonce
+  unsigned char noncevalue[NONCELENGTH];
   ret = mbedtls_ctr_drbg_random( &ctr_drbg, noncevalue, NONCELENGTH );
   if( ret != 0 )
   {
-	mbedtls_printf("failed!\n");
+	mbedtls_//printf("failed!\n");
   }
 
   //Inserting nonce into coin buf
   mycoin.nonceval = noncevalue;
   memcpy(coinbuf+16+KEYLENGTH, &noncevalue, NONCELENGTH);
-  dumpbuf("Added nonce value:", coinbuf, 16+KEYLENGTH+NONCELENGTH);
+  //dumpbuf("Added nonce value:", coinbuf, 16+KEYLENGTH+NONCELENGTH);
 
   //Inserting reversed hash length into coin buf
   int newhashlen = ntohl(HASHLENGTH);
   mycoin.hashlen = newhashlen;
   memcpy(coinbuf+16+KEYLENGTH+NONCELENGTH, &newhashlen, STANDARDLENGTH);
-  dumpbuf("Added hash length:", coinbuf, 20+KEYLENGTH+NONCELENGTH);
+  //dumpbuf("Added hash length:", coinbuf, 20+KEYLENGTH+NONCELENGTH);
 
   //Add 0x00 pow value into coinbuf
   unsigned char zerobuf[HASHLENGTH];
   memset(zerobuf,0x00,HASHLENGTH);
   memcpy(&mycoin.hashval, &zerobuf, HASHLENGTH);
   memcpy(coinbuf+20+KEYLENGTH+NONCELENGTH, &mycoin.hashval, HASHLENGTH);
-  dumpbuf("Added empty hash value:", coinbuf, 20+KEYLENGTH+NONCELENGTH+HASHLENGTH);
- 
+  //dumpbuf("Added empty hash value:", coinbuf, 20+KEYLENGTH+NONCELENGTH+HASHLENGTH);
+
   //SHA-256 hashing the nonce and giving pow hash
   //if checker == 1 LS0's are correct (equal to difficulty)
   int checker = 0;
@@ -247,23 +247,23 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
           checker = zero_bits(bits, hashbuf, HASHLENGTH);
 
  	  if(checker == 1) {
-		  printf("Success! Found correct nonce.\n");
+		  //printf("Success! Found correct nonce.\n");
 		  break;
 	  }
-      
+
 	  else{
 		  //Increment nonce
 		  incr_nonce(ptr, guard_ptr);
-  
+
 		  //Store nonce int back into buffer
 		  mycoin.nonceval = noncevalue;
 		  memcpy(coinbuf+16+KEYLENGTH, &noncevalue, NONCELENGTH);
       }
   }
-  
+
   if(checker == 0)
   {
-	printf("Error, unable to produce correct nonce.");
+	//printf("Error, unable to produce correct nonce.");
 	return(0);
   }
 
@@ -271,7 +271,7 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   //Inserting correct hash value into coin buf
   mycoin.hashval = hashbuf;
   memcpy(coinbuf+20+KEYLENGTH+NONCELENGTH, &hashbuf, HASHLENGTH);
-  dumpbuf("Added correct hash value:", coinbuf, 20+KEYLENGTH+NONCELENGTH+HASHLENGTH);
+  //dumpbuf("Added correct hash value:", coinbuf, 20+KEYLENGTH+NONCELENGTH+HASHLENGTH);
 
 
   mbedtls_md_starts( &sha_ctx );
@@ -282,11 +282,11 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   //Signing key using pow hash
   size_t siglength = 150;
   unsigned char sigbuf[150];
-  
+
   if( ( ret = mbedtls_pk_sign( &key, MBEDTLS_MD_SHA256, hashbuf, 0, sigbuf, &siglength,
                        mbedtls_ctr_drbg_random, &ctr_drbg ) ) != 0 )
   {
-      mbedtls_printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
+      mbedtls_//printf( " failed\n  ! mbedtls_pk_sign returned -0x%04x\n", -ret );
   }
 
   //Inserting siglen to coin buf
@@ -295,17 +295,17 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 
   mycoin.siglen = siglength;
   memcpy(coinbuf+242, &k, STANDARDLENGTH);
-  dumpbuf("Added signature length:", coinbuf, 24+KEYLENGTH+NONCELENGTH+HASHLENGTH);
+  //dumpbuf("Added signature length:", coinbuf, 24+KEYLENGTH+NONCELENGTH+HASHLENGTH);
 
   //Inserting sigval to coin buf
   mycoin.sigval = sigbuf;
   memcpy(coinbuf+246, &sigbuf, siglength);
-  dumpbuf("Added signature value:", coinbuf, 24+KEYLENGTH+NONCELENGTH+HASHLENGTH+siglength);
+  //dumpbuf("Added signature value:", coinbuf, 24+KEYLENGTH+NONCELENGTH+HASHLENGTH+siglength);
 
   //Populating actual input buffer
   memcpy(buf, coinbuf, 246 + siglength);
   *buflen = 246 + siglength;
-  dumpbuf("buf", buf, 246 + siglength);
+  //dumpbuf("buf", buf, 246 + siglength);
 
 
  //Verifying signature
@@ -313,10 +313,10 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
 
   rv = mbedtls_pk_verify(&key, MBEDTLS_MD_SHA256, hashbuf, HASHLENGTH, sigbuf, siglength);
   if (rv!=0) {
-  	printf("Failed to verify signature\n");
+  	//printf("Failed to verify signature\n");
   }
   else {
-	printf("Successfully verified signature!\n");
+	//printf("Successfully verified signature!\n");
   }
 
   return (0);
