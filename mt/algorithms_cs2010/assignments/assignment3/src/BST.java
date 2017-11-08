@@ -184,8 +184,8 @@ public class BST<Key extends Comparable<Key>, Value> {
       if (isEmpty()) 
     	  return null;
       
-      int medianPos = (root.N+1)/2;
-      Node returnNode = getNode(medianPos);
+      Integer medianPos = (root.N+1)/2;
+      return (Key) medianPos;
      
     }
 
