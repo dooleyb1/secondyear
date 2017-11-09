@@ -11,7 +11,6 @@ import tcdIO.Terminal;
 public class Gateway extends Node {
 	
 	static final int DEFAULT_GATEWAY_PORT = 40000;
-	static final int DEFAULT_CLIENT_PORT = 40789;
 	static final int DEFAULT_SERVER_PORT = 50000;
 	static final String DEFAULT_DST_NODE = "localhost";	
 	
@@ -20,7 +19,7 @@ public class Gateway extends Node {
 	/*
 	 * 
 	 */
-	Gateway(Terminal terminal, String serverHost, int serverPort, String clientHost, int clientPort, int gatewayPort) {
+	Gateway(Terminal terminal, String gatewayHost, int gatewayPort) {
 		try {
 			this.terminal= terminal;
 			
@@ -34,7 +33,7 @@ public class Gateway extends Node {
 	public static void main(String[] args) {
 		try {					
 			Terminal terminal= new Terminal("Gateway");
-			(new Gateway(terminal, DEFAULT_DST_NODE, DEFAULT_SERVER_PORT, DEFAULT_DST_NODE, DEFAULT_CLIENT_PORT, DEFAULT_GATEWAY_PORT)).start();
+			(new Gateway(terminal, DEFAULT_DST_NODE, DEFAULT_GATEWAY_PORT)).start();
 			
 		} catch(java.lang.Exception e) {e.printStackTrace();}
 
@@ -60,6 +59,7 @@ public class Gateway extends Node {
 				packet.setPort(content.getDestination());
 				socket.send(packet);
 				terminal.println("\nPacket sent to server");
+				terminal.println("\n------------------------>");
 			}
 			
 			//If the packet comes from the server, send ACK to client
@@ -72,6 +72,7 @@ public class Gateway extends Node {
 				packet.setPort(content.getSource());
 				socket.send(packet);
 				terminal.println("Respone sent to client");
+				terminal.println("\n<------------------------");
 			}
 			
 			else

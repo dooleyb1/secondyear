@@ -8,8 +8,6 @@ import tcdIO.Terminal;
 
 public class Server extends Node {
 	static final int DEFAULT_PORT = 50000;
-	static int expectedSequenceNumber;
-
 	Terminal terminal;
 	HashMap<Integer, Integer> hmap = new HashMap<Integer, Integer>();
 	
@@ -19,7 +17,6 @@ public class Server extends Node {
 	Server(Terminal terminal, int port) {
 		try {
 			this.terminal= terminal;
-			this.expectedSequenceNumber = 0;
 			socket= new DatagramSocket(port);
 			listener.go();
 		}
@@ -36,27 +33,23 @@ public class Server extends Node {
 			String recievedSequenceNumber = Integer.toString(recievedPacket.getSequnceNumber());
 			terminal.println("Packet recieved at server:\n");
 			terminal.println("Sequence number of packet = " + recievedSequenceNumber);
-			Integer sourceAddress = recievedPacket.getSource();
-			Integer expectedSequenceNum = 0;
+			Integer sourceAddress = (Integer) recievedPacket.getSource();
 			
 			//If first communication
 			if(recievedPacket.getSequnceNumber() == 0) {
 				
 				//Set expected sequence num for client address to 0 
-				expectedSequenceNum = 0;
-				hmap.put(sourceAddress, expectedSequenceNum);
+				hmap.put(sourceAddress, 0);
 			}
 			
 			//Verify if sequence number is expected sequence number
-			if(recievedPacket.getSequnceNumber() == hmap.get(sourceAddress)){
+			if(recievedPacket.getSequnceNumber() == (int) hmap.get(sourceAddress)){
 
 				terminal.println("Correct expected sequence number.\n");
 				terminal.println("Contents of packet = '" + recievedPacket.toString() + "'\n");
 				
 				//Update expected sequence number and add to hmap
-				this.updateExpectedSequenceNumber();
-				expectedSequenceNum = this.getExpectedSequenceNumber();
-				hmap.put(sourceAddress, expectedSequenceNum);
+				this.updateExpectedSequenceNumber(hmap, sourceAddress);
 				
 				StringContent response = recievedPacket;
 				//Indicate ACK
@@ -72,7 +65,7 @@ public class Server extends Node {
 			else{
 				terminal.println("Incorrect sequence number.");
 				terminal.println("Contents of packet = '" + recievedPacket.toString() + "'\n");
-				terminal.println("Expected sequence number '" + this.getExpectedSequenceNumber() + "'.");
+				terminal.println("Expected sequence number '" + hmap.get(sourceAddress) + "'.");
 				terminal.println("Recieved sequence number '" + recievedPacket.getSequnceNumber() + "'.");
 				
 				StringContent response = recievedPacket;;
@@ -89,15 +82,14 @@ public class Server extends Node {
 		catch(Exception e) {e.printStackTrace();}
 	}
 	
-	public int getExpectedSequenceNumber(){
-		return expectedSequenceNumber;
+	public Integer getExpectedSequenceNumber(HashMap<Integer, Integer> hmap, Integer address){
+		return hmap.get(address);
 	}
-	
-	public void resetExpectedSequenceNumber(){
-		expectedSequenceNumber=0;
-	}
-	public void updateExpectedSequenceNumber(){
-		expectedSequenceNumber++;
+
+	public void updateExpectedSequenceNumber(HashMap<Integer, Integer> hmap, Integer address){
+		Integer temp = hmap.get(address);
+		temp++;
+		hmap.put(address, temp);
 	}
 
 	

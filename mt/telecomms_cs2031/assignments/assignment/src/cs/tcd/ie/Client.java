@@ -21,7 +21,6 @@ import tcdIO.*;
  *
  */
 public class Client extends Node {
-	static final int DEFAULT_SRC_PORT = 40789;
 	static final int DEFAULT_DST_PORT = 50000;
 	static final int DEFAULT_GATEWAY_PORT = 40000;
 	static final String DEFAULT_DST_NODE = "localhost";	
@@ -34,7 +33,7 @@ public class Client extends Node {
 	Terminal terminal;
 	//Now becomes gateway address
 	InetSocketAddress gatewayAddress;
-	
+	int sourcePortNumber;
 	/**
 	 * Constructor
 	 * 	 
@@ -46,9 +45,9 @@ public class Client extends Node {
 			
 			//Creates address for gateway
 			gatewayAddress = new InetSocketAddress(gatewayHost, gatewayPort);
-			
+			this.sourcePortNumber = srcPort;
 			//Creates socket at srcPort
-			socket= new DatagramSocket(srcPort);
+			socket= new DatagramSocket(sourcePortNumber);
 			this.seqNumber = ByteBuffer.allocate(4).putInt(0).array();
 			this.flag = ByteBuffer.allocate(4).putInt(0).array();
 			previousPacket = null;
@@ -183,15 +182,15 @@ public class Client extends Node {
 			flag = this.flag;
 		
 			//Reads and sorts the relevant information into byte arrays
-			payload = (terminal.readString("String to send: ")).getBytes();
 			int dst = terminal.readInt("Destination address: ");
+			payload = (terminal.readString("String to send: ")).getBytes();
 			dstAddress = ByteBuffer.allocate(PacketContent.DST_ADDRESS_LENGTH).putInt(dst).array();
 			//Response flag = 1 for ACK, 0 for NAK
 			responseFlag = ByteBuffer.allocate(PacketContent.RESPONSE_FLAG_LENGTH).putInt(1).array();
 			//Initialise response number at 0
 			responseNumber = ByteBuffer.allocate(PacketContent.RESPONSE_NUMBER_LENGTH).putInt(0).array();
 			System.out.print(ByteBuffer.wrap(dstAddress).getInt());
-			srcAddress = ByteBuffer.allocate(PacketContent.SRC_ADDRESS_LENGTH).putInt(DEFAULT_SRC_PORT).array();
+			srcAddress = ByteBuffer.allocate(PacketContent.SRC_ADDRESS_LENGTH).putInt(this.sourcePortNumber).array();
 			
 			//Creates a buffer to contain the information
 			buffer= new byte[PacketContent.HEADER_LENGTH + payload.length];
