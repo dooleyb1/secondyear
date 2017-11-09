@@ -3,7 +3,7 @@ package cs.tcd.ie;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.Arrays;
-
+import java.util.HashMap;
 import tcdIO.Terminal;
 
 public class Server extends Node {
@@ -11,6 +11,7 @@ public class Server extends Node {
 	static int expectedSequenceNumber;
 
 	Terminal terminal;
+	HashMap<Integer, Integer> hmap = new HashMap<Integer, Integer>();
 	
 	/*
 	 * 
@@ -35,14 +36,27 @@ public class Server extends Node {
 			String recievedSequenceNumber = Integer.toString(recievedPacket.getSequnceNumber());
 			terminal.println("Packet recieved at server:\n");
 			terminal.println("Sequence number of packet = " + recievedSequenceNumber);
+			Integer sourceAddress = recievedPacket.getSource();
+			Integer expectedSequenceNum = 0;
+			
+			//If first communication
+			if(recievedPacket.getSequnceNumber() == 0) {
+				
+				//Set expected sequence num for client address to 0 
+				expectedSequenceNum = 0;
+				hmap.put(sourceAddress, expectedSequenceNum);
+			}
 			
 			//Verify if sequence number is expected sequence number
-			if(recievedPacket.getSequnceNumber() == this.getExpectedSequenceNumber()){
+			if(recievedPacket.getSequnceNumber() == hmap.get(sourceAddress)){
 
 				terminal.println("Correct expected sequence number.\n");
 				terminal.println("Contents of packet = '" + recievedPacket.toString() + "'\n");
 				
+				//Update expected sequence number and add to hmap
 				this.updateExpectedSequenceNumber();
+				expectedSequenceNum = this.getExpectedSequenceNumber();
+				hmap.put(sourceAddress, expectedSequenceNum);
 				
 				StringContent response = recievedPacket;
 				//Indicate ACK
