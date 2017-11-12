@@ -109,15 +109,19 @@ public class BST<Key extends Comparable<Key>, Value> {
         
         int cmp = key.compareTo(x.key);
         
+        //If key < Node.key place node left
         if(cmp < 0) 
         	x.left  = put(x.left,  key, val);
         
+        //Else if key > Node.key place node right
         else if(cmp > 0) 
         	x.right = put(x.right, key, val);
         
+        //Else set Node.value = val
         else             
         	x.val   = val;
         
+        //Update Node.N
         x.N = 1 + size(x.left) + size(x.right);
         return x;
     }
