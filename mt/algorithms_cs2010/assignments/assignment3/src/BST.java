@@ -117,7 +117,7 @@ public class BST<Key extends Comparable<Key>, Value> {
         else if(cmp > 0) 
         	x.right = put(x.right, key, val);
         
-        //Else set Node.value = val
+        //Else set Node.value = val (override value)
         else             
         	x.val   = val;
         
@@ -125,6 +125,32 @@ public class BST<Key extends Comparable<Key>, Value> {
         x.N = 1 + size(x.left) + size(x.right);
         return x;
     }
+
+    /**
+     * Tree height.
+     *
+     * Asymptotic worst-case running time using Theta notation: TODO
+     *
+     * @return the number of links from the root to the deepest leaf.
+     *
+     * Example 1: for an empty tree this should return -1.
+     * Example 2: for a tree with only one node it should return 0.
+     * Example 3: for the following tree it should return 2.
+     *   B
+     *  / \
+     * A   C
+     *      \
+     *       D
+     */
+    public int height() {
+      
+    	if(root == null)
+    		return -1;
+    	
+    	int h = heightOfNode(root);
+    	return h;
+    }
+    
 
     /**
      * Tree height from given node t, using recursion
@@ -152,30 +178,6 @@ public class BST<Key extends Comparable<Key>, Value> {
     	return maxHeight+1;
     	
     }
-    /**
-     * Tree height.
-     *
-     * Asymptotic worst-case running time using Theta notation: TODO
-     *
-     * @return the number of links from the root to the deepest leaf.
-     *
-     * Example 1: for an empty tree this should return -1.
-     * Example 2: for a tree with only one node it should return 0.
-     * Example 3: for the following tree it should return 2.
-     *   B
-     *  / \
-     * A   C
-     *      \
-     *       D
-     */
-    public int height() {
-      
-    	if(root == null)
-    		return -1;
-    	
-    	int h = heightOfNode(root);
-    	return h;
-    }
 
     /**
      * Median key.
@@ -187,10 +189,14 @@ public class BST<Key extends Comparable<Key>, Value> {
     public Key median() {
       if (isEmpty()) 
     	  return null;
-      
-      int medianPos = (root.N+1)/2;
-      return getKeyAt(medianPos);
      
+      else 
+    	  return median(root);
+    }
+    
+    private Key median (Node x) {
+    	int medianPos = (int) ((size()-1)/2);
+        return getKeyAt(medianPos);
     }
     
     public Key getKeyAt(int x) {
@@ -210,13 +216,20 @@ public class BST<Key extends Comparable<Key>, Value> {
     	
     	//If x is right of current node... adjusting for keys ignored on left
     	else if(sizeLeft<x)
-    		return getKeyAt(node.right, x-sizeLeft-1);
+    		return getKeyAt(node.right, (x-sizeLeft-1));
     	
     	else
     		return node.key;	
     	
     }
 
+    /** Returns the key for a given node */
+    public Key getNodeKey(Node x) {
+    	if (x==null)
+    		return null;
+    	else
+    		return x.key;
+    }
     /**
      * Print all keys of the tree in a sequence, in-order.
      * That is, for each node, the keys in the left subtree should appear before the key in the node.
@@ -311,9 +324,6 @@ public class BST<Key extends Comparable<Key>, Value> {
     
 	private Node delete(Node node, Key key) {
 
-		if (node == null)
-			return null;
-
 		// Create comparison int for input key
 		int cmp = key.compareTo(node.key);
 
@@ -355,27 +365,29 @@ public class BST<Key extends Comparable<Key>, Value> {
 	public Node floor (Key key) {
 		return floor(root, key);
 	}
-	
+
 	private Node floor(Node node, Key key)
 	{
 		if (node == null) 
 			return null;
 		
-		int cmp = key.compareTo(node.key);
-		
-		if (cmp == 0)
-			return node;
-		
-		if (cmp < 0) 
-			return floor(node.left, key);
-		
 		else {
-			Node temp = floor(node.right, key);
+			int cmp = key.compareTo(node.key);
 			
-			if (temp != null) 
-				return temp;
-			else 
+			if (cmp == 0)
 				return node;
+			
+			else if (cmp < 0)
+				return floor(node.left, key);
+		
+			else {
+				Node temp = floor(node.right, key);
+				
+				if (temp != null) 
+					return temp;
+				else 
+					return node;
+			}
 		}
 	}
 	
@@ -383,7 +395,7 @@ public class BST<Key extends Comparable<Key>, Value> {
      * Removes the largest key after a given node
      *
      */
-
+	
     private Node deleteMax(Node node) {
         if (node.right == null) 
         	return node.left;
