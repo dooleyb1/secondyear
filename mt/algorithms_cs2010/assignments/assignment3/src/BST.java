@@ -188,11 +188,34 @@ public class BST<Key extends Comparable<Key>, Value> {
       if (isEmpty()) 
     	  return null;
       
-      Integer medianPos = (root.N+1)/2;
-      return (Key) medianPos;
+      int medianPos = (root.N+1)/2;
+      return getKeyAt(medianPos);
      
     }
+    
+    public Key getKeyAt(int x) {
+        return getKeyAt(root, x);
+      }
 
+    private Key getKeyAt(Node node, int x) {
+    	if(node == null)
+    		return null;
+    	
+    	//Get number of key-value pairs in left subtree
+    	int sizeLeft = size(node.left);
+    	
+    	//If x is on left of current node
+    	if(sizeLeft>x)
+    		return getKeyAt(node.left, x);
+    	
+    	//If x is right of current node... adjusting for keys ignored on left
+    	else if(sizeLeft<x)
+    		return getKeyAt(node.right, x-sizeLeft-1);
+    	
+    	else
+    		return node.key;	
+    	
+    }
 
     /**
      * Print all keys of the tree in a sequence, in-order.
@@ -216,19 +239,62 @@ public class BST<Key extends Comparable<Key>, Value> {
      * @return a String with all keys in the tree, in order, parenthesized.
      */
     public String printKeysInOrder() {
-      if (isEmpty()) return "()";
-      // TODO fill in the correct implementation
-      return null;
+      if (isEmpty()) 
+    	  return "()";
+      
+      else 
+    	  return printKeysInOrder(root);
     }
     
+    private String printKeysInOrder(Node node) {
+    	
+    	//Initialise string 
+    	String resultString = "";
+    	
+    	if(node == null)
+    		return "()";
+    	
+    	//Iterate through all subtrees recursively from node printing with the correct parenthesice's
+    	else {
+    		resultString += "(";
+    		resultString += printKeysInOrder(node.left);
+    		resultString += node.key;
+    		resultString += printKeysInOrder(node.right);
+    		resultString += ")";
+    	}
+    	
+    	return resultString;
+    	
+    }
     /**
      * Pretty Printing the tree. Each node is on one line -- see assignment for details.
      *
      * @return a multi-line string with the pretty ascii picture of the tree.
      */
     public String prettyPrintKeys() {
-      //TODO fill in the correct implementation.
-      return null;
+      if(isEmpty())
+    	  return null;
+      
+      else
+    	 return prettyPrintKeys(root, "");
+    }
+    
+    private String prettyPrintKeys(Node node, String prefix) {
+    	String resultString = "";
+    	
+    	if(node == null) 
+    		return resultString;
+    	
+    	else {
+    		//Print first value of tree/subtree and pretty characters (-)
+    		resultString += (prefix + "-" + node.val + "\n");
+    		//Recursively print left subtree and pretty characters ( |)
+    		resultString += prettyPrintKeys(node.left, prefix+" |");
+    		//Recursively print right subtree and pretty characters
+    		resultString += prettyPrintKeys(node.left, prefix+"  ");
+    	}
+    	
+    	return resultString;
     }
 
     /**
@@ -240,7 +306,95 @@ public class BST<Key extends Comparable<Key>, Value> {
      * @param key the key to delete
      */
     public void delete(Key key) {
-      //TODO fill in the correct implementation.
+    	if (isEmpty() || !contains(key)) {
+      	  return;
+        }
+        else
+      	  root = delete(root, key);
+    }
+    
+	private Node delete(Node node, Key key) {
+
+		if (node == null)
+			return null;
+
+		// Create comparison int for input key
+		int cmp = key.compareTo(node.key);
+
+		// If key is less than key of current node recursively search left subtree
+		if (cmp < 0)
+			node.left = delete(node.left, key);
+
+		// If key is more than key of current node recursively search right subtree
+		else if (cmp > 0)
+			node.right = delete(node.left, key);
+
+		// If key is equal to key of current node, replace with predecessor
+		else {
+			if (node.left == null)
+				return node.right;
+
+			if (node.right == null)
+				return node.left;
+
+			// Node to be deleted
+			Node temp = node;
+
+			// Set input node to the largest key <= to node to be deleted
+			node = floor(temp.left, node.key);
+
+			// Update left pointer
+			node.left = deleteMax(temp.left);
+
+			// Update right pointer
+			node.right = temp.right;
+		}
+		node.N = size(node.left) + size(node.right) + 1;
+		return node;
+	}
+
+	/*
+	 * Returns the largest key in the symbol table less than or equal to key
+	 */
+	public Node floor (Key key) {
+		return floor(root, key);
+	}
+	
+	private Node floor(Node node, Key key)
+	{
+		if (node == null) 
+			return null;
+		
+		int cmp = key.compareTo(node.key);
+		
+		if (cmp == 0) 
+			return node;
+		
+		if (cmp < 0) 
+			return floor(node.left, key);
+		
+		else {
+			Node temp = floor(node.right, key);
+			
+			if (temp != null) 
+				return temp;
+			else 
+				return node;
+		}
+	}
+	
+	   /**
+     * Removes the largest key after a given node
+     *
+     */
+
+    private Node deleteMax(Node node) {
+        if (node.right == null) 
+        	return node.left;
+        
+        node.right = deleteMax(node.right);
+        node.N = size(node.left) + size(node.right) + 1;
+        return node;
     }
 
 }
