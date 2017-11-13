@@ -272,10 +272,6 @@ public class BST<Key extends Comparable<Key>, Value> {
      * @return a multi-line string with the pretty ascii picture of the tree.
      */
     public String prettyPrintKeys() {
-      if(isEmpty())
-    	  return null;
-      
-      else
     	 return prettyPrintKeys(root, "");
     }
     
@@ -283,15 +279,15 @@ public class BST<Key extends Comparable<Key>, Value> {
     	String resultString = "";
     	
     	if(node == null) 
-    		return resultString;
+    		return (prefix + "-null\n");
     	
     	else {
     		//Print first value of tree/subtree and pretty characters (-)
-    		resultString += (prefix + "-" + node.val + "\n");
+    		resultString += prefix + "-" + node.val + "\n";
     		//Recursively print left subtree and pretty characters ( |)
-    		resultString += prettyPrintKeys(node.left, prefix+" |");
+    		resultString += prettyPrintKeys(node.left, (prefix+" |"));
     		//Recursively print right subtree and pretty characters
-    		resultString += prettyPrintKeys(node.left, prefix+"  ");
+    		resultString += prettyPrintKeys(node.right, (prefix+"  "));
     	}
     	
     	return resultString;
@@ -327,7 +323,7 @@ public class BST<Key extends Comparable<Key>, Value> {
 
 		// If key is more than key of current node recursively search right subtree
 		else if (cmp > 0)
-			node.right = delete(node.left, key);
+			node.right = delete(node.right, key);
 
 		// If key is equal to key of current node, replace with predecessor
 		else {
@@ -367,7 +363,7 @@ public class BST<Key extends Comparable<Key>, Value> {
 		
 		int cmp = key.compareTo(node.key);
 		
-		if (cmp == 0) 
+		if (cmp == 0)
 			return node;
 		
 		if (cmp < 0) 
