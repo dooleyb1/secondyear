@@ -1,0 +1,35 @@
+	
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE Student_Info [ <!ELEMENT Student_Info (Student)*>
+<!ELEMENT Student (name, student_id, favourite_music_groups, favourite_county, expected_date_of_graduation)>
+<!ELEMENT name   (first_name, middle_name,surname)>
+<!ELEMENT first_name (#PCDATA)>
+<!ELEMENT middle_name (#PCDATA)>
+<!ELEMENT surname (#PCDATA)>
+<!ELEMENT student_id (#PCDATA)>
+<!ELEMENT favourite_music_goups (group+)>
+<!ELEMENT group_name (#PCDATA)>
+<!ELEMENT favourite_county (#PCDATA)>
+<!ELEMENT exected_date_of_graduation (#PCDATA)>
+<!ATTLIST Student student_id CDATA #REQUIRED>
+]>
+
+<Student_Info>
+  <Student  student_id="105">
+    <name>
+	<first_name>Brandon</first_name>
+	<middle_name>Paul</middle_name>
+	<surname>Dooley</surname>
+    </name>
+    <Department>Design Department</Department>
+    <Telephone>03-1452-4567</Telephone>
+    <Email>okamura@xmltr.co.jp</Email>
+  </Employee>
+  <Employee  Employee_Number="109">
+    <Name>Aiko Tanaka</Name>
+    <Department>Sales Department</Department>
+    <Telephone>03-6459-98764</Telephone>
+    <Email>tanaka@xmltr.co.jp</Email>
+  </Employee>
+</Employee_Info>
