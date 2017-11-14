@@ -379,7 +379,7 @@ public class BST<Key extends Comparable<Key>, Value> {
 			
 			else if (cmp < 0)
 				return floor(node.left, key);
-		
+	
 			else {
 				Node temp = floor(node.right, key);
 				
