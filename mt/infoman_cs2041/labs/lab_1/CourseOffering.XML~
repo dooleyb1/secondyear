@@ -1,4 +1,6 @@
 
+<?xml version="1.0" encoding="UTF-8"?>
+
 <!DOCTYPE CourseOffering [
 <!ELEMENT CourseOffering (year, semester, enrolment_quota, enrolment_open, student+)>
 <!ELEMENT year (#PCDATA)>

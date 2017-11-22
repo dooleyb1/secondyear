@@ -1,5 +1,4 @@
-	
-<?xml version="1.0" encoding="UTF-8"?>
+
 
 <!DOCTYPE Employee_Info [ <!ELEMENT Employee_Info (Employee)*>
 <!ELEMENT Employee (Name, Department, Telephone, Email)>

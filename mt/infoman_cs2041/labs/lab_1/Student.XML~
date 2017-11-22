@@ -1,4 +1,5 @@
 
+<?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE Student_Info [ <!ELEMENT Student_Info (Student)*>
 <!ELEMENT Student (name, favourite_music_groups, favourite_county, expected_date_of_graduation)>
