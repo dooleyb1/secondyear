@@ -28,7 +28,7 @@ static char *hversion="\t\t tree v1.7.0 %s 1996 - 2014 by Steve Baker and Thomas
 /* Globals */
 bool dflag, lflag, pflag, sflag, Fflag, aflag, fflag, uflag, gflag;
 bool qflag, Nflag, Qflag, Dflag, inodeflag, devflag, hflag, Rflag;
-bool Hflag, siflag, cflag, Xflag, Jflag, duflag, pruneflag;
+bool Hflag, siflag, cflag, Zflag, Xflag, Jflag, duflag, pruneflag;
 bool noindent, force_color, nocolor, xdev, noreport, nolinks, flimit, dirsfirst;
 bool ignorecase, matchdirs;
 bool reverse;
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
   aflag = dflag = fflag = lflag = pflag = sflag = Fflag = uflag = gflag = FALSE;
   Dflag = qflag = Nflag = Qflag = Rflag = hflag = Hflag = siflag = cflag = FALSE;
   noindent = force_color = nocolor = xdev = noreport = nolinks = reverse = FALSE;
-  ignorecase = matchdirs = dirsfirst = inodeflag = devflag = Xflag = Jflag = FALSE;
+  ignorecase = matchdirs = dirsfirst = inodeflag = devflag = Xflag = Zflag = Jflag = FALSE;
   duflag = pruneflag = FALSE;
   flimit = 0;
   dirs = xmalloc(sizeof(int) * (maxdirs=4096));
@@ -204,6 +204,8 @@ int main(int argc, char **argv)
 	case 'D':
 	  Dflag = TRUE;
 	  break;
+        case 'Z':
+	  Zflag = TRUE;
 	case 't':
 	  cmpfunc = mtimesort;
 	  break;
@@ -1162,6 +1164,10 @@ static char *month[] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
 
+static char *day[] = {
+  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+};
+
 #define SIXMONTHS (6*31*24*60*60)
 
 char *do_date(time_t t)
@@ -1177,10 +1183,28 @@ char *do_date(time_t t)
   } else {
     time_t c = time(0);
     if (t > c) return " The Future ";
+    //Prints Months
     sprintf(buf,"%s %2d",month[tm->tm_mon],tm->tm_mday);
+    printf("Day found is %s",day[tm->tm_wday]);
     if (t+SIXMONTHS < c) sprintf(buf+6,"  %4d",1900+tm->tm_year);
     else sprintf(buf+6," %2d:%02d",tm->tm_hour,tm->tm_min);
   }
+  return buf;
+}
+
+char *do_happy_friday(time_t t)
+{
+  static char buf[256];
+  struct tm *tm;
+
+  tm = localtime(&t);
+
+  time_t c = time(0);
+  if (t > c) return " The Future ";
+
+  sprintf(buf,"%s %2d",month[tm->tm_mon],tm->tm_mday);
+  sprintf(buf, "Day found is %s",day[tm->tm_wday]);
+    
   return buf;
 }
 
@@ -1283,6 +1307,7 @@ char *fillinfo(char *buf, struct _info *ent)
   if (gflag) n += sprintf(buf+n, " %-8.32s", gidtoname(ent->gid));
   if (sflag) n += psize(buf+n,ent->size);
   if (Dflag) n += sprintf(buf+n, " %s", do_date(cflag? ent->ctime : ent->mtime));
+  if (Zflag) n += sprintf(buf+n, " %s", do_happy_friday(ent->mtime));
   
   return buf;
 }
