@@ -152,6 +152,11 @@ off_t unix_listdir(char *d, int *dt, int *ft, u_long lev, dev_t dev);
 off_t unix_rlistdir(char *d, int *dt, int *ft, u_long lev, dev_t dev);
 void r_listdir(struct _info **dir, char *d, int *dt, int *ft, u_long lev);
 
+/* cs2014.c */
+off_t cs2014_listdir(char *d, int *dt, int *ft, u_long lev, dev_t dev);
+off_t cs2014_rlistdir(char *d, int *dt, int *ft, u_long lev, dev_t dev);
+void cs2014_r_listdir(struct _info **dir, char *d, int *dt, int *ft, u_long lev);
+
 /* html.c */
 void emit_html_header(const char *charset, char *title, char *version);
 off_t html_listdir(char *d, int *dt, int *ft, u_long lev, dev_t dev);

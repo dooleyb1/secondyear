@@ -206,6 +206,7 @@ int main(int argc, char **argv)
 	  break;
         case 'Z':
 	  Zflag = TRUE;
+	  break;
 	case 't':
 	  cmpfunc = mtimesort;
 	  break;
@@ -471,7 +472,13 @@ int main(int argc, char **argv)
     listdir = needfulltree ? json_rlistdir : json_listdir;
     colorize = FALSE;
     colored = FALSE; /* Do people want colored JSON output? */
-  } else {
+  } 
+    //Else list as happy friday directory
+    else if (Zflag) {
+    listdir = needfulltree? cs2014_rlistdir : cs2014_listdir;
+  } 
+    //Else list as unix directory 
+    else {
     listdir = needfulltree ? unix_rlistdir : unix_listdir;
   }
   if (dflag) pruneflag = FALSE;	/* You'll just get nothing otherwise. */
@@ -1164,8 +1171,8 @@ static char *month[] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
 
-static char *day[] = {
-  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+static char *happy[] = {
+  "HAPPY SUNDAY!!! ", "HAPPY MONDAY!!! ", "HAPPY TUESDAY!!! ", "HAPPY WEDNESDAY!!! ", "HAPPY THURSDAY!!! ", "HAPPY FRIDAY!!! ", "HAPPY SATURDAY!!! "   
 };
 
 #define SIXMONTHS (6*31*24*60*60)
@@ -1185,7 +1192,6 @@ char *do_date(time_t t)
     if (t > c) return " The Future ";
     //Prints Months
     sprintf(buf,"%s %2d",month[tm->tm_mon],tm->tm_mday);
-    printf("Day found is %s",day[tm->tm_wday]);
     if (t+SIXMONTHS < c) sprintf(buf+6,"  %4d",1900+tm->tm_year);
     else sprintf(buf+6," %2d:%02d",tm->tm_hour,tm->tm_min);
   }
@@ -1201,9 +1207,10 @@ char *do_happy_friday(time_t t)
 
   time_t c = time(0);
   if (t > c) return " The Future ";
-
-  sprintf(buf,"%s %2d",month[tm->tm_mon],tm->tm_mday);
-  sprintf(buf, "Day found is %s",day[tm->tm_wday]);
+  
+  
+  if(tm->tm_wday == 5)
+    sprintf(buf,"%s ",happy[5]);
     
   return buf;
 }
