@@ -1171,10 +1171,6 @@ static char *month[] = {
   "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
 
-static char *happy[] = {
-  "HAPPY SUNDAY!!! ", "HAPPY MONDAY!!! ", "HAPPY TUESDAY!!! ", "HAPPY WEDNESDAY!!! ", "HAPPY THURSDAY!!! ", "HAPPY FRIDAY!!! ", "HAPPY SATURDAY!!! "   
-};
-
 #define SIXMONTHS (6*31*24*60*60)
 
 char *do_date(time_t t)
@@ -1199,21 +1195,19 @@ char *do_date(time_t t)
 }
 
 char *do_happy_friday(time_t t)
-{
-  static char buf[256];
-  struct tm *tm;
+ {
+   static char buf[256];
+   struct tm *tm;
+ 
+   tm = localtime(&t);
+ 
+   time_t c = time(0);
+   if (t > c) return " The Future ";
+   sprintf(buf,"%d",tm->tm_wday);
+     
+   return buf;
+ }
 
-  tm = localtime(&t);
-
-  time_t c = time(0);
-  if (t > c) return " The Future ";
-  
-  
-  if(tm->tm_wday == 5)
-    sprintf(buf,"%s ",happy[5]);
-    
-  return buf;
-}
 
 
 void printit(char *s)

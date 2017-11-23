@@ -80,10 +80,9 @@ off_t cs2014_listdir(char *d, int *dt, int *ft, u_long lev, dev_t dev)
     if (!noindent) indent(lev);
 
     fillinfo(path,*dir);
-    if (path[0] == ' ') {
-      fprintf(outfile, "%s ",path);
+    if (path[1] == '5') {
+      fprintf(outfile, "HAPPY FRIDAY!!! ");
     }
-    
     
     if (colorize) {
       if ((*dir)->lnk && linktargetcolor) colored = color((*dir)->lnkmode,(*dir)->name,(*dir)->orphan,FALSE);
