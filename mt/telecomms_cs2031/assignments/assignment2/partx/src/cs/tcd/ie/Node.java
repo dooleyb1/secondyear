@@ -8,7 +8,20 @@ import java.util.concurrent.CountDownLatch;
 
 public abstract class Node {
 	static final int PACKETSIZE = 65536;
-	static final int CONTROLLER_PORT = 40009;
+
+	static final String DEFAULT_DST_NODE = "localhost";
+	
+	static final int END_USER_1_PORT = 40700;
+	static final int END_USER_2_PORT = 40701;
+	
+	public static final int ROUTER_1_PORT = 40789;
+	public static final int ROUTER_2_PORT= 40790;
+	public static final int ROUTER_3_PORT = 40791;
+	
+	public static final int ROUTE_ID_1 = 1; //ROUTE_ID_1 is when E1 sends packet to E2
+	public static final int ROUTE_ID_2 = 2; //ROUTE_ID_2 is when E2 sends packet to E1
+	
+	public static final int CONTROLLER_PORT = 50000;
 
 	DatagramSocket socket;
 	Listener listener;

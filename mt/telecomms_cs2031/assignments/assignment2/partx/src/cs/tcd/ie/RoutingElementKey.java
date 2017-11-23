@@ -2,13 +2,13 @@ package cs.tcd.ie;
 
 public class RoutingElementKey {
 	
-	int inPort;
-	int outPort;
+	int hopCount;
+	int nextDest;
 	
 	
-	public RoutingElementKey(int inPort, int outPort) {
-	    this.inPort=inPort;
-	    this.outPort = outPort;
+	public RoutingElementKey(int hopCount, int nextDest) {
+	    this.hopCount=hopCount;
+	    this.nextDest = nextDest;
 	  }
 }
 	

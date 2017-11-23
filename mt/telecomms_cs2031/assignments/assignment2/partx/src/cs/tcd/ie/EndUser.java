@@ -21,7 +21,6 @@ import tcdIO.*;
  *
  */
 public class EndUser extends Node {
-	static final String DEFAULT_DST_NODE = "localhost";
 	
 	//Flag = 0 if coming from client, flag = 1 if coming from router
 	byte[] flag; 
@@ -45,7 +44,7 @@ public class EndUser extends Node {
 			//Creates socket at srcPort (EndUser)
 			socket= new DatagramSocket(sourcePortNumber);
 			
-			//Set flag =0, coming from EndUser
+			//Set flag =0, coming from EndUser (entering network)
 			this.flag = ByteBuffer.allocate(4).putInt(0).array();
 			listener.go();
 		}
