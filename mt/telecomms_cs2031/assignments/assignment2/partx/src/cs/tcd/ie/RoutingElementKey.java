@@ -10,5 +10,9 @@ public class RoutingElementKey {
 	    this.hopCount=hopCount;
 	    this.nextDest = nextDest;
 	  }
+	
+	public void setNextHop(int nextHop) {
+		this.nextDest = nextHop;
+	}
 }
 	

@@ -107,7 +107,8 @@ public class EndUser extends Node {
 		
 
 		terminal.println("\nSending packet to router at : " + this.connectedRouterPort + "...");
-		packet = new DatagramPacket(buffer, buffer.length, this.connectedRouterPort);
+		packet = new DatagramPacket(buffer, buffer.length);
+		packet.setPort(this.connectedRouterPort);
 		socket.send(packet);
 		terminal.println("Packet sent to router\n");
 

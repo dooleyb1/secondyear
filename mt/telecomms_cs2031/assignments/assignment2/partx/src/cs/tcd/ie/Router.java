@@ -1,6 +1,7 @@
 package cs.tcd.ie;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -18,7 +19,7 @@ public class Router extends Node {
 	int routerPort;
 	
 	/*
-	 * Hashmap to store routing table within 
+	 * routingMap == Hashmap to store routing table within 
 	 * - <Integer> = destination address
 	 * - <RoutingElementKey> = object that holds hopCount (cost) and nextHop for each respective destination address;
 	 */
@@ -50,7 +51,7 @@ public class Router extends Node {
 		this.initialiseDistanceMap();
 		terminal.println("Sucess\n");
 		
-		terminal.println("Initialising distance map at router (" + this.routerPort + ")...");
+		terminal.println("Initialising routing map at router (" + this.routerPort + ")...");
 		this.initialiseRoutingMap();
 		terminal.println("Sucess\n");
 		
@@ -114,7 +115,6 @@ public class Router extends Node {
 	}
 	
 	public void printDistanceMap() {
-		int i = 1;
 		int address;
 		int distance;
 		
@@ -132,7 +132,6 @@ public class Router extends Node {
 	}
 	
 	public void printRoutingMap() {
-		int i = 1;
 		RoutingElementKey routingKey;
 		int address;
 		int hopCount;
@@ -156,52 +155,86 @@ public class Router extends Node {
 	public void onReceipt(DatagramPacket packet) {
 		try {
 			
-			terminal.println("\nPacket recieved at router (" + this.routerPort + ")");
+			terminal.println("\nPacket recieved at router (" + this.routerPort + ")...");
 			StringContent content = new StringContent(packet);
 			
 			//If packet is from controller, process flow update
 			if(content.getSource() == CONTROLLER_PORT) {
+				terminal.println("\nPacket received from Controller...");
+				terminal.println("Processing controller update...\n");
 				processControllerUpdate(packet);
+				continueTransmission(content, packet);
 			}
 			
 			//If packet is not from controller, continue with flow
 			else {
-			
-				//If router has routing knowledge of how to get to destination, send packet to next router
-				if(this.routingMap.containsKey(content.getDestination())){
-					content.incrementHopCount();
-					RoutingElementKey key = routingMap.get(content.getDestination());
-					int nextHop = key.nextDest;
-					
-					//Set dst port of packet to that of the next router
-					DatagramPacket updatedPacket = content.toDatagramPacket();
-					updatedPacket.setPort(nextHop);
-					
-					socket.send(updatedPacket);
-					terminal.println("\nPacket sent to next router(" + nextHop + ")...");	
-				}
-				
-				//If routing knowledge unknown, contact controller for update
-				else {
-					getRoutingPath(packet);
-				}	
+				continueTransmission(content, packet);
 			}
 		}
 		catch(Exception e) {e.printStackTrace();}
 	}
 	
 	/*
-	 * Contacts controller to find out routing path for the new packet
+	 * continueTransmission()
 	 */
-	public void getRoutingPath(DatagramPacket packet) {
+	public void continueTransmission(StringContent content, DatagramPacket packet) throws IOException {
 		
+		//If router has routing knowledge of how to get to destination, send packet to next router
+		if(this.routingMap.containsKey(content.getDestination())){
+			content.incrementHopCount();
+			RoutingElementKey key = routingMap.get(content.getDestination());
+			int nextHop = key.nextDest;
+			
+			//Set dst port of packet to that of the next router
+			DatagramPacket updatedPacket = content.toDatagramPacket();
+			updatedPacket.setPort(nextHop);
+			
+			socket.send(updatedPacket);
+			terminal.println("\nPacket sent to next router(" + nextHop + ")...");	
+		}
+		
+		//If routing knowledge unknown, contact controller for update
+		else {
+			getRoutingPath(packet);
+		}	
+	}
+	/*
+	 * Contacts controller to find out routing path for the new packet
+	 *  
+	 * @param packet - packet received from end user
+	 * @returns void
+	 */
+	public void getRoutingPath(DatagramPacket packet) throws IOException {
+		
+		terminal.println("Contacting controller to get flow update for new packet...");
+		StringContent packetContent = new StringContent(packet);
+		int dst = packetContent.getDestination();
+		int src = packetContent.getSource();
+		int router = this.routerPort;
+		
+		UpdateRequestContent request = new UpdateRequestContent(dst,src,router);
+		DatagramPacket requestPacket = request.toDatagramPacket();
+		requestPacket.setPort(CONTROLLER_PORT);
+		socket.send(requestPacket);
 	}
 	
 	/*
 	 * Processes an update packet received from controller (updates tables etc)
+	 * 
+	 * @param packet - Update packet from controller
+	 * @returns void 
 	 */
 	public void processControllerUpdate(DatagramPacket packet){
 		
+		UpdateResponseContent content = new UpdateResponseContent(packet);
+		int dst = content.getDst();
+		int newNextHop = content.getNextHop();
+		
+		RoutingElementKey key = this.routingMap.get(dst);
+		key.setNextHop(newNextHop);
+		
+		this.routingMap.put(dst, key);
+		terminal.println("Controller update processed successfully...");
 	}
 
 	/*

@@ -8,15 +8,16 @@ public class StringContent implements PacketContent {
 	byte[] destination;
 	byte[] source;
 	byte[] hopCount;
+	byte[] payload;
+	byte[] buffer;
 	
 	public StringContent(DatagramPacket packet) {
-		byte[] payload= null;
-		byte[] buffer= null;
-		
-		
+		payload= null;
+		buffer= null;
 		
 		buffer= packet.getData();
 		payload= new byte[packet.getLength()-HEADER_LENGTH];
+		
 		this.destination = new byte[DST_ADDRESS_LENGTH];
 		this.source = new byte[SRC_ADDRESS_LENGTH];
 		this.hopCount = new byte[HOP_COUNT_LENGTH];
@@ -24,6 +25,7 @@ public class StringContent implements PacketContent {
 		
 		//Extract payload
 		System.arraycopy(buffer, HEADER_LENGTH, payload, 0, packet.getLength()-HEADER_LENGTH);
+		
 		//Extract destination address
 		System.arraycopy(buffer, 0, this.destination, 0, DST_ADDRESS_LENGTH);
 		//Extract source address
