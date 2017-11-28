@@ -112,7 +112,7 @@ public class Controller extends Node {
 	public void onReceipt(DatagramPacket packet) {
 		try {
 			
-			terminal.println("\nPacket recieved at controller (" + this.controllerPort + ")");
+			terminal.println("\nPacket recieved at controller (" + this.controllerPort + ")\n");
 			UpdateRequestContent content = new UpdateRequestContent(packet);	
 			
 			//If the controller recieves a packet, it is from a router seeking a routing flow for a given packet

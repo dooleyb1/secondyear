@@ -94,24 +94,21 @@ public class Router extends Node {
 	 * Initialises the routing map's of each respective router
 	 */
 	public void initialiseRoutingMap() {
-		
-		//hopCount = 0 & nextDest = 0 for all routing map initally
-		RoutingElementKey initialR = new RoutingElementKey(0,0);
-		
+				
 		//Initialise the distanceMap table for the router
 		switch(this.routerPort) {
 			//For router 1 do this
 			case ROUTER_1_PORT:
-				this.routingMap.put(END_USER_1_PORT, initialR);
-				this.routingMap.put(END_USER_2_PORT, initialR);
+				this.routingMap.put(END_USER_1_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(END_USER_2_PORT, new RoutingElementKey(0,0));
 			//For router 2 do this
 			case ROUTER_2_PORT:
-				this.routingMap.put(END_USER_1_PORT, initialR);
-				this.routingMap.put(END_USER_2_PORT, initialR);
+				this.routingMap.put(END_USER_1_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(END_USER_2_PORT, new RoutingElementKey(0,0));
 			//For router 3 do this
 			case ROUTER_3_PORT:
-				this.routingMap.put(END_USER_1_PORT, initialR);
-				this.routingMap.put(END_USER_2_PORT, initialR);
+				this.routingMap.put(END_USER_1_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(END_USER_2_PORT, new RoutingElementKey(0,0));
 		}
 	}
 	
@@ -207,6 +204,7 @@ public class Router extends Node {
 			
 			else
 			terminal.println("\nPacket sent to next router(" + nextHop + ")...");
+			terminal.println("\nWaiting for contact at router(" + this.routerPort + ")...");
 		}
 		
 		//If routing knowledge unknown, contact controller for update
@@ -223,8 +221,10 @@ public class Router extends Node {
 	 */
 	public void getRoutingPath(DatagramPacket packet) throws IOException, InterruptedException {
 		
-		terminal.println("Contacting controller to get flow update for new packet...");
+		terminal.println("Contacting controller to get flow updat e for new packet...");
 		StringContent packetContent = new StringContent(packet);
+		
+		//Needs to find out how to get from src to dest
 		int dst = packetContent.getDestination();
 		int src = packetContent.getSource();
 		int router = this.routerPort;
@@ -248,11 +248,16 @@ public class Router extends Node {
 		
 		UpdateResponseContent content = new UpdateResponseContent(packet);
 		terminal.println("Processing controller update...");
+		
+		//Destination is the end goal of the packet
 		int dst = content.getDst();
+		//For current router to get to this dst the next hop is newNextHop
 		int newNextHop = content.getNextHop();
 		
 		RoutingElementKey key = this.routingMap.get(dst);
+		terminal.println("Previous next hop for dst address(" +dst+ ") was : " + key.nextDest);
 		key.nextDest = newNextHop;
+		terminal.println("New next hop for dst address(" +dst+ ") is : " + newNextHop);
 		
 		this.routingMap.put(dst, key);
 		terminal.println("Controller update processed successfully...");

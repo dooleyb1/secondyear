@@ -67,7 +67,7 @@ public class EndUser extends Node {
 		
 		terminal.println("Packet contents = " + content.string);
 		
-		String choice = terminal.readString("Would you like to send a response? [y/n] ");
+		String choice = terminal.readString("\nWould you like to send a response? [y/n] ");
 		
 		if(choice.equalsIgnoreCase("y")) {
 			this.isResponse = true;
