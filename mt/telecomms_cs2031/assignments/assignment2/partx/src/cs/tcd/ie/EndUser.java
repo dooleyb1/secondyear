@@ -4,7 +4,9 @@
 package cs.tcd.ie;
 
 import java.net.DatagramSocket;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
@@ -24,9 +26,10 @@ public class EndUser extends Node {
 	
 	//Flag = 0 if coming from client, flag = 1 if coming from router
 	byte[] flag; 
-	
+	boolean isResponse;
+	int responseAddr;
 	Terminal terminal;
-	InetSocketAddress nextRouterAddress;
+	InetSocketAddress routerAddress;
 	int sourcePortNumber;
 	int connectedRouterPort;
 	
@@ -40,7 +43,9 @@ public class EndUser extends Node {
 			this.terminal= terminal;
 			this.sourcePortNumber = srcPort;
 			this.connectedRouterPort = routerPort;
-			
+			this.routerAddress = new InetSocketAddress(host, routerPort);
+			this.isResponse = false;
+			this.responseAddr = 0;
 			//Creates socket at srcPort (EndUser)
 			socket= new DatagramSocket(sourcePortNumber);
 			
@@ -58,11 +63,24 @@ public class EndUser extends Node {
 	 */
 	public synchronized void onReceipt(DatagramPacket packet) throws Exception {
 		StringContent content= new StringContent(packet);
-		terminal.println("Packet received from router...");
+		terminal.println("\nPacket received from router...");
 		
-		//TODO - Write Method here
-		//this.printPacketDetails(packet);
-		this.notify();
+		terminal.println("Packet contents = " + content.string);
+		
+		String choice = terminal.readString("Would you like to send a response? [y/n] ");
+		
+		if(choice.equalsIgnoreCase("y")) {
+			this.isResponse = true;
+			this.responseAddr = content.getSource();
+			sendMessage();
+		}
+		
+		else {
+			terminal.println("Goodbye.");
+			this.notify();
+		}
+		
+	
 	}
 	
 	
@@ -75,23 +93,42 @@ public class EndUser extends Node {
 	 */
 	public synchronized void start() throws Exception, SocketTimeoutException {
 
+		String choice = terminal.readString("Enter 's' to send a message or 'r' to receive a message: ");
+	
+		if(choice.equalsIgnoreCase("s"))
+			sendMessage();
+		
+		else
+			terminal.println("Waiting for contact at End User (" + this.sourcePortNumber + ")...");
+			this.wait();
+	}
+	
+	public synchronized void sendMessage() throws IOException {
+		
 		DatagramPacket packet = null;
-
+		
 		byte[] dstAddress = null;
 		byte[] srcAddress = null;
 		byte[] hopCount = null;
-
 		byte[] payload = null;
 		byte[] buffer = null;
+		int dst;
 
 		dstAddress = new byte[PacketContent.DST_ADDRESS_LENGTH];
 		srcAddress = new byte[PacketContent.SRC_ADDRESS_LENGTH];
 		hopCount = new byte[PacketContent.HOP_COUNT_LENGTH];
-
-		// Reads and sorts the relevant information into byte arrays
-		int dst = terminal.readInt("Destination address of end user you would like the packet to be sent to: ");
+		
+		if(!isResponse) {
+		    String dstStr = terminal.readString("Destination address of end user: ");
+		    dst = Integer.parseInt ( dstStr );
+		}
+		
+		else
+			dst = this.responseAddr;
+		
+	    dstAddress = ByteBuffer.allocate(PacketContent.DST_ADDRESS_LENGTH).putInt(dst).array();
+	    
 		payload = (terminal.readString("String to send: ")).getBytes();
-		dstAddress = ByteBuffer.allocate(PacketContent.DST_ADDRESS_LENGTH).putInt(dst).array();
 		System.out.print(ByteBuffer.wrap(dstAddress).getInt());
 		srcAddress = ByteBuffer.allocate(PacketContent.SRC_ADDRESS_LENGTH).putInt(this.sourcePortNumber).array();
 		hopCount = ByteBuffer.allocate(PacketContent.HOP_COUNT_LENGTH).putInt(0).array();
@@ -100,19 +137,16 @@ public class EndUser extends Node {
 		buffer = new byte[PacketContent.HEADER_LENGTH + payload.length];
 
 		// Encloses the above information into a buffer containing an array of bytes
-		System.arraycopy(dstAddress, 0, buffer, 0, dstAddress.length);
-		System.arraycopy(srcAddress, 0, buffer, dstAddress.length, srcAddress.length);
-		System.arraycopy(hopCount, 0, buffer, (dstAddress.length + srcAddress.length), hopCount.length);
+		System.arraycopy(dstAddress, 0, buffer, 0, PacketContent.DST_ADDRESS_LENGTH);
+		System.arraycopy(srcAddress, 0, buffer, PacketContent.DST_ADDRESS_LENGTH, PacketContent.SRC_ADDRESS_LENGTH);
+		System.arraycopy(hopCount, 0, buffer, (PacketContent.DST_ADDRESS_LENGTH + PacketContent.SRC_ADDRESS_LENGTH), PacketContent.HOP_COUNT_LENGTH);
 		System.arraycopy(payload, 0, buffer, PacketContent.HEADER_LENGTH, payload.length);
 		
 
 		terminal.println("\nSending packet to router at : " + this.connectedRouterPort + "...");
-		packet = new DatagramPacket(buffer, buffer.length);
-		packet.setPort(this.connectedRouterPort);
+		packet = new DatagramPacket(buffer, buffer.length, this.routerAddress);
 		socket.send(packet);
 		terminal.println("Packet sent to router\n");
-
-		this.wait();
 	}
 	
 	/**
@@ -121,10 +155,22 @@ public class EndUser extends Node {
 	 * Sends a packet to a given address
 	 */
 	public static void main(String[] args) {
-		try {					
-			Terminal terminal= new Terminal("End-User");		
-			int endUserPortNumber = terminal.readInt("End-User port number: ");
-			int routerPortNumber = terminal.readInt("Connected router port number: ");
+		try {	
+			//Establish end user details
+			System.out.print ( "Enter the port for end user to be established on: " );
+		    BufferedReader input = new BufferedReader ( new InputStreamReader ( System.in ));
+		    String inputString = input.readLine();
+		    int endUserPortNumber = Integer.parseInt ( inputString );
+		    
+		    //Set connected port for end user
+		    int routerPortNumber=0;
+		    
+		    if(endUserPortNumber == END_USER_1_PORT)
+		    	routerPortNumber = ROUTER_1_PORT;
+		    else
+		    	routerPortNumber = ROUTER_2_PORT;
+		    	
+		    Terminal terminal = new Terminal("End User (" + endUserPortNumber + ")");
 			(new EndUser(terminal, DEFAULT_DST_NODE, endUserPortNumber, routerPortNumber)).start();
 			terminal.println("Program completed");
 		} catch(java.lang.Exception e) {e.printStackTrace();}

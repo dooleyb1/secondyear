@@ -179,7 +179,8 @@ public class Controller extends Node {
 		System.arraycopy(nextHopBuf, 0, buffer, (dstBuf.length+srcBuf.length), nextHopBuf.length);
 		
 		//Create update response packet to be sent to router
-		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, routerAddress);
+		InetSocketAddress routerAddr = new InetSocketAddress(Node.DEFAULT_DST_NODE, routerAddress);
+		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, routerAddr);
 		socket.send(packet);
 		terminal.println("Router(" + routerAddress + ") informed of new flow...\n");
 	}

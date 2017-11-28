@@ -1,6 +1,7 @@
 package cs.tcd.ie;
 
 import java.net.DatagramPacket;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
 public class UpdateRequestContent implements PacketContent {
@@ -8,6 +9,7 @@ public class UpdateRequestContent implements PacketContent {
 	byte[] destination;
 	byte[] source;
 	byte[] router;
+	
 	
 	public UpdateRequestContent(DatagramPacket packet) {
 		byte[] buffer= null;
@@ -62,7 +64,7 @@ public class UpdateRequestContent implements PacketContent {
 			System.arraycopy(this.destination, 0, buffer, 0, this.destination.length);
 			System.arraycopy(this.source, 0, buffer, this.destination.length, this.source.length);
 			System.arraycopy(this.router, 0, buffer, (this.source.length+this.destination.length), this.router.length);
-			
+		
 			packet= new DatagramPacket(buffer, buffer.length);
 		}
 		catch(Exception e) {e.printStackTrace();}

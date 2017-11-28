@@ -22,16 +22,14 @@ public class StringContent implements PacketContent {
 		this.source = new byte[SRC_ADDRESS_LENGTH];
 		this.hopCount = new byte[HOP_COUNT_LENGTH];
 		
-		
-		//Extract payload
-		System.arraycopy(buffer, HEADER_LENGTH, payload, 0, packet.getLength()-HEADER_LENGTH);
-		
 		//Extract destination address
 		System.arraycopy(buffer, 0, this.destination, 0, DST_ADDRESS_LENGTH);
 		//Extract source address
 		System.arraycopy(buffer, DST_ADDRESS_LENGTH, this.source, 0, SRC_ADDRESS_LENGTH);
 		//Extract hop count
-		System.arraycopy(buffer, (DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH), this.hopCount, 0, SRC_ADDRESS_LENGTH);
+		System.arraycopy(buffer, (DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH), this.hopCount, 0, HOP_COUNT_LENGTH);
+		//Extract payload
+		System.arraycopy(buffer, HEADER_LENGTH, payload, 0, packet.getLength()-HEADER_LENGTH);
 		
 		this.string = new String(payload);
 	}

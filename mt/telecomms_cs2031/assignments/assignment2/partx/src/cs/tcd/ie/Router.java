@@ -17,6 +17,8 @@ public class Router extends Node {
 		
 	Terminal terminal;
 	int routerPort;
+	boolean onHold;
+	DatagramPacket messagePacket;
 	
 	/*
 	 * routingMap == Hashmap to store routing table within 
@@ -34,7 +36,8 @@ public class Router extends Node {
 		try {
 			this.terminal= terminal;
 			this.routerPort = routerPort;
-			
+			this.onHold = false;
+			this.messagePacket = null;
 			this.routingMap = new HashMap<Integer, RoutingElementKey>();
 			this.distanceMap = new HashMap<Integer, Integer>();
 			
@@ -72,12 +75,18 @@ public class Router extends Node {
 			case ROUTER_1_PORT:
 				this.distanceMap.put(ROUTER_2_PORT, 0);
 				this.distanceMap.put(ROUTER_3_PORT, 0);
+				this.distanceMap.put(END_USER_1_PORT, 0);
+				this.distanceMap.put(END_USER_2_PORT, 0);
 			case ROUTER_2_PORT:
 				this.distanceMap.put(ROUTER_1_PORT, 0);
 				this.distanceMap.put(ROUTER_3_PORT, 0);
+				this.distanceMap.put(END_USER_1_PORT, 0);
+				this.distanceMap.put(END_USER_2_PORT, 0);
 			case ROUTER_3_PORT:
 				this.distanceMap.put(ROUTER_1_PORT, 0);
 				this.distanceMap.put(ROUTER_2_PORT, 0);
+				this.distanceMap.put(END_USER_1_PORT, 0);
+				this.distanceMap.put(END_USER_2_PORT, 0);
 		}
 	}
 	
@@ -93,16 +102,16 @@ public class Router extends Node {
 		switch(this.routerPort) {
 			//For router 1 do this
 			case ROUTER_1_PORT:
-				this.routingMap.put(ROUTER_2_PORT, initialR);
-				this.routingMap.put(ROUTER_3_PORT, initialR);
+				this.routingMap.put(END_USER_1_PORT, initialR);
+				this.routingMap.put(END_USER_2_PORT, initialR);
 			//For router 2 do this
 			case ROUTER_2_PORT:
-				this.routingMap.put(ROUTER_1_PORT, initialR);
-				this.routingMap.put(ROUTER_3_PORT, initialR);
+				this.routingMap.put(END_USER_1_PORT, initialR);
+				this.routingMap.put(END_USER_2_PORT, initialR);
 			//For router 3 do this
 			case ROUTER_3_PORT:
-				this.routingMap.put(ROUTER_1_PORT, initialR);
-				this.routingMap.put(ROUTER_2_PORT, initialR);
+				this.routingMap.put(END_USER_1_PORT, initialR);
+				this.routingMap.put(END_USER_2_PORT, initialR);
 		}
 	}
 	
@@ -156,19 +165,18 @@ public class Router extends Node {
 		try {
 			
 			terminal.println("\nPacket recieved at router (" + this.routerPort + ")...");
-			StringContent content = new StringContent(packet);
 			
 			//If packet is from controller, process flow update
-			if(content.getSource() == CONTROLLER_PORT) {
-				terminal.println("\nPacket received from Controller...");
-				terminal.println("Processing controller update...\n");
+			if(packet.getPort() == CONTROLLER_PORT) {
+				terminal.println("\nPacket came from controller...");
 				processControllerUpdate(packet);
-				continueTransmission(content, packet);
+				
 			}
 			
 			//If packet is not from controller, continue with flow
 			else {
-				continueTransmission(content, packet);
+				this.messagePacket = packet;
+				continueTransmission(packet);
 			}
 		}
 		catch(Exception e) {e.printStackTrace();}
@@ -177,24 +185,33 @@ public class Router extends Node {
 	/*
 	 * continueTransmission()
 	 */
-	public void continueTransmission(StringContent content, DatagramPacket packet) throws IOException {
+	public void continueTransmission(DatagramPacket packet) throws IOException, InterruptedException {
+		
+		StringContent content = new StringContent(packet);
 		
 		//If router has routing knowledge of how to get to destination, send packet to next router
-		if(this.routingMap.containsKey(content.getDestination())){
+		if(this.routingMap.get(content.getDestination()).nextDest != 0){
+			terminal.println("Router knows how to get to destination...");
 			content.incrementHopCount();
 			RoutingElementKey key = routingMap.get(content.getDestination());
 			int nextHop = key.nextDest;
 			
 			//Set dst port of packet to that of the next router
 			DatagramPacket updatedPacket = content.toDatagramPacket();
-			updatedPacket.setPort(nextHop);
-			
+			InetSocketAddress nextAddr = new InetSocketAddress(Node.DEFAULT_DST_NODE, nextHop);
+			updatedPacket.setSocketAddress(nextAddr);
 			socket.send(updatedPacket);
-			terminal.println("\nPacket sent to next router(" + nextHop + ")...");	
+			
+			if(nextHop == Node.END_USER_1_PORT || nextHop == Node.END_USER_2_PORT)
+				terminal.println("\nPacket sent to end user(" + nextHop + ")...");
+			
+			else
+			terminal.println("\nPacket sent to next router(" + nextHop + ")...");
 		}
 		
 		//If routing knowledge unknown, contact controller for update
 		else {
+			this.onHold = true;
 			getRoutingPath(packet);
 		}	
 	}
@@ -204,7 +221,7 @@ public class Router extends Node {
 	 * @param packet - packet received from end user
 	 * @returns void
 	 */
-	public void getRoutingPath(DatagramPacket packet) throws IOException {
+	public void getRoutingPath(DatagramPacket packet) throws IOException, InterruptedException {
 		
 		terminal.println("Contacting controller to get flow update for new packet...");
 		StringContent packetContent = new StringContent(packet);
@@ -214,8 +231,11 @@ public class Router extends Node {
 		
 		UpdateRequestContent request = new UpdateRequestContent(dst,src,router);
 		DatagramPacket requestPacket = request.toDatagramPacket();
-		requestPacket.setPort(CONTROLLER_PORT);
+		InetSocketAddress controllerAddress = new InetSocketAddress(Node.DEFAULT_DST_NODE, Node.CONTROLLER_PORT);
+		requestPacket.setSocketAddress(controllerAddress);
 		socket.send(requestPacket);
+		terminal.println("Update request sent to controller...");
+		terminal.println("Waiting for update from controller...");
 	}
 	
 	/*
@@ -224,17 +244,28 @@ public class Router extends Node {
 	 * @param packet - Update packet from controller
 	 * @returns void 
 	 */
-	public void processControllerUpdate(DatagramPacket packet){
+	public void processControllerUpdate(DatagramPacket packet) throws InterruptedException, IOException{
 		
 		UpdateResponseContent content = new UpdateResponseContent(packet);
+		terminal.println("Processing controller update...");
 		int dst = content.getDst();
 		int newNextHop = content.getNextHop();
 		
 		RoutingElementKey key = this.routingMap.get(dst);
-		key.setNextHop(newNextHop);
+		key.nextDest = newNextHop;
 		
 		this.routingMap.put(dst, key);
 		terminal.println("Controller update processed successfully...");
+		terminal.println("Updating maps...\n");
+		printRoutingMap();
+		
+		
+		//If router was originally waiting for controller update, continue with flow of original message packet
+		if(this.onHold)
+		{
+			this.onHold = false;
+			continueTransmission(this.messagePacket);
+		}
 	}
 
 	/*
@@ -249,7 +280,7 @@ public class Router extends Node {
 		    int routerPortNumber = Integer.parseInt ( inputString );
 		    
 		    //Create router at defined port number
-		    Terminal terminal= new Terminal("Router");
+		    Terminal terminal = new Terminal("Router (" + routerPortNumber + ")");
 			(new Router(terminal, routerPortNumber)).start();
 			terminal.println("Program completed");
 		} catch(java.lang.Exception e) {e.printStackTrace();}
