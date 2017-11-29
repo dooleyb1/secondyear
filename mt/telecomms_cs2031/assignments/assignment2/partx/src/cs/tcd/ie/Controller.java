@@ -18,6 +18,7 @@ public class Controller extends Node {
 	
 	Terminal terminal;
 	int controllerPort;
+	boolean allInfoReceived;
 
 	
 	/*
@@ -35,7 +36,7 @@ public class Controller extends Node {
 		try {
 			this.terminal= terminal;
 			this.controllerPort = controllerPort;
-			
+			this.allInfoReceived = false;
 			this.routingMap = new HashMap<Integer, HashMap<Integer,Integer>>();
 			
 			//Creates router socket at defined address
@@ -48,10 +49,7 @@ public class Controller extends Node {
 	
 	public synchronized void start() throws Exception {
 		terminal.println("Controller initialised at (" + this.controllerPort + ")...");
-		terminal.println("Hard coding network routing map...\n");
-		this.hardCodeRoutingMap();
-		
-		this.printRoutingMap();
+		terminal.println("Waiting for contact at controller...");
 		this.wait();
 	}
 	
@@ -112,20 +110,32 @@ public class Controller extends Node {
 	public void onReceipt(DatagramPacket packet) {
 		try {
 			
-			terminal.println("\nPacket recieved at controller (" + this.controllerPort + ")\n");
-			UpdateRequestContent content = new UpdateRequestContent(packet);	
+			terminal.println("\nPacket recieved at controller (" + this.controllerPort + ")...\n");
 			
-			//If the controller recieves a packet, it is from a router seeking a routing flow for a given packet
-			int src = content.getSource();
-			int dst = content.getDestination();
+			//Check flag to see what type of packet it is 
+			byte[] buffer = null;
+			buffer = packet.getData();
+			byte[] flagBuf = new byte[PacketContent.FLAG_LENGTH];
+			System.arraycopy(buffer, 0, flagBuf, 0, PacketContent.FLAG_LENGTH);
+			int flag = ByteBuffer.wrap(flagBuf).getInt();
 			
-			int routeID = getRouteID(dst, src);
-			
-			if(routeID != 0) 
-				updateAllRouters(routeID);
-			
-			else 
-				throw new Exception();
+			//Process flag
+			switch(flag) {
+			//If flag = 1, packet is from router seeking flow update
+			case 1:
+				terminal.println("Packet is from router seeking flow update...");
+				handleUpdateRequest();
+				break;
+			//If flag = 2, packet is from a node informing of connections
+			case 2:
+				terminal.println("Packet is from node informing of connections...");
+				handleConnectionInform();
+				break;
+			default:
+				terminal.println("Unknown flag...");
+				break;
+			}
+		
 			
 		}
 		catch(Exception e) {e.printStackTrace();}

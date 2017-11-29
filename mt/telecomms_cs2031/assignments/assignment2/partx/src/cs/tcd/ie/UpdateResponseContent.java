@@ -8,6 +8,7 @@ public class UpdateResponseContent implements PacketContent {
 	byte[] dst;
 	byte[] src;
 	byte[] nextHop;
+	byte[] flag;
 	
 	public UpdateResponseContent(DatagramPacket packet) {
 		byte[] buffer= null;
@@ -15,22 +16,29 @@ public class UpdateResponseContent implements PacketContent {
 		this.dst = new byte[DST_ADDRESS_LENGTH];
 		this.src = new byte[SRC_ADDRESS_LENGTH];
 		this.nextHop = new byte[NEXT_HOP_LENGTH];
+		this.flag = new byte[FLAG_LENGTH];
 		buffer= packet.getData();
 		
-		//Router Update Response Packet Protocol = [DESTINATION] | [SOURCE] | [NEXT_HOP_ADDRESS
+		//Controller Update Response Packet Protocol = [FLAG] | [DESTINATION] | [SOURCE] | [NEXT_HOP_ADDRESS]
 		
+		//Extract flag 
+		System.arraycopy(buffer, 0, this.flag, 0, FLAG_LENGTH);
 		//Extract dst address
-		System.arraycopy(buffer, 0, this.dst, 0, DST_ADDRESS_LENGTH);
+		System.arraycopy(buffer, FLAG_LENGTH, this.dst, 0, DST_ADDRESS_LENGTH);
 		//Extract src address
-		System.arraycopy(buffer, DST_ADDRESS_LENGTH, this.src, 0, SRC_ADDRESS_LENGTH);
+		System.arraycopy(buffer,(DST_ADDRESS_LENGTH+FLAG_LENGTH), this.src, 0, SRC_ADDRESS_LENGTH);
 		//Extract next hop address
-		System.arraycopy(buffer, (DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH), this.nextHop, 0, NEXT_HOP_LENGTH);
+		System.arraycopy(buffer, (FLAG_LENGTH+DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH), this.nextHop, 0, NEXT_HOP_LENGTH);
 		
 	}
 
 	
 	public int getDst(){
 		return ByteBuffer.wrap(this.dst).getInt();
+	}
+	
+	public int getFlag(){
+		return ByteBuffer.wrap(this.flag).getInt();
 	}
 	
 	public int getSrc(){
@@ -48,9 +56,10 @@ public class UpdateResponseContent implements PacketContent {
 		try {
 			buffer= new byte[ROUTER_UPDATE_RESPONSE_PACKET_LENGTH];
 			
-			System.arraycopy(this.dst, 0, buffer, 0, DST_ADDRESS_LENGTH);
-			System.arraycopy(this.src, 0, buffer, DST_ADDRESS_LENGTH, SRC_ADDRESS_LENGTH);
-			System.arraycopy(this.nextHop, 0, buffer, (DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH), this.nextHop.length);
+			System.arraycopy(this.flag, 0, buffer, 0, FLAG_LENGTH);
+			System.arraycopy(this.dst, 0, buffer, FLAG_LENGTH, DST_ADDRESS_LENGTH);
+			System.arraycopy(this.src, 0, buffer, (FLAG_LENGTH+DST_ADDRESS_LENGTH), SRC_ADDRESS_LENGTH);
+			System.arraycopy(this.nextHop, 0, buffer, (FLAG_LENGTH+DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH), this.nextHop.length);
 			packet= new DatagramPacket(buffer, buffer.length);
 		}
 		catch(Exception e) {e.printStackTrace();}

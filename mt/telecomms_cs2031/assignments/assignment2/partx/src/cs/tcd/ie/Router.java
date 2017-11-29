@@ -20,6 +20,11 @@ public class Router extends Node {
 	boolean onHold;
 	DatagramPacket messagePacket;
 	
+	InetSocketAddress controllerAddress;
+	int connectionCount;
+	int[] connections;
+	ControllerInformPacket controllerPacket;
+	
 	/*
 	 * routingMap == Hashmap to store routing table within 
 	 * - <Integer> = destination address
@@ -41,6 +46,10 @@ public class Router extends Node {
 			this.routingMap = new HashMap<Integer, RoutingElementKey>();
 			this.distanceMap = new HashMap<Integer, Integer>();
 			
+			this.controllerAddress = new InetSocketAddress(Node.DEFAULT_DST_NODE, Node.CONTROLLER_PORT);
+			this.connectionCount = 0;
+			this.connections = null;
+			
 			//Creates router socket at defined address
 			socket= new DatagramSocket(routerPort);
 			listener.go();
@@ -61,10 +70,24 @@ public class Router extends Node {
 		terminal.println("Printing maps at router (" + this.routerPort + ")...\n");
 		this.printMaps();
 		
+		//Inform controller of direct connections
+		terminal.println("Informing controller of connections...");
+		informController();
+		
 		terminal.println("\nWaiting for contact at router(" + this.routerPort + ")...");
 		this.wait();
 	}
 
+	public synchronized void informController() throws IOException {
+		
+		initialiseConnections();
+		this.controllerPacket = new ControllerInformPacket(this.routerPort, this.connections);
+		DatagramPacket packet = controllerPacket.toDatagramPacket();
+		packet.setSocketAddress(controllerAddress);
+		socket.send(packet);
+		terminal.println("Controller informed of connections...");
+	}
+	
 	/*
 	 * Initialises the distanceMap's of each respective router (distance from A-B)
 	 */
@@ -110,6 +133,37 @@ public class Router extends Node {
 				this.routingMap.put(END_USER_1_PORT, new RoutingElementKey(0,0));
 				this.routingMap.put(END_USER_2_PORT, new RoutingElementKey(0,0));
 		}
+	}
+	
+	public void initialiseConnections() {
+		
+		this.connectionCount = 2;
+		this.connections = new int[connectionCount];
+		this.connections[1] = END_USER_1_PORT;
+		this.connections[2] = ROUTER_2_PORT;
+		
+		//Initialise the connections for the router
+		switch (this.routerPort) {
+		// For router 1 do this
+		case ROUTER_1_PORT:
+			this.connectionCount = 2;
+			this.connections = new int[connectionCount];
+			this.connections[1] = END_USER_1_PORT;
+			this.connections[2] = ROUTER_2_PORT;
+			// For router 2 do this
+		case ROUTER_2_PORT:
+			this.connectionCount = 2;
+			this.connections = new int[connectionCount];
+			this.connections[1] = ROUTER_1_PORT;
+			this.connections[2] = ROUTER_3_PORT;
+			// For router 3 do this
+		case ROUTER_3_PORT:
+			this.connectionCount = 2;
+			this.connections = new int[connectionCount];
+			this.connections[1] = END_USER_2_PORT;
+			this.connections[2] = ROUTER_2_PORT;
+		}
+		terminal.println("Connections initialised...");
 	}
 	
 	/*

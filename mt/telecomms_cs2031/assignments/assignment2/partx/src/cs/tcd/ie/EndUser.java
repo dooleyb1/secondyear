@@ -30,8 +30,12 @@ public class EndUser extends Node {
 	int responseAddr;
 	Terminal terminal;
 	InetSocketAddress routerAddress;
+	InetSocketAddress controllerAddress;
 	int sourcePortNumber;
 	int connectedRouterPort;
+	int connectionCount;
+	int[] connections;
+	ControllerInformPacket controllerPacket;
 	
 	/**
 	 * Constructor
@@ -44,8 +48,16 @@ public class EndUser extends Node {
 			this.sourcePortNumber = srcPort;
 			this.connectedRouterPort = routerPort;
 			this.routerAddress = new InetSocketAddress(host, routerPort);
+			this.controllerAddress = new InetSocketAddress(host, Node.CONTROLLER_PORT);
+			
 			this.isResponse = false;
 			this.responseAddr = 0;
+			
+			this.connectionCount = 1;
+			this.connections = new int[connectionCount];
+			this.connections[0] = this.connectedRouterPort;
+			this.controllerPacket = null
+					;
 			//Creates socket at srcPort (EndUser)
 			socket= new DatagramSocket(sourcePortNumber);
 			
@@ -93,6 +105,10 @@ public class EndUser extends Node {
 	 */
 	public synchronized void start() throws Exception, SocketTimeoutException {
 
+		//Inform controller of direct connections
+		terminal.println("Informing controller of connections...");
+		informController();
+		
 		String choice = terminal.readString("Enter 's' to send a message or 'r' to receive a message: ");
 	
 		if(choice.equalsIgnoreCase("s"))
@@ -101,6 +117,15 @@ public class EndUser extends Node {
 		else
 			terminal.println("Waiting for contact at End User (" + this.sourcePortNumber + ")...");
 			this.wait();
+	}
+	
+	public synchronized void informController() throws IOException {
+		
+		this.controllerPacket = new ControllerInformPacket(this.sourcePortNumber, this.connections);
+		DatagramPacket packet = controllerPacket.toDatagramPacket();
+		packet.setSocketAddress(controllerAddress);
+		socket.send(packet);
+		
 	}
 	
 	public synchronized void sendMessage() throws IOException {

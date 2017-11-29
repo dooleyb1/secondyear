@@ -9,6 +9,7 @@ public class UpdateRequestContent implements PacketContent {
 	byte[] destination;
 	byte[] source;
 	byte[] router;
+	byte[] flag;
 	
 	
 	public UpdateRequestContent(DatagramPacket packet) {
@@ -17,16 +18,19 @@ public class UpdateRequestContent implements PacketContent {
 		this.destination = new byte[DST_ADDRESS_LENGTH];
 		this.source = new byte[SRC_ADDRESS_LENGTH];
 		this.router = new byte[ROUTER_ADDRESS_LENGTH];
+		this.flag = new byte[FLAG_LENGTH];
 		buffer= packet.getData();
 		
-		//Router Update Packet Protocol = [DESTINATION][SOURCE][SRC_ROUTER]
+		//Router Update Request Packet Protocol = [FLAG] | [DESTINATION] | [SOURCE] | [SRC_ROUTER]
 		
+		//Extract flag 
+		System.arraycopy(buffer, 0, this.flag, 0, FLAG_LENGTH);
 		//Extract destination address
-		System.arraycopy(buffer, 0, this.destination, 0, DST_ADDRESS_LENGTH);
+		System.arraycopy(buffer, FLAG_LENGTH, this.destination, 0, DST_ADDRESS_LENGTH);
 		//Extract source address
-		System.arraycopy(buffer, DST_ADDRESS_LENGTH, this.source, 0, SRC_ADDRESS_LENGTH);
-		//Extract hop count
-		System.arraycopy(buffer, (DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH), this.router, 0, ROUTER_ADDRESS_LENGTH);
+		System.arraycopy(buffer, DST_ADDRESS_LENGTH+FLAG_LENGTH, this.source, 0, SRC_ADDRESS_LENGTH);
+		//Extract src router
+		System.arraycopy(buffer, (DST_ADDRESS_LENGTH+SRC_ADDRESS_LENGTH+FLAG_LENGTH), this.router, 0, ROUTER_ADDRESS_LENGTH);
 	}
 	
 	public UpdateRequestContent(int dst, int src, int router) {
@@ -34,6 +38,10 @@ public class UpdateRequestContent implements PacketContent {
 		this.destination = new byte[DST_ADDRESS_LENGTH];
 		this.source = new byte[SRC_ADDRESS_LENGTH];
 		this.router = new byte[ROUTER_ADDRESS_LENGTH];
+		
+		this.flag = new byte[FLAG_LENGTH];
+		//Flag = 0 for UpdateRequestContent 
+		this.flag = ByteBuffer.allocate(PacketContent.FLAG_LENGTH).putInt(0).array();
 		
 		//Router Update Packet Protocol = [DESTINATION][SOURCE][SRC_ROUTER]
 		this.destination = ByteBuffer.allocate(PacketContent.DST_ADDRESS_LENGTH).putInt(dst).array();
@@ -44,6 +52,10 @@ public class UpdateRequestContent implements PacketContent {
 	
 	public int getDestination(){
 		return ByteBuffer.wrap(this.destination).getInt();
+	}
+	
+	public int getFlag(){
+		return ByteBuffer.wrap(this.flag).getInt();
 	}
 	
 	public int getSource(){
@@ -61,9 +73,10 @@ public class UpdateRequestContent implements PacketContent {
 		try {
 			buffer= new byte[ROUTER_UPDATE_REQUEST_PACKET_LENGTH];
 			
-			System.arraycopy(this.destination, 0, buffer, 0, this.destination.length);
-			System.arraycopy(this.source, 0, buffer, this.destination.length, this.source.length);
-			System.arraycopy(this.router, 0, buffer, (this.source.length+this.destination.length), this.router.length);
+			System.arraycopy(this.flag, 0, buffer, 0, FLAG_LENGTH);
+			System.arraycopy(this.destination, 0, buffer, FLAG_LENGTH, DST_ADDRESS_LENGTH);
+			System.arraycopy(this.source, 0, buffer, (DST_ADDRESS_LENGTH+FLAG_LENGTH), SRC_ADDRESS_LENGTH);
+			System.arraycopy(this.router, 0, buffer, (DST_ADDRESS_LENGTH+FLAG_LENGTH+SRC_ADDRESS_LENGTH), ROUTER_ADDRESS_LENGTH);
 		
 			packet= new DatagramPacket(buffer, buffer.length);
 		}
