@@ -4,7 +4,7 @@
  *
  *  @version 3.0 1/11/15 16:49:42
  *
- *  @author TODO
+ *  @author Brandon Dooley (dooleyb1@tcd.ie)
  *
  *************************************************************************/
 
@@ -129,7 +129,7 @@ public class BST<Key extends Comparable<Key>, Value> {
     /**
      * Tree height.
      *
-     * Asymptotic worst-case running time using Theta notation: TODO
+     * Asymptotic worst-case running time using Theta notation: O(n), unbalanced tree
      *
      * @return the number of links from the root to the deepest leaf.
      *
