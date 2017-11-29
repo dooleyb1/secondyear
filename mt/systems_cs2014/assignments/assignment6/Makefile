@@ -32,6 +32,7 @@ MDOPTS=-f
 # non-debug version
 #CXX=g++ -Ofast
 CXX=g++ -std=c++14 -g
+ 
 
 all: html 
 
