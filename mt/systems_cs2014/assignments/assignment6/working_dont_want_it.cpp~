@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 	    		}
 				if (!strcmp("web",argv[i])) {
 	    		 	 webflag = true;
-			 		 memcpy(request, argv[6], strlen(argv[6])+1);
+			 		 memcpy(request, argv[6], strlen(argv[6])+1)
 			  		 cout << "webflag set to true" << "\n";
 			  		 cout << "HTTP get request is : " << request << "\n";
 	     		     break;
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
     	else
         	printf("\nSuccessfully opened socket");
      
-    	server = gethostbyname(host);
+    	server = gethostbyname(firstHalf);
      
     	if (server == NULL)
     	{
@@ -160,45 +160,9 @@ int main(int argc, char **argv)
         	printf("\n%s = ", server->h_name);
         	unsigned int j = 0;
         	while (server -> h_addr_list[j] != NULL)
-        	{
-           		printf("%s", inet_ntoa(*(struct in_addr*)(server -> h_addr_list[j])));
-            		j++;
-        	}
+        {
+            printf("%s", inet_ntoa(*(struct in_addr*)(server -> h_addr_list[j])));
+            j++;
+        }
 	}
-	printf("\n");
- 
-    	bzero((char *) &serveraddr, sizeof(serveraddr));
-    	serveraddr.sin_family = AF_INET;
- 
-    	bcopy((char *)server->h_addr, (char *)&serveraddr.sin_addr.s_addr, server->h_length);
-     
-    	serveraddr.sin_port = htons(port);
-     
-    	if (connect(tcpSocket, (struct sockaddr *) &serveraddr, sizeof(serveraddr)) < 0)
-        	printf("\nError Connecting");
-    	else
-        	printf("\nSuccessfully Connected");
-   
-    	bzero(request, 1000);
- 
-    	sprintf(request, "Get %s HTTP/1.1\r\n Host: %s\r\n \r\n \r\n", request, host);
-     
-    	printf("\n%s", request);
-     
-    	if (send(tcpSocket, request, strlen(request), 0) < 0)
-        	printf("Error with send()");
-    	else
-        	printf("Successfully sent html fetch request");
-     
-    	bzero(request, 1000);
-     
-    	recv(tcpSocket, merged_request, 999, 0);
-    	printf("\n%s", merged_request);
-    	printf("\nhello");
-     
-    	close(tcpSocket);
-     
-    	return (1);
-
-}
 }
