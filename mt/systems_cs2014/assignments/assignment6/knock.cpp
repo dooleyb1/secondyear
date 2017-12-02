@@ -42,6 +42,7 @@ int main(int argc, char **argv)
     char* input_buffer;
     input_buffer = (char*) malloc(20000);
     struct hostent *server;
+    struct protoent *pr;
     struct sockaddr_in serveraddr;
     int port;
     int result;
@@ -139,7 +140,9 @@ int main(int argc, char **argv)
 	
 	else{
 	//Create socket 
-	int tcpSocket = socket(AF_INET, SOCK_STREAM, 0);
+	pr = getprotobyname("tcp");
+	
+	int tcpSocket = socket(AF_INET, SOCK_STREAM, pr->p_proto);
      
     	if (tcpSocket < 0)
         	printf("\nError opening socket");
@@ -164,7 +167,11 @@ int main(int argc, char **argv)
         	printf("\nError Connecting");
  
 	//Format HTTP GET Request 
-    	sprintf(request, "GET /%s HTTP/1.1\r\nHost: %s\r\nContent-Type: text/plain\r\n\r\n", 		resource_path, host);
+	if(webflag)
+    		sprintf(request, "GET /%s HTTP/1.1\r\nHost: %s\r\nContent-Type: text/plain\r\n\r\n", 		resource_path, host);
+
+	else
+		sprintf(request, "GET HTTP/1.1\r\nHost: \r\nContent-Type: text/plain\r\n\r\n");
 		
 	//Send HTTP GET Request
 	if( send(tcpSocket , request , strlen(request) , 0) < 0)
@@ -175,7 +182,6 @@ int main(int argc, char **argv)
 
 	//Receive data from socket and write to user defined file
     	readSocket(tcpSocket, input_buffer);
-	printf("Respone written to file %s...\n", name_with_extension);
     	return 0;
   }
 }
