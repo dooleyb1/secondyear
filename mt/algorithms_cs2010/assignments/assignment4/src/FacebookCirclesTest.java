@@ -94,7 +94,7 @@ public class FacebookCirclesTest
     assertEquals( "Checking size of average circle there are 4 friendships b/w 8 users",   2, fbCircles.sizeOfAverageCircle() );
     assertEquals( "Checking size of smallest circle there are 4 friendships b/w 8 users", 1, fbCircles.sizeOfSmallestCircle() );
   }
-  /*
+  
   //~ Integration Tests..........................................................
   //
   // Each of the following methods tests the actual facebook data from the provided
@@ -109,7 +109,7 @@ public class FacebookCirclesTest
     assertEquals( "Checking size of average circle in file 1684.edges",   196, fbCircles.sizeOfAverageCircle() );
     assertEquals( "Checking size of smallest circle in file 1684.edges", 2, fbCircles.sizeOfSmallestCircle() );
   }
-
+  
   @Test
   public void test1912() throws IOException
   {
@@ -159,7 +159,6 @@ public class FacebookCirclesTest
     assertEquals( "Checking size of average circle in file all.edges",   282, fbCircles.sizeOfAverageCircle() );
     assertEquals( "Checking size of smallest circle in file all.edges", 1, fbCircles.sizeOfSmallestCircle() );
   }
-  */
   
   /**
    * Read the contents of a facebook friendship file containing pairs of user
