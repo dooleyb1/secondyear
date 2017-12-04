@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE vehicleMaintenance SYSTEM "mechanics_info.dtd">
+
+<mechanics_info>
+  <Mechanic  mechanic_id="105">
+    <name>
+			<first_name>Brandon</first_name>
+			<surname>Dooley</surname>
+    </name>
+
+		<details>
+			<address>
+				<number_or_name>11</number_or_name>
+				<street>Killeen Crescent</street>
+				<town>Malahide</town>
+				<postcode>K36 X368</postcode>
+				<county>Dublin</county>
+			</address>
+
+			<PPSN>8782192M</PPSN>
+			<phone_number>0860721926</phone_number>
+			<e-mail_address>dooleyb1@tcd.ie</e-mail_address>
+			
+			<bank_details>
+				<IBAN>1271MA192739</IBAN>
+				<BIC>2718AX</BIC>
+			</bank_details>	
+		</details>
+
+		<role>Junior Mechanic</role>
+			
+		<vehicles_serviced>
+			<Vehicle vehicle_id ="19210">
+				<type>Ambulance</type>
+				<last_service>21/06/2016</last_service>
+				<needs_service>false</needs_service>
+				<is_being_serviced>false</is_being_serviced>
+			</Vehicle>
+
+			<Vehicle vehicle_id ="97315">
+				<type>Fire Brigade</type>
+				<last_service>31/12/2014</last_service>
+				<needs_service>true</needs_service>
+				<is_being_serviced>false</is_being_serviced>
+			</Vehicle>
+
+			<Vehicle vehicle_id ="4287">
+				<type>Police Car</type>
+				<last_service>19/5/2017</last_service>
+				<needs_service>false</needs_service>
+				<is_being_serviced>false</is_being_serviced>
+			</Vehicle>
+		</vehicles_serviced>
+		
+		<is_servicing>false</is_servicing>
+	</Mechanic>
+</mechanics_Info>

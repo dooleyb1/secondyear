@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This document contains the XML Model for the records/info of all mechanics within the larger Emergency Services Vehicle Maintenance System model -->
+
+<!--  The * cardinality is used for Mechanic as there can be no mechanics registered in the system or an infinite amount of mechanics-->
+
+<!ELEMENT Mechanics_Info (Mechanic)*>
+
+<!-- Each mechanic has an associated set of data attributed to the mechanic itself. Each mechanic has a required attribute 'mechanic_id', this is so anyone operating on the system can effeciently and quickly access/edit a mechanics respective details. Each mechanic can have multiple roles however must have atleast one, hence the + cardinality is used. -->
+
+<!ELEMENT Mechanic (name, details, role+, vehicles_serviced, is_servicing)>
+<!ATTLIST Mechanic mechanic_id CDATA #REQUIRED>
+<!ELEMENT mechanic_id (#PCDATA)>
+
+<!ELEMENT name   (first_name,surname)>
+		<!ELEMENT first_name (#PCDATA) #REQUIRED>
+		<!ELEMENT surname (#PCDATA) #REQUIRED>
+
+<!ELEMENT details (address, PPSN, phone_number, e-mail_address, bank_details)>
+		<!ELEMENT address (number_or_name, street, town, postcode, county)>
+				<!ELEMENT number_or_name (#PCDATA)>
+				<!ELEMENT street (#PCDATA)>
+				<!ELEMENT town (#PCDATA)>
+				<!ELEMENT postcode (#PCDATA)>	
+				<!ELEMENT county (#PCDATA)>
+		<!ELEMENT PPSN (#PCDATA) #REQUIRED>
+		<!ELEMENT phone_number (#PCDATA)>
+		<!ELEMENT e-mail_address (#PCDATA)>
+		<!ELEMENT bank_details (IBAN, BIC)>
+				<!ELEMENT IBAN (#PCDATA) #REQUIRED>
+				<!ELEMENT BIC (#PCDATA) #REQUIRED>
+<!ELEMENT role (#PCDATA)>
+
+<!-- Each mechanic also has an associated record of all the vehicles he/she has previously serviced. This is to enable a sense of traceability to the system, so that in the event of an accident occuring as a direct result of a faulty service the full service history can be traced back. -->
+
+<!ELEMENT vehicles_serviced (Vehicle)*>
+
+<!-- Each vehicle has an associated required attribute 'vehicle_id', this is in place to allow effecient and quick access to a vehicles record by someone acting on the system. Each vehicle also has other pieces of data associated with it such as it's type (e.g Ambulance, Fire Brigade, Police Car etc.), when it was last serviced, whether or not it needs a service and whether or not it is currently being serviced. -->
+
+		<!ELEMENT Vehicle (type, last_service, needs_service, is_being_serviced)>
+			<!ATTLIST Vehicle vehicle_id CDATA #REQUIRED>
+			<!ELEMENT vehicle_id (#PCDATA)>
+				<!ELEMENT type (#PCDATA) #REQUIRED>	
+				<!ELEMENT last_service (#PCDATA)>	
+				<!ELEMENT needs_service (#PCDATA)>
+				<!ELEMENT is_being_serviced (#PCDATA)>
+<!ELEMENT is_servicing (#PCDATA)>]>
