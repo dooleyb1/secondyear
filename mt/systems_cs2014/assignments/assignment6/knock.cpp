@@ -171,7 +171,7 @@ int main(int argc, char **argv)
     		sprintf(request, "GET /%s HTTP/1.1\r\nHost: %s\r\nContent-Type: text/plain\r\n\r\n", 		resource_path, host);
 
 	else
-		sprintf(request, "GET HTTP/1.1\r\nHost: \r\nContent-Type: text/plain\r\n\r\n");
+		sprintf(request, "GET / HTTP/1.1\r\nHost: %s\r\nContent-Type: text/plain\r\n\r\n", host);
 		
 	//Send HTTP GET Request
 	if( send(tcpSocket , request , strlen(request) , 0) < 0)
