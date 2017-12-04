@@ -13,8 +13,7 @@ using namespace std;
 
 //Globals
 bool hostflag, portflag, helpflag, webflag, fileflag;
-FILE * outputfile;
-const char* extension = ".txt";
+fstream f;
 
 //Function for reading and writing data recievedfrom socket
 static int readSocket(int socket, char *buffer);
@@ -34,13 +33,9 @@ int main(int argc, char **argv)
     hostflag = portflag = helpflag = webflag = fileflag = false;
     
     //Initialise variables
-    char filename[500];
-    char* name_with_extension;
     char host[500];
     char resource_path[500];
     char request[1000];
-    char* input_buffer;
-    input_buffer = (char*) malloc(20000);
     struct hostent *server;
     struct protoent *pr;
     struct sockaddr_in serveraddr;
@@ -72,11 +67,7 @@ int main(int argc, char **argv)
 			  break;
 			case 'f':
 			  fileflag = true;
-			  memcpy(filename, argv[i+1], strlen(argv[i+1])+1);
-		    	  name_with_extension = (char*) malloc(strlen(filename)+1+4);
-			  strcpy(name_with_extension, filename); 
-			  strcat(name_with_extension, extension);
-			  outputfile = fopen (name_with_extension,"w+");
+			  f.open(argv[i+1],ios::out);
 			  break;
 			case '?':
 			  helpflag = true;
@@ -116,11 +107,7 @@ int main(int argc, char **argv)
 	    		}
 			if (!strcmp("file",argv[i])) {
 	    		  fileflag = true;
-			  memcpy(filename, argv[i+1], strlen(argv[i+1])+1);
-		    	  name_with_extension = (char*) malloc(strlen(filename)+1+4);
-			  strcpy(name_with_extension, filename); 
-			  strcat(name_with_extension, extension);
-			  outputfile = fopen (name_with_extension,"w+");	
+			  f.open(argv[i+1],ios::out);	
 	     		  break;
 	    		}
 			//If no flag has been set, then invalid input 
@@ -133,9 +120,19 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-
-	if(helpflag){
-		usage(1);
+	
+	//Handle invalid input or helpflag
+	if(!fileflag || !hostflag || helpflag) {
+		if(helpflag)
+			usage(1);
+		else if(!fileflag) {
+			printf("No file defined\n");
+			usage(1);
+		}
+		else {
+			printf("No host defined\n");
+			usage(1);
+		}
 	}
 	
 	else{
@@ -156,7 +153,7 @@ int main(int argc, char **argv)
         	printf("gethostbyname() failed\n");
     	}
  
-	
+	//Format server address
     	bzero((char *) &serveraddr, sizeof(serveraddr));
     	serveraddr.sin_family = AF_INET;
 	bcopy((char *)server->h_addr, (char *)&serveraddr.sin_addr.s_addr, server->h_length);
@@ -179,13 +176,16 @@ int main(int argc, char **argv)
         	printf("Send failed");
         	return 1;
     	}
-
-	//Receive data from socket and write to user defined file
-    	readSocket(tcpSocket, input_buffer);
+	
+	//Receive response and write to file
+	char* buf = new char[100000];
+	bzero(buf, 100000);
+	readSocket(tcpSocket, buf);
     	return 0;
   }
 }
 
+//Function to handle socket responses of specific lengths
 static int readSocket(int socket, char *buffer)
 {
     ssize_t bytes_read = 0;
@@ -198,7 +198,7 @@ static int readSocket(int socket, char *buffer)
 	//If fileflag set, write to file 
 	if(fileflag)
 	{
-	    fprintf (outputfile, "%s", buffer);
+	    f<<buffer;
 	    bytes_read = recv(socket, buffer, BUFSIZE - 1, 0);
 	}
 	//Otherwise print buffer to console
@@ -214,7 +214,6 @@ static int readSocket(int socket, char *buffer)
         printf("Socket recv failed");
         return -1;
     }
-    fclose (outputfile);
     return 0;
 }
 
