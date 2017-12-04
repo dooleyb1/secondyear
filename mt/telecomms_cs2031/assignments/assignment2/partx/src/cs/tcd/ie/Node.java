@@ -11,6 +11,8 @@ public abstract class Node {
 
 	static final String DEFAULT_DST_NODE = "localhost";
 	
+	static final int NETWORK_NODE_COUNT = 5;
+	
 	static final int END_USER_1_PORT = 40700;
 	static final int END_USER_2_PORT = 40701;
 	

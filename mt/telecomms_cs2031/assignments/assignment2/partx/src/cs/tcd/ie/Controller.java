@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -20,6 +21,10 @@ public class Controller extends Node {
 	int controllerPort;
 	boolean allInfoReceived;
 
+	/*
+	 * Hashmap to reference node names
+	 */
+	HashMap<Integer, String> nodeNames;
 	
 	/*
 	 * Hashmap to store routing table within 
@@ -28,6 +33,12 @@ public class Controller extends Node {
 	 */
 	HashMap<Integer, HashMap<Integer,Integer>> routingMap;
 	
+	/*
+	 * Hashmap to store network connections for each node
+	 * - <Integer> = node address
+	 * - ArrayList<Integer> = nodes connections
+	 */
+	HashMap<Integer, ArrayList<Integer>> networkConnections;
 	
 	/*
 	 * 
@@ -38,7 +49,10 @@ public class Controller extends Node {
 			this.controllerPort = controllerPort;
 			this.allInfoReceived = false;
 			this.routingMap = new HashMap<Integer, HashMap<Integer,Integer>>();
+			this.networkConnections = new HashMap<Integer, ArrayList<Integer>>();
+			this.nodeNames = new HashMap<Integer, String>();
 			
+			fillNodeNames();
 			//Creates router socket at defined address
 			socket= new DatagramSocket(controllerPort);
 			listener.go();
@@ -51,6 +65,14 @@ public class Controller extends Node {
 		terminal.println("Controller initialised at (" + this.controllerPort + ")...");
 		terminal.println("Waiting for contact at controller...");
 		this.wait();
+	}
+	
+	public void fillNodeNames() {
+		this.nodeNames.put(END_USER_1_PORT, "(END USER 1)");
+		this.nodeNames.put(END_USER_2_PORT, "(END USER 2)");
+		this.nodeNames.put(ROUTER_1_PORT, "(ROUTER 1)");
+		this.nodeNames.put(ROUTER_2_PORT, "(ROUTER 2)");
+		this.nodeNames.put(ROUTER_3_PORT, "(ROUTER 3)");
 	}
 	
 	public void hardCodeRoutingMap() {
@@ -105,6 +127,27 @@ public class Controller extends Node {
 		    terminal.println("" + routerAddress + "               |       " + nextHop);
 		}
 	}
+	
+	public void printNetworkConnections() {
+		int nodeAddress;
+		ArrayList<Integer> connections;
+		
+		terminal.println("Node Address           |   Connections" );
+		terminal.println("---------------------------------------------");
+		
+		for (Entry<Integer, ArrayList<Integer>> entry : this.networkConnections.entrySet()) {
+
+			nodeAddress = entry.getKey();
+			connections = entry.getValue();
+			terminal.println("" + nodeAddress + " " + nodeNames.get(nodeAddress) + "    |       ");
+			
+			for(Integer i : connections)
+				terminal.println("                                |       " + i + " " + nodeNames.get(i));
+			
+			terminal.println("-----------------------------------------------");
+		}
+		
+	}
 
 	
 	public void onReceipt(DatagramPacket packet) {
@@ -124,12 +167,13 @@ public class Controller extends Node {
 			//If flag = 1, packet is from router seeking flow update
 			case 1:
 				terminal.println("Packet is from router seeking flow update...");
-				handleUpdateRequest();
+				//handleUpdateRequest();
 				break;
 			//If flag = 2, packet is from a node informing of connections
 			case 2:
 				terminal.println("Packet is from node informing of connections...");
-				handleConnectionInform();
+				handleConnectionInform(packet);
+				printNetworkConnections();
 				break;
 			default:
 				terminal.println("Unknown flag...");
@@ -139,6 +183,28 @@ public class Controller extends Node {
 			
 		}
 		catch(Exception e) {e.printStackTrace();}
+	}
+	
+	/*
+	 * Handles a connection inform  packet from a node in the network
+	 * 
+	 * @param packet : packet containing connection information for a given node 
+	 */
+	public void handleConnectionInform(DatagramPacket packet) {
+		terminal.println("Handling connection inform packet...");
+		ControllerInformPacket info = new ControllerInformPacket(packet);
+		int nodeAddress = info.getSource();
+		int[] nodeConnections = info.getConnectionAddresses();
+		ArrayList<Integer> connections = new ArrayList<Integer>();
+		
+		//Iterate through connections storing them to arraylist
+		for(int i=0;i<nodeConnections.length;i++) {
+			connections.add(nodeConnections[i]);
+		}
+		
+		//Store connections for given node
+		this.networkConnections.put(nodeAddress, connections);
+		terminal.println("Network connections updated...\n");
 	}
 	
 	/*

@@ -28,7 +28,7 @@ public interface PacketContent {
 	
 	//ControllerInformPacket Protocol = [FLAG] | [SOURCE_ADDRESS] | [CONNECTION_COUNT (N)] | [CONNECTION_ADDRESS_1] | ... | [CONNECTION_N] 
 	//Flag = 2 for ControllerInformPacket
-	public static final byte CONTROLLER_INFORM_PACKET_LENGTH = 20;
+	//public static final byte CONTROLLER_INFORM_PACKET_LENGTH = 20;
 	public static final byte FLAG_LENGTH = 4;
 	//public static final byte SRC_ADDRESS_LENGTH = 6;
 	public static final byte CONNECTION_COUNT_LENGTH = 4;

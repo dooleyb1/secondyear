@@ -48,7 +48,6 @@ public class Router extends Node {
 			
 			this.controllerAddress = new InetSocketAddress(Node.DEFAULT_DST_NODE, Node.CONTROLLER_PORT);
 			this.connectionCount = 0;
-			this.connections = null;
 			
 			//Creates router socket at defined address
 			socket= new DatagramSocket(routerPort);
@@ -71,7 +70,7 @@ public class Router extends Node {
 		this.printMaps();
 		
 		//Inform controller of direct connections
-		terminal.println("Informing controller of connections...");
+		terminal.println("\nInforming controller of connections...");
 		informController();
 		
 		terminal.println("\nWaiting for contact at router(" + this.routerPort + ")...");
@@ -100,16 +99,19 @@ public class Router extends Node {
 				this.distanceMap.put(ROUTER_3_PORT, 0);
 				this.distanceMap.put(END_USER_1_PORT, 0);
 				this.distanceMap.put(END_USER_2_PORT, 0);
+				break;
 			case ROUTER_2_PORT:
 				this.distanceMap.put(ROUTER_1_PORT, 0);
 				this.distanceMap.put(ROUTER_3_PORT, 0);
 				this.distanceMap.put(END_USER_1_PORT, 0);
 				this.distanceMap.put(END_USER_2_PORT, 0);
+				break;
 			case ROUTER_3_PORT:
 				this.distanceMap.put(ROUTER_1_PORT, 0);
 				this.distanceMap.put(ROUTER_2_PORT, 0);
 				this.distanceMap.put(END_USER_1_PORT, 0);
 				this.distanceMap.put(END_USER_2_PORT, 0);
+				break;
 		}
 	}
 	
@@ -123,24 +125,22 @@ public class Router extends Node {
 			//For router 1 do this
 			case ROUTER_1_PORT:
 				this.routingMap.put(END_USER_1_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(END_USER_2_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_2_PORT, new RoutingElementKey(0,0));
+				break;
 			//For router 2 do this
 			case ROUTER_2_PORT:
-				this.routingMap.put(END_USER_1_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(END_USER_2_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_1_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_3_PORT, new RoutingElementKey(0,0));
+				break;
 			//For router 3 do this
 			case ROUTER_3_PORT:
-				this.routingMap.put(END_USER_1_PORT, new RoutingElementKey(0,0));
 				this.routingMap.put(END_USER_2_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_2_PORT, new RoutingElementKey(0,0));
+				break;
 		}
 	}
 	
 	public void initialiseConnections() {
-		
-		this.connectionCount = 2;
-		this.connections = new int[connectionCount];
-		this.connections[1] = END_USER_1_PORT;
-		this.connections[2] = ROUTER_2_PORT;
 		
 		//Initialise the connections for the router
 		switch (this.routerPort) {
@@ -148,20 +148,23 @@ public class Router extends Node {
 		case ROUTER_1_PORT:
 			this.connectionCount = 2;
 			this.connections = new int[connectionCount];
-			this.connections[1] = END_USER_1_PORT;
-			this.connections[2] = ROUTER_2_PORT;
+			this.connections[0] = END_USER_1_PORT;
+			this.connections[1] = ROUTER_2_PORT;
+			break;
 			// For router 2 do this
 		case ROUTER_2_PORT:
 			this.connectionCount = 2;
 			this.connections = new int[connectionCount];
-			this.connections[1] = ROUTER_1_PORT;
-			this.connections[2] = ROUTER_3_PORT;
+			this.connections[0] = ROUTER_1_PORT;
+			this.connections[1] = ROUTER_3_PORT;
+			break;
 			// For router 3 do this
 		case ROUTER_3_PORT:
 			this.connectionCount = 2;
 			this.connections = new int[connectionCount];
-			this.connections[1] = END_USER_2_PORT;
-			this.connections[2] = ROUTER_2_PORT;
+			this.connections[0] = END_USER_2_PORT;
+			this.connections[1] = ROUTER_2_PORT;
+			break;
 		}
 		terminal.println("Connections initialised...");
 	}
