@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,7 +21,6 @@ public class Controller extends Node {
 	Terminal terminal;
 	int controllerPort;
 	boolean allInfoReceived;
-
 	/*
 	 * Hashmap to reference node names
 	 */
@@ -28,8 +28,8 @@ public class Controller extends Node {
 	
 	/*
 	 * Hashmap to store routing table within 
-	 * - <Integer> = routeID#
-	 * - HashMap<Integer, Integer> = maps sequential flow for each router for unique routeID
+	 * - <Destination> = routeID#
+	 * - HashMap<Node, NextHop> = maps sequential flow for each router for unique routeID
 	 */
 	HashMap<Integer, HashMap<Integer,Integer>> routingMap;
 	
@@ -39,20 +39,29 @@ public class Controller extends Node {
 	 * - ArrayList<Integer> = nodes connections
 	 */
 	HashMap<Integer, ArrayList<Integer>> networkConnections;
+	ArrayList<Integer> endUsers;
+	ArrayList<Integer> routers;
+	int nodeCount;
 	
 	/*
 	 * 
 	 */
 	Controller(Terminal terminal, int controllerPort) {
 		try {
+			//Initialise variables
 			this.terminal= terminal;
 			this.controllerPort = controllerPort;
 			this.allInfoReceived = false;
+			this.nodeCount = 0;
+			
+			//Initialise maps & array lists
 			this.routingMap = new HashMap<Integer, HashMap<Integer,Integer>>();
 			this.networkConnections = new HashMap<Integer, ArrayList<Integer>>();
 			this.nodeNames = new HashMap<Integer, String>();
-			
+			this.endUsers = new ArrayList<Integer>();
+			this.routers = new ArrayList<Integer>();
 			fillNodeNames();
+			
 			//Creates router socket at defined address
 			socket= new DatagramSocket(controllerPort);
 			listener.go();
@@ -63,16 +72,143 @@ public class Controller extends Node {
 	
 	public synchronized void start() throws Exception {
 		terminal.println("Controller initialised at (" + this.controllerPort + ")...");
+		
 		terminal.println("Waiting for contact at controller...");
+		
 		this.wait();
 	}
 	
+	/*
+	 * Method that does Distance Vector Routing calculation. Calculates the next hop for each node when packet is to be sent.
+	 */
+	public void doDistanceVector() {
+		//Calculate route from each end user to end user
+		ArrayList<Integer> otherEndUsers;
+		HashMap<Integer, Integer> route;
+		ArrayList<Integer> path;
+		terminal.println("Doing distance vector routing...\n");
+		
+		//For each end user, find routes to each other end user
+		for(int src : this.endUsers) {
+			otherEndUsers = new ArrayList<Integer>();
+			route = new HashMap<Integer, Integer>();
+			path = new ArrayList<Integer>();
+			//Get all other end users in the network (routes need to be established for each)
+			for(int otherUser : this.endUsers) {
+				if(otherUser != src)
+					otherEndUsers.add(otherUser);
+			}
+			//For each possible other end user node, find quickest route
+			for(int dst : otherEndUsers) {
+				terminal.println("Path from " + src + " to "+ dst + " is as follows:");
+				path = getQuickestRouteBetween(src,dst);
+				for(int x : path)
+					terminal.println("Node - " + x);
+				
+				terminal.println("\n");
+			}
+				
+		}
+	}
+	
+	/*
+	 * Gets quickest route between node x and node y using Breadth-First-Search (BFS) 
+	 * Inspiration from (https://codereview.stackexchange.com/questions/84717/shortest-path-using-breadth-first-search)
+	 * 
+	 * @param src	source node address
+	 * @param dst	destination node address
+	 * 
+	 * @returns route	HashMap representing quickest route for each node in route HashMap<Node><NextHop>
+	 */
+	public ArrayList<Integer> getQuickestRouteBetween(int src, int dst){
+		ArrayList<Integer> path = new ArrayList<Integer>();
+		
+		 // If the source is the same as destination, I'm done.
+        if (src == dst) {
+            path.add(src);
+            return path;
+        }
+        
+        // A queue to store the un-visited nodes.
+        ArrayDeque<Integer> queue = new ArrayDeque<Integer>();
+
+        // A queue to store the visited nodes.
+        ArrayDeque<Integer> visited = new ArrayDeque<Integer>();
+        
+        queue.offer(src);
+        while (!queue.isEmpty()) {
+            int vertex = queue.poll();
+            visited.offer(vertex);
+
+            //Get connections for current vertex
+            ArrayList<Integer> neighboursList = this.networkConnections.get(vertex);
+            int index = 0;
+            int neighboursSize = neighboursList.size();
+            while (index != neighboursSize) {
+                int neighbour = neighboursList.get(index);
+
+                path.add(neighbour);
+                path.add(vertex);
+
+                if (neighbour == dst) {
+                    return filterPath(src, dst, path);
+                } else {
+                    if (!visited.contains(neighbour)) {
+                        queue.offer(neighbour);
+                    }
+                }
+                index++;
+            }
+        }
+        return null;
+    }
+		
+	
+	/**
+     * Adds the nodes involved in the shortest path.
+     * Taken from (https://codereview.stackexchange.com/questions/84717/shortest-path-using-breadth-first-search)
+     * @param src         The source node.
+     * @param destination The destination node.
+     * @param path        The path that has nodes and their neighbours.
+     * @return The shortest path.
+     */
+    public ArrayList<Integer> filterPath(Integer src, Integer destination,
+                                                 ArrayList<Integer> path) {
+
+        ArrayList<Integer> shortestPath = new ArrayList<Integer>();
+        ArrayList<Integer> addedNodes = new ArrayList<Integer>();
+        int node;
+        shortestPath.add(src);
+        addedNodes.add(src);
+        
+        //Filter out double adding of nodes
+        for(int i=0;i<path.size();i++) {
+        	node = path.get(i);
+        	if(!addedNodes.contains(node)) {
+        		shortestPath.add(node);
+        		addedNodes.add(node);
+        	}
+        }
+        
+        return shortestPath;
+    }
+	/*
+	 * Populates endUsers and routers ArrayLists, also populates nodeNames HashMap with respective names for each node
+	 */
 	public void fillNodeNames() {
+		//Handle network end users names and addresses
 		this.nodeNames.put(END_USER_1_PORT, "(END USER 1)");
+		this.endUsers.add(END_USER_1_PORT);
 		this.nodeNames.put(END_USER_2_PORT, "(END USER 2)");
+		this.endUsers.add(END_USER_2_PORT);
+		
+		//Handle network router names and addresses
 		this.nodeNames.put(ROUTER_1_PORT, "(ROUTER 1)");
+		this.routers.add(ROUTER_1_PORT);
 		this.nodeNames.put(ROUTER_2_PORT, "(ROUTER 2)");
+		this.routers.add(ROUTER_2_PORT);
 		this.nodeNames.put(ROUTER_3_PORT, "(ROUTER 3)");
+		this.routers.add(ROUTER_3_PORT);
 	}
 	
 	public void hardCodeRoutingMap() {
@@ -174,6 +310,9 @@ public class Controller extends Node {
 				terminal.println("Packet is from node informing of connections...");
 				handleConnectionInform(packet);
 				printNetworkConnections();
+				if(this.nodeCount == NETWORK_NODE_COUNT) {
+					doDistanceVector();
+				}
 				break;
 			default:
 				terminal.println("Unknown flag...");
@@ -204,6 +343,9 @@ public class Controller extends Node {
 		
 		//Store connections for given node
 		this.networkConnections.put(nodeAddress, connections);
+		
+		this.nodeCount++;
+		terminal.println("Node count = " + this.nodeCount);
 		terminal.println("Network connections updated...\n");
 	}
 	
