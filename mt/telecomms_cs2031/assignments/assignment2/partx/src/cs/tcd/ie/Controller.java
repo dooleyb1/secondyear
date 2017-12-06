@@ -100,10 +100,10 @@ public class Controller extends Node {
 			}
 			//For each possible other end user node, find quickest route
 			for(int dst : otherEndUsers) {
-				terminal.println("Path from " + src + " to "+ dst + " is as follows:");
+				terminal.println("Path from " + src + "(" + nodeNames.get(src) +  ") to "+ dst + "(" + nodeNames.get(dst) + ") is as follows:");
 				path = getQuickestRouteBetween(src,dst);
 				for(int x : path)
-					terminal.println("Node - " + x);
+					terminal.println("Node - " + x + "(" + nodeNames.get(x) + ")");
 				
 				terminal.println("\n");
 			}
@@ -209,6 +209,16 @@ public class Controller extends Node {
 		this.routers.add(ROUTER_2_PORT);
 		this.nodeNames.put(ROUTER_3_PORT, "(ROUTER 3)");
 		this.routers.add(ROUTER_3_PORT);
+		this.nodeNames.put(ROUTER_4_PORT, "(ROUTER 4)");
+		this.routers.add(ROUTER_4_PORT);
+		this.nodeNames.put(ROUTER_5_PORT, "(ROUTER 5)");
+		this.routers.add(ROUTER_5_PORT);
+		this.nodeNames.put(ROUTER_6_PORT, "(ROUTER 6)");
+		this.routers.add(ROUTER_6_PORT);
+		this.nodeNames.put(ROUTER_7_PORT, "(ROUTER 7)");
+		this.routers.add(ROUTER_7_PORT);
+		this.nodeNames.put(ROUTER_8_PORT, "(ROUTER 8)");
+		this.routers.add(ROUTER_8_PORT);
 	}
 	
 	public void hardCodeRoutingMap() {
