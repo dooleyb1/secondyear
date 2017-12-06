@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This document contains the design for a file containing vehicle maintenance data. -->
+<!-- The parts inventory contains a list of all services to be completed, information pertaining
+the service and mechanic assigned to the service. The + cardinality is used for service as
+there must be one but there can be as many as needed -->
+<!ELEMENT services (service+)>
+
+<!-- Each service contains important information for the mechanic. The vehicle ID is required,
+however the mechanic ID is not (marked with ? cardinality). This is because the service could 
+be added without a mechanic initially assigned to it. The same goes for parts needed. There
+may not always be parts needed to complete the service. -->
+<!-- The service ID is an attribute to the service element -->
+<!ELEMENT service (vehicleID, mechanicID?, serviceDescription, serviceType, partsNeeded?)>
+<!ATTLIST service id CDATA #REQUIRED>
+
+<!ELEMENT vehicleID (#PCDATA)>
+<!ELEMENT mechanicID (#PCDATA)>
+<!ELEMENT serviceDescription (#PCDATA)>
+<!ELEMENT serviceType (#PCDATA)>
+
+<!-- Each parts needed contains parts elements with id attributes and quantity attributes.
+The id attribute is required and the default quantity is 1 -->
+<!ELEMENT partsNeeded (part+)>
+<!ELEMENT part EMPTY>
+<!ATTLIST part id CDATA #REQUIRED>
+<!ATTLIST part quantity CDATA "1">

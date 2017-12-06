@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This document contains the design for a file containing parts inventory data. -->
+<!-- The parts inventory contains a list of all parts in stock, information pertaining
+the parts and stock figures. -->
+<!ELEMENT partsInventory (part+)>
+
+<!-- Each part with a unique part id has its own part entry. The id is entered as an attribute,
+as is the category of the part and the no. of that part in stock. Make, model, name and part
+description are all required elements for each part. ? is used for all others as they are
+not required but can only occur a maximum of once. -->
+<!ELEMENT part (make,model,name,partDescription,fittingPosition?,RRP?,specification?)>
+<!ATTLIST part id CDATA #REQUIRED>
+<!ATTLIST part category CDATA "uncategorized">
+<!ATTLIST part stock CDATA #REQUIRED>
+
+<!-- Make and model are required elements for each part and the model has a required attribute
+to specify the model years for the part. -->
+<!ELEMENT make (#PCDATA)>
+<!ELEMENT model (#PCDATA)>
+<!ATTLIST model year CDATA #REQUIRED>
+
+<!-- The name and part description are also required for each part entry. -->
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT partDescription (#PCDATA)>
+
+<!-- Fitting position allows to specify which part of the vehicle the part is to be fitted to -->
+<!ELEMENT fittingPosition (#PCDATA)>
+
+<!-- RRP specifies the recommended retail price as reference for mechanics as to what a
+reasonable price to pay and charge for a part is. The currency attribute can also be
+specified and its default is euro. -->
+<!ELEMENT RRP (#PCDATA)>
+<!ATTLIST RRP currency CDATA "euro">
+
+<!-- The specification element is used to provide important part specific information to a mechanic. -->
+<!-- Some elements such as height and diameters have a metric attribute to specify the unit of measurement -->
+<!-- All elements have a cardinality of ? as they are all optional elements but may only occur a maximum of once-->
+<!ELEMENT specification (height?,inlet?,outerDiameter?,innerDiameter?,shape?,transmissionType?,engineCode?,weight?)>
+<!ELEMENT height (#PCDATA)>
+<!ATTLIST height metric CDATA "mm">
+
+<!ELEMENT inlet (#PCDATA)>
+<!ATTLIST inlet metric CDATA "mm">
+
+<!ELEMENT outerDiameter (#PCDATA)>
+<!ATTLIST outerDiameter metric CDATA "mm">
+
+<!ELEMENT innerDiameter (#PCDATA)>
+<!ATTLIST innerDiameter metric CDATA "mm">
+
+<!ELEMENT shape (#PCDATA)>
+<!ELEMENT transmissionType (#PCDATA)>
+<!ELEMENT engineCode (#PCDATA)>
+
+<!ELEMENT weight (#PCDATA)>
+<!ATTLIST weight metric CDATA "kg">
