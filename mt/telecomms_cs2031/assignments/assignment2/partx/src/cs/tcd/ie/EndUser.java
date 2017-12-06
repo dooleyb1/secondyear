@@ -193,7 +193,7 @@ public class EndUser extends Node {
 		    if(endUserPortNumber == END_USER_1_PORT)
 		    	routerPortNumber = ROUTER_1_PORT;
 		    else
-		    	routerPortNumber = ROUTER_3_PORT;
+		    	routerPortNumber = ROUTER_8_PORT;
 		    	
 		    Terminal terminal = new Terminal("End User (" + endUserPortNumber + ")");
 			(new EndUser(terminal, DEFAULT_DST_NODE, endUserPortNumber, routerPortNumber)).start();

@@ -17,7 +17,6 @@ public class Router extends Node {
 		
 	Terminal terminal;
 	int routerPort;
-	boolean onHold;
 	DatagramPacket messagePacket;
 	
 	InetSocketAddress controllerAddress;
@@ -32,8 +31,6 @@ public class Router extends Node {
 	 */
 	HashMap<Integer, RoutingElementKey> routingMap;
 	
-	HashMap<Integer, Integer> distanceMap;
-	
 	/*
 	 * 
 	 */
@@ -41,10 +38,8 @@ public class Router extends Node {
 		try {
 			this.terminal= terminal;
 			this.routerPort = routerPort;
-			this.onHold = false;
 			this.messagePacket = null;
 			this.routingMap = new HashMap<Integer, RoutingElementKey>();
-			this.distanceMap = new HashMap<Integer, Integer>();
 			
 			this.controllerAddress = new InetSocketAddress(Node.DEFAULT_DST_NODE, Node.CONTROLLER_PORT);
 			this.connectionCount = 0;
@@ -58,16 +53,14 @@ public class Router extends Node {
 
 	
 	public synchronized void start() throws Exception {
-		terminal.println("Initialising distance map at router (" + this.routerPort + ")...");
-		this.initialiseDistanceMap();
 		terminal.println("Sucess\n");
 		
 		terminal.println("Initialising routing map at router (" + this.routerPort + ")...");
 		this.initialiseRoutingMap();
 		terminal.println("Sucess\n");
 		
-		terminal.println("Printing maps at router (" + this.routerPort + ")...\n");
-		this.printMaps();
+		terminal.println("Printing routing map at router (" + this.routerPort + ")...\n");
+		this.printRoutingMap();
 		
 		//Inform controller of direct connections
 		terminal.println("\nInforming controller of connections...");
@@ -87,61 +80,6 @@ public class Router extends Node {
 		terminal.println("Controller informed of connections...");
 	}
 	
-	/*
-	 * Initialises the distanceMap's of each respective router (distance from A-B)
-	 */
-	public void initialiseDistanceMap() {
-		
-		//Initialise the distanceMap table for the router
-		switch(this.routerPort) {
-			case ROUTER_1_PORT:
-				this.distanceMap.put(ROUTER_2_PORT, 0);
-				this.distanceMap.put(ROUTER_3_PORT, 0);
-				this.distanceMap.put(END_USER_1_PORT, 0);
-				this.distanceMap.put(END_USER_2_PORT, 0);
-				break;
-			case ROUTER_2_PORT:
-				this.distanceMap.put(ROUTER_1_PORT, 0);
-				this.distanceMap.put(ROUTER_3_PORT, 0);
-				this.distanceMap.put(END_USER_1_PORT, 0);
-				this.distanceMap.put(END_USER_2_PORT, 0);
-				break;
-			case ROUTER_3_PORT:
-				this.distanceMap.put(ROUTER_1_PORT, 0);
-				this.distanceMap.put(ROUTER_2_PORT, 0);
-				this.distanceMap.put(END_USER_1_PORT, 0);
-				this.distanceMap.put(END_USER_2_PORT, 0);
-				break;
-			case ROUTER_4_PORT:
-				this.distanceMap.put(ROUTER_1_PORT, 0);
-				this.distanceMap.put(ROUTER_2_PORT, 0);
-				this.distanceMap.put(END_USER_1_PORT, 0);
-				this.distanceMap.put(END_USER_2_PORT, 0);
-				break;
-			case ROUTER_5_PORT:
-				this.distanceMap.put(ROUTER_1_PORT, 0);
-				this.distanceMap.put(ROUTER_2_PORT, 0);
-				this.distanceMap.put(END_USER_1_PORT, 0);
-				this.distanceMap.put(END_USER_2_PORT, 0);
-				break;
-			case ROUTER_6_PORT:
-				this.distanceMap.put(ROUTER_1_PORT, 0);
-				this.distanceMap.put(ROUTER_2_PORT, 0);
-				this.distanceMap.put(END_USER_1_PORT, 0);
-				this.distanceMap.put(END_USER_2_PORT, 0);
-				break;
-			case ROUTER_7_PORT:
-				this.distanceMap.put(ROUTER_1_PORT, 0);
-				this.distanceMap.put(ROUTER_2_PORT, 0);
-				this.distanceMap.put(END_USER_1_PORT, 0);
-				this.distanceMap.put(END_USER_2_PORT, 0);
-			case ROUTER_8_PORT:
-				this.distanceMap.put(ROUTER_1_PORT, 0);
-				this.distanceMap.put(ROUTER_2_PORT, 0);
-				this.distanceMap.put(END_USER_1_PORT, 0);
-				this.distanceMap.put(END_USER_2_PORT, 0);
-		}
-	}
 	
 	/*
 	 * Initialises the routing map's of each respective router
@@ -229,10 +167,11 @@ public class Router extends Node {
 			this.connections[2] = ROUTER_7_PORT;
 			break;
 		case ROUTER_5_PORT:
-			this.connectionCount = 2;
+			this.connectionCount = 3;
 			this.connections = new int[connectionCount];
 			this.connections[0] = ROUTER_2_PORT;
-			this.connections[1] = ROUTER_7_PORT;
+			this.connections[1] = ROUTER_2_PORT;
+			this.connections[2] = ROUTER_7_PORT;
 			break;
 		case ROUTER_6_PORT:
 			this.connectionCount = 2;
@@ -258,49 +197,25 @@ public class Router extends Node {
 		terminal.println("Connections initialised...");
 	}
 	
-	/*
-	 * Prints both the distanceMap and the routingMap
-	 */
-	public void printMaps() {
-		this.printDistanceMap();
-		this.printRoutingMap();
-	}
-	
-	public void printDistanceMap() {
-		int address;
-		int distance;
-		
-		terminal.println("***Distance Map for Router(" + this.routerPort + ")***\n");
-		terminal.println("Address   |    Distance ");
-		terminal.println("-----------------------------------------------");
-		
-		for(Entry<Integer, Integer> entry : this.distanceMap.entrySet()) {
-		    
-			address = entry.getKey();
-		    distance = entry.getValue();
-		    
-		    terminal.println("" + address + "       |       " + distance);
-		}
-	}
 	
 	public void printRoutingMap() {
 		RoutingElementKey routingKey;
-		int address;
-		int hopCount;
+		int destination;
 		int nextHop;
+		int hopCount;
 		
 		terminal.println("\n***Routing Map for Router(" + this.routerPort + ")***\n");
-		terminal.println("Address   |    HopCount    |   NextHop" );
+		terminal.println("Destination   |    NextHop    |   HopCount" );
 		terminal.println("-------------------------------------------------------");
 		
 		for(Entry<Integer, RoutingElementKey> entry : this.routingMap.entrySet()) {
 		    
-			address = entry.getKey();
+			destination = entry.getKey();
 		    routingKey = entry.getValue();
-		    hopCount = routingKey.hopCount;
 		    nextHop = routingKey.nextDest;
+		    hopCount = routingKey.hopCount;
 		    
-		    terminal.println("" + address + "       |       " + hopCount + "              |         " + nextHop);
+		    terminal.println("" + destination + "       |       " + nextHop + "              |         " + hopCount);
 		}
 	}
 	
@@ -313,7 +228,7 @@ public class Router extends Node {
 			if(packet.getPort() == CONTROLLER_PORT) {
 				terminal.println("\nPacket came from controller...");
 				processControllerUpdate(packet);
-				
+				terminal.println("\nWaiting for contact at router(" + this.routerPort + ")...");
 			}
 			
 			//If packet is not from controller, continue with flow
@@ -335,15 +250,13 @@ public class Router extends Node {
 		//If router has routing knowledge of how to get to destination, send packet to next router
 		if(this.routingMap.get(content.getDestination()).nextDest != 0){
 			terminal.println("Router knows how to get to destination...");
-			content.incrementHopCount();
 			RoutingElementKey key = routingMap.get(content.getDestination());
 			int nextHop = key.nextDest;
 			
 			//Set dst port of packet to that of the next router
-			DatagramPacket updatedPacket = content.toDatagramPacket();
 			InetSocketAddress nextAddr = new InetSocketAddress(Node.DEFAULT_DST_NODE, nextHop);
-			updatedPacket.setSocketAddress(nextAddr);
-			socket.send(updatedPacket);
+			packet.setSocketAddress(nextAddr);
+			socket.send(packet);
 			
 			if(nextHop == Node.END_USER_1_PORT || nextHop == Node.END_USER_2_PORT)
 				terminal.println("\nPacket sent to end user(" + nextHop + ")...");
@@ -351,12 +264,6 @@ public class Router extends Node {
 			else
 			terminal.println("\nPacket sent to next router(" + nextHop + ")...");
 			terminal.println("\nWaiting for contact at router(" + this.routerPort + ")...");
-		}
-		
-		//If routing knowledge unknown, contact controller for update
-		else {
-			this.onHold = true;
-			getRoutingPath(packet);
 		}	
 	}
 	/*
@@ -392,31 +299,21 @@ public class Router extends Node {
 	 */
 	public void processControllerUpdate(DatagramPacket packet) throws InterruptedException, IOException{
 		
-		UpdateResponseContent content = new UpdateResponseContent(packet);
+		NodeInformPacket content = new NodeInformPacket(packet);
 		terminal.println("Processing controller update...");
 		
 		//Destination is the end goal of the packet
-		int dst = content.getDst();
-		//For current router to get to this dst the next hop is newNextHop
-		int newNextHop = content.getNextHop();
-		
-		RoutingElementKey key = this.routingMap.get(dst);
-		terminal.println("Previous next hop for dst address(" +dst+ ") was : " + key.nextDest);
-		key.nextDest = newNextHop;
-		terminal.println("New next hop for dst address(" +dst+ ") is : " + newNextHop);
+		int dst = content.getDestinationAddress();
+		//Extract next hop 
+		int nextHop = content.getNextHopAddress();
+		//Extract hop count
+		int hopCount = content.getHopCount();
+		RoutingElementKey key = new RoutingElementKey(hopCount,nextHop);
 		
 		this.routingMap.put(dst, key);
 		terminal.println("Controller update processed successfully...");
 		terminal.println("Updating maps...\n");
 		printRoutingMap();
-		
-		
-		//If router was originally waiting for controller update, continue with flow of original message packet
-		if(this.onHold)
-		{
-			this.onHold = false;
-			continueTransmission(this.messagePacket);
-		}
 	}
 
 	/*

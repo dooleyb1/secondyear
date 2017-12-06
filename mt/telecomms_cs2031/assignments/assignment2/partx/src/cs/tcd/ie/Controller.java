@@ -12,7 +12,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
+import java.util.Queue;
+import java.util.Stack;
 
 import tcdIO.Terminal;
 
@@ -39,6 +42,7 @@ public class Controller extends Node {
 	 * - ArrayList<Integer> = nodes connections
 	 */
 	HashMap<Integer, ArrayList<Integer>> networkConnections;
+	ArrayList<Integer> shortestPath;
 	ArrayList<Integer> endUsers;
 	ArrayList<Integer> routers;
 	int nodeCount;
@@ -60,6 +64,7 @@ public class Controller extends Node {
 			this.nodeNames = new HashMap<Integer, String>();
 			this.endUsers = new ArrayList<Integer>();
 			this.routers = new ArrayList<Integer>();
+			this.shortestPath = new ArrayList<Integer>();
 			fillNodeNames();
 			
 			//Creates router socket at defined address
@@ -81,17 +86,15 @@ public class Controller extends Node {
 	/*
 	 * Method that does Distance Vector Routing calculation. Calculates the next hop for each node when packet is to be sent.
 	 */
-	public void doDistanceVector() {
+	public void doDistanceVector() throws IOException {
 		//Calculate route from each end user to end user
 		ArrayList<Integer> otherEndUsers;
-		HashMap<Integer, Integer> route;
 		ArrayList<Integer> path;
-		terminal.println("Doing distance vector routing...\n");
-		
+		terminal.println("Finding shortest path between end users in network...\n");
+		InetSocketAddress nodeAddress;
 		//For each end user, find routes to each other end user
 		for(int src : this.endUsers) {
 			otherEndUsers = new ArrayList<Integer>();
-			route = new HashMap<Integer, Integer>();
 			path = new ArrayList<Integer>();
 			//Get all other end users in the network (routes need to be established for each)
 			for(int otherUser : this.endUsers) {
@@ -100,10 +103,30 @@ public class Controller extends Node {
 			}
 			//For each possible other end user node, find quickest route
 			for(int dst : otherEndUsers) {
-				terminal.println("Path from " + src + "(" + nodeNames.get(src) +  ") to "+ dst + "(" + nodeNames.get(dst) + ") is as follows:");
+				terminal.println("Path from " + src + nodeNames.get(src) + " to "+ dst + nodeNames.get(dst) + " is as follows:");
 				path = getQuickestRouteBetween(src,dst);
-				for(int x : path)
-					terminal.println("Node - " + x + "(" + nodeNames.get(x) + ")");
+				//When route found, inform affected nodes of their respective next hop
+				int i = 0;
+				for(int node : path) {
+					//If node is not an end user, do this (don't inform end users as only one connection - that to router)
+					if(node!=END_USER_1_PORT && node!=END_USER_2_PORT) {
+						int nodesNextHop = path.get(i+1);
+						int hopCount = path.size()-(i+1);
+						i++;
+						terminal.println("\nNodeInformPacket: "
+								+ "\nNode = " + node + nodeNames.get(node) 
+								+ "\nDst = " + dst + nodeNames.get(dst)
+								+ "\nNextHop = " +nodesNextHop + nodeNames.get(nodesNextHop)
+								+ "\nHopCount = " + hopCount);	
+						NodeInformPacket informPacket = new NodeInformPacket(node,dst,nodesNextHop,hopCount);
+						DatagramPacket packet = informPacket.toDatagramPacket();
+						nodeAddress = new InetSocketAddress(Node.DEFAULT_DST_NODE, node);
+						packet.setSocketAddress(nodeAddress);
+						socket.send(packet);
+					}
+					else
+						i++;
+				}
 				
 				terminal.println("\n");
 			}
@@ -122,6 +145,7 @@ public class Controller extends Node {
 	 */
 	public ArrayList<Integer> getQuickestRouteBetween(int src, int dst){
 		ArrayList<Integer> path = new ArrayList<Integer>();
+		this.shortestPath.clear();
 		
 		 // If the source is the same as destination, I'm done.
         if (src == dst) {
@@ -151,7 +175,7 @@ public class Controller extends Node {
                 path.add(vertex);
 
                 if (neighbour == dst) {
-                    return filterPath(src, dst, path);
+                    return processPath(src, dst, path);
                 } else {
                     if (!visited.contains(neighbour)) {
                         queue.offer(neighbour);
@@ -166,32 +190,35 @@ public class Controller extends Node {
 	
 	/**
      * Adds the nodes involved in the shortest path.
-     * Taken from (https://codereview.stackexchange.com/questions/84717/shortest-path-using-breadth-first-search)
+     *
      * @param src         The source node.
      * @param destination The destination node.
      * @param path        The path that has nodes and their neighbours.
      * @return The shortest path.
      */
-    public ArrayList<Integer> filterPath(Integer src, Integer destination,
+    private ArrayList<Integer> processPath(int src, int destination,
                                                  ArrayList<Integer> path) {
 
-        ArrayList<Integer> shortestPath = new ArrayList<Integer>();
-        ArrayList<Integer> addedNodes = new ArrayList<Integer>();
-        int node;
-        shortestPath.add(src);
-        addedNodes.add(src);
-        
-        //Filter out double adding of nodes
-        for(int i=0;i<path.size();i++) {
-        	node = path.get(i);
-        	if(!addedNodes.contains(node)) {
-        		shortestPath.add(node);
-        		addedNodes.add(node);
-        	}
+    	
+        // Finds out where the destination node directly comes from.
+        int index = path.indexOf(destination);
+        Integer source = path.get(index + 1);
+
+        // Adds the destination node to the shortestPath.
+        this.shortestPath.add(0, destination);
+
+        if (source.equals(src)) {
+            // The original source node is found.
+            shortestPath.add(0, src);
+            return this.shortestPath;
+        } else {
+            // We find where the source node of the destination node
+            // comes from.
+            // We then set the source node to be the destination node.
+            return processPath(src, source, path);
         }
-        
-        return shortestPath;
     }
+    
 	/*
 	 * Populates endUsers and routers ArrayLists, also populates nodeNames HashMap with respective names for each node
 	 */
