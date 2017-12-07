@@ -132,6 +132,9 @@ public class Router extends Node {
 		}
 	}
 	
+	/*
+	 * Hard codes local connections for each router node
+	 */
 	public void initialiseConnections() {
 		
 		//Initialise the connections for the router
@@ -265,30 +268,6 @@ public class Router extends Node {
 			terminal.println("\nPacket sent to next router(" + nextHop + ")...");
 			terminal.println("\nWaiting for contact at router(" + this.routerPort + ")...");
 		}	
-	}
-	/*
-	 * Contacts controller to find out routing path for the new packet
-	 *  
-	 * @param packet - packet received from end user
-	 * @returns void
-	 */
-	public void getRoutingPath(DatagramPacket packet) throws IOException, InterruptedException {
-		
-		terminal.println("Contacting controller to get flow updat e for new packet...");
-		StringContent packetContent = new StringContent(packet);
-		
-		//Needs to find out how to get from src to dest
-		int dst = packetContent.getDestination();
-		int src = packetContent.getSource();
-		int router = this.routerPort;
-		
-		UpdateRequestContent request = new UpdateRequestContent(dst,src,router);
-		DatagramPacket requestPacket = request.toDatagramPacket();
-		InetSocketAddress controllerAddress = new InetSocketAddress(Node.DEFAULT_DST_NODE, Node.CONTROLLER_PORT);
-		requestPacket.setSocketAddress(controllerAddress);
-		socket.send(requestPacket);
-		terminal.println("Update request sent to controller...");
-		terminal.println("Waiting for update from controller...");
 	}
 	
 	/*
