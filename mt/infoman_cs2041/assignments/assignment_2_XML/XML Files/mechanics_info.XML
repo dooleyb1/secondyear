@@ -30,23 +30,23 @@
 		<role>Senior Mechanic</role>
 			
 		<vehicles_serviced>
-			<Vehicle VehicleID='4930' NeedsService="YES" isBeingServiced="NO">
+			<Vehicle VehicleID='4930' NeedsService="NO" isBeingServiced="NO">
 				<LastService>21/06/2017</LastService>
  			 </Vehicle>
 
-			<Vehicle VehicleID="2019" NeedsService="YES" isBeingServiced="YES">
+			<Vehicle VehicleID="2019" NeedsService="YES" isBeingServiced="NO">
 				<LastService>14/03/2016</LastService>
   			</Vehicle>
 			
-			<Vehicle VehicleID="13984" NeedsService="NO" isBeingServiced="NO">
+			<Vehicle VehicleID="13984" NeedsService="YES" isBeingServiced="YES">
 				<LastService>9/11/2017</LastService>
  			 </Vehicle>
 
-			  <Vehicle VehicleID="1246" NeedsService="NO" isBeingServiced="NO">
+			  <Vehicle VehicleID="1246" NeedsService="YES" isBeingServiced="NO">
 				    <LastService>31/9/2017</LastService>
  			 </Vehicle>
 
-			 <Vehicle VehicleID="4958" NeedsService="YES" isBeingServiced="YES">
+			 <Vehicle VehicleID="4958" NeedsService="NO" isBeingServiced="NO">
 			            <LastService>23/8/2015</LastService>
  			 </Vehicle>
 		</vehicles_serviced>
@@ -118,23 +118,23 @@
 		<role>Senior Mechanic</role>
 			
 		<vehicles_serviced>
-			<Vehicle VehicleID='4930' NeedsService="YES" isBeingServiced="NO">
+			<Vehicle VehicleID='4930' NeedsService="NO" isBeingServiced="NO">
 				<LastService>21/06/2017</LastService>
  			 </Vehicle>
 
-			<Vehicle VehicleID="2019" NeedsService="YES" isBeingServiced="YES">
+			<Vehicle VehicleID="2019" NeedsService="YES" isBeingServiced="NO">
 				<LastService>14/03/2016</LastService>
   			</Vehicle>
 			
-			<Vehicle VehicleID="13984" NeedsService="NO" isBeingServiced="NO">
+			<Vehicle VehicleID="13984" NeedsService="YES" isBeingServiced="YES">
 				<LastService>9/11/2017</LastService>
  			 </Vehicle>
 
-			  <Vehicle VehicleID="1246" NeedsService="NO" isBeingServiced="NO">
+			  <Vehicle VehicleID="1246" NeedsService="YES" isBeingServiced="NO">
 				    <LastService>31/9/2017</LastService>
  			 </Vehicle>
 
-			 <Vehicle VehicleID="4958" NeedsService="YES" isBeingServiced="YES">
+			 <Vehicle VehicleID="4958" NeedsService="NO" isBeingServiced="NO">
 			            <LastService>23/8/2015</LastService>
  			 </Vehicle>
 		</vehicles_serviced>
@@ -201,7 +201,7 @@
 		<role>Apprentice Mechanic</role>
 			
 		<vehicles_serviced>
-			<Vehicle VehicleID="1246" NeedsService="NO" isBeingServiced="NO">
+			<Vehicle VehicleID="1246" NeedsService="YES" isBeingServiced="NO">
 				    <LastService>31/9/2017</LastService>
  			 </Vehicle>
 		</vehicles_serviced>
