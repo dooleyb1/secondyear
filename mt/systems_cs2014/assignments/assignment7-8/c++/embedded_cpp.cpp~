@@ -71,24 +71,6 @@ class ExampleHandler : public CivetHandler
 
 class VanityPrimeHandler : public CivetHandler
 {
-  private:
-	void
-	dumpbuf(char *msg, char *buffer, int buflen)
-	{
-		printf("\n%s, %x long at %p\n",msg,buflen,buffer);
-        	int i = 0;
-		for (i;i<buflen;i++) {
-			printf("%02x",buffer[i]);
-			if (!((i+1)%16)) 
-				printf("\n");
-			else 
-				printf(",");
-		}
-		if (buflen%16) 
-			printf("\n");
-		printf("\n");
-		fflush(stdout);
-	}
   public:
 	bool
 	handleGet(CivetServer *server, struct mg_connection *conn)
@@ -96,16 +78,22 @@ class VanityPrimeHandler : public CivetHandler
 		mg_printf(conn,
 		          "HTTP/1.1 200 OK\r\nContent-Type: "
 		          "text/plain\r\nConnection: close\r\n\r\n");
-		mg_printf(conn, "Calculate vanity prime here...\n");
-		/* Handler may access the request info using mg_get_request_info */
+		//mg_printf(conn, "Calculate vanity prime here...\n");
 		const struct mg_request_info *req_info = mg_get_request_info(conn);
-		mg_printf(conn, "You said : %s \n",req_info->request_uri);
-		char vanity_string[VANITY_PRIME_LENGTH];
-		memcpy(vanity_string, (req_info->request_uri+INDENT), sizeof(vanity_string));
-		mg_printf(conn, "Vanity string = %s \n",vanity_string);
-		int vanity_string_length = strlen(vanity_string);
-		mg_printf(conn, "Vanity string length = %i \n",vanity_string_length);
+		//mg_printf(conn, "\n\nYou said : %s \n",req_info->request_uri+INDENT);
+		//mg_printf(conn, "\n\nLength : %i \n",strlen(req_info->request_uri+INDENT));
+
+		if(strlen(req_info->request_uri+INDENT) > 256){
+			mg_printf(conn, "400 Bad Request\nVanity string entered exceeds max vanity prime length (%i)", VANITY_PRIME_LENGTH);
+			return false;
+		}
 		
+		int vanity_string_length = strlen(req_info->request_uri+INDENT);
+		char vanity_string[vanity_string_length];
+		memcpy(vanity_string, (req_info->request_uri+INDENT), sizeof(vanity_string));
+		//mg_printf(conn, "Vanity string = %s \n",vanity_string);
+		//mg_printf(conn, "Vanity string length = %i \n",vanity_string_length);	
+	
 		//Generating random number of 1024 bits
 		mbedtls_ctr_drbg_init( &ctr_drbg );
   		mbedtls_entropy_init( &entropy );
@@ -123,7 +111,7 @@ class VanityPrimeHandler : public CivetHandler
 		bool prime_found = false;
 		size_t output_length = 0;
 		int attempts = 0;
-		mg_printf(conn, "Attempting to find vanity prime number...\n");
+		//mg_printf(conn, "Attempting to find vanity prime number...\n");
 
 		while(!prime_found && attempts<MAX_ATTEMPTS){
 			attempts++;
@@ -140,19 +128,25 @@ class VanityPrimeHandler : public CivetHandler
 		
 			if(result == 0){
 				prime_found = true;
-				mg_printf(conn, "Number is prime!\n\n");
+				//mg_printf(conn, "Number is prime!\n\n");
 			}
 		}
 
 		if(prime_found){
-			mg_printf(conn, "Vanity prime found = %s\n", buf);
-			mg_printf(conn, "Attempts = %i\n", attempts);
+			mg_printf(conn, "%s", buf);
+			//mg_printf(conn, "Vanity prime found = %s\n", buf);
+			//mg_printf(conn, "Attempts = %i\n", attempts);
+			//mg_printf(conn, "Length = %i \n",strlen(buf));
 		}
 		else{
-			mg_printf(conn, "Max attempts exceeded");
-			mg_printf(conn, "Attempts = %i\n", attempts);
+			mg_printf(conn, "400 Bad Request\nAttempts to produce vanity string exceeded max attempts (%i)", MAX_ATTEMPTS);
+			//mg_printf(conn, "Attempts = %i\n", attempts);
 		}
-
+		
+		//Free mbedtls resources 
+		mbedtls_ctr_drbg_free(&ctr_drbg);
+		mbedtls_entropy_free(&entropy);
+		mbedtls_mpi_free(&mpi);
 		return true;
 	}
 
@@ -485,7 +479,7 @@ class WebSocketHandler : public CivetWebSocketHandler {
 
 
 int
-main(int argc, char *argv[])
+process(int argc, char *argv[])
 {
 	const char *options[] = {
 	    "document_root", DOCUMENT_ROOT, "listening_ports", PORT, 0};

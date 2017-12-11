@@ -6,8 +6,8 @@
 #This makefile is used to test the other Makefiles
 
 
-PROG = embedded_cpp
-SRC = embedded_cpp.cpp 
+PROG = main
+SRC = embedded_cpp.cpp daemon.cpp
 
 # set this to where you built the civetweb repo
 TOP = /home/brandon/secondyear/mt/systems_cs2014/assignments/assignment7-8/c++/civetweb
