@@ -3,13 +3,13 @@ package cs.tcd.ie;
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 
-public class UpdateResponseContent implements PacketContent {
+public class UpdateResponsePacket implements PacketContent {
 	
 	byte[] dst;
 	byte[] src;
 	byte[] nextHop;
 	
-	public UpdateResponseContent(DatagramPacket packet) {
+	public UpdateResponsePacket(DatagramPacket packet) {
 		byte[] buffer= null;
 	
 		this.dst = new byte[DST_ADDRESS_LENGTH];

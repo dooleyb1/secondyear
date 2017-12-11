@@ -96,7 +96,7 @@ public class Controller extends Node {
 			}
 			//For each possible other end user node, find quickest route
 			for(int dst : otherEndUsers) {
-				terminal.println("Path from " + src + nodeNames.get(src) + " to "+ dst + nodeNames.get(dst) + " is as follows:");
+				terminal.println("Shortest path from " + src + nodeNames.get(src) + " to "+ dst + nodeNames.get(dst) + " is as follows:");
 				path = getQuickestRouteBetween(src,dst);
 				//When route found, inform affected nodes of their respective next hop
 				int i = 0;
@@ -106,11 +106,7 @@ public class Controller extends Node {
 						int nodesNextHop = path.get(i+1);
 						int hopCount = path.size()-(i+1);
 						i++;
-						terminal.println("\nNodeInformPacket: "
-								+ "\nNode = " + node + nodeNames.get(node) 
-								+ "\nDst = " + dst + nodeNames.get(dst)
-								+ "\nNextHop = " +nodesNextHop + nodeNames.get(nodesNextHop)
-								+ "\nHopCount = " + hopCount);	
+						terminal.println(node + nodeNames.get(node));	
 						NodeInformPacket informPacket = new NodeInformPacket(node,dst,nodesNextHop,hopCount);
 						DatagramPacket packet = informPacket.toDatagramPacket();
 						nodeAddress = new InetSocketAddress(Node.DEFAULT_DST_NODE, node);

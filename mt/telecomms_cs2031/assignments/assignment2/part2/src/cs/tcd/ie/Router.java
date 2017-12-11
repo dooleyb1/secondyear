@@ -59,15 +59,11 @@ public class Router extends Node {
 
 	
 	public synchronized void start() throws Exception {
-		terminal.println("Sucess\n");
-		
 		terminal.println("Initialising routing map at router (" + this.routerPort + ")...");
 		this.initialiseRoutingMap();
-		terminal.println("Sucess\n");
 		
 		terminal.println("Filling in node names in map...");
 		this.addNodeNames();
-		terminal.println("Success\n");
 		
 		terminal.println("Printing routing map at router (" + this.routerPort + ")...\n");
 		this.printRoutingMap();

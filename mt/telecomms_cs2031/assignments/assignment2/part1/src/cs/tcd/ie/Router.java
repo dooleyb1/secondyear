@@ -52,11 +52,9 @@ public class Router extends Node {
 	public synchronized void start() throws Exception {
 		terminal.println("Initialising distance map at router (" + this.routerPort + ")...");
 		this.initialiseDistanceMap();
-		terminal.println("Sucess\n");
 		
 		terminal.println("Initialising routing map at router (" + this.routerPort + ")...");
 		this.initialiseRoutingMap();
-		terminal.println("Sucess\n");
 		
 		terminal.println("Printing maps at router (" + this.routerPort + ")...\n");
 		this.printMaps();
@@ -229,7 +227,7 @@ public class Router extends Node {
 		int src = packetContent.getSource();
 		int router = this.routerPort;
 		
-		UpdateRequestContent request = new UpdateRequestContent(dst,src,router);
+		UpdateRequestPacket request = new UpdateRequestPacket(dst,src,router);
 		DatagramPacket requestPacket = request.toDatagramPacket();
 		InetSocketAddress controllerAddress = new InetSocketAddress(Node.DEFAULT_DST_NODE, Node.CONTROLLER_PORT);
 		requestPacket.setSocketAddress(controllerAddress);
@@ -246,7 +244,7 @@ public class Router extends Node {
 	 */
 	public void processControllerUpdate(DatagramPacket packet) throws InterruptedException, IOException{
 		
-		UpdateResponseContent content = new UpdateResponseContent(packet);
+		UpdateResponsePacket content = new UpdateResponsePacket(packet);
 		terminal.println("Processing controller update...");
 		
 		//Destination is the end goal of the packet

@@ -113,7 +113,7 @@ public class Controller extends Node {
 		try {
 			
 			terminal.println("\nPacket recieved at controller (" + this.controllerPort + ")\n");
-			UpdateRequestContent content = new UpdateRequestContent(packet);	
+			UpdateRequestPacket content = new UpdateRequestPacket(packet);	
 			
 			//If the controller recieves a packet, it is from a router seeking a routing flow for a given packet
 			int src = content.getSource();
