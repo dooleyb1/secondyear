@@ -11,7 +11,6 @@ import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 import tcdIO.*;
 
@@ -190,10 +189,36 @@ public class EndUser extends Node {
 		    //Set connected port for end user
 		    int routerPortNumber=0;
 		    
-		    if(endUserPortNumber == END_USER_1_PORT)
-		    	routerPortNumber = ROUTER_1_PORT;
-		    else
-		    	routerPortNumber = ROUTER_8_PORT;
+		    //Set connected router address
+		    switch(endUserPortNumber) {
+		    case NET_18_PORT:
+		    	routerPortNumber = ROUTER_A_PORT;
+		    	break;
+		    case NET_15_PORT:
+		    	routerPortNumber = ROUTER_B_PORT;
+		    	break;
+		    case NET_28_PORT:
+		    	routerPortNumber = ROUTER_B_PORT;
+		    	break;
+		    case NET_7_PORT:
+		    	routerPortNumber = ROUTER_D_PORT;
+		    	break;
+		    case NET_5_PORT:
+		    	routerPortNumber = ROUTER_F_PORT;
+		    	break;
+		    case NET_11_PORT:
+		    	routerPortNumber = ROUTER_F_PORT;
+		    	break;
+		    case NET_21_PORT:
+		    	routerPortNumber = ROUTER_E_PORT;
+		    	break;
+		    case NET_2_PORT:
+		    	routerPortNumber = ROUTER_E_PORT;
+		    	break;
+		    case NET_10_PORT:
+		    	routerPortNumber = ROUTER_C_PORT;
+		    	break;
+		    }
 		    	
 		    Terminal terminal = new Terminal("End User (" + endUserPortNumber + ")");
 			(new EndUser(terminal, DEFAULT_DST_NODE, endUserPortNumber, routerPortNumber)).start();

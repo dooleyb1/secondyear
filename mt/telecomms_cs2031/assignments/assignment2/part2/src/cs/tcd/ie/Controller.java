@@ -1,21 +1,14 @@
 package cs.tcd.ie;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map.Entry;
-import java.util.Queue;
-import java.util.Stack;
 
 import tcdIO.Terminal;
 
@@ -109,7 +102,7 @@ public class Controller extends Node {
 				int i = 0;
 				for(int node : path) {
 					//If node is not an end user, do this (don't inform end users as only one connection - that to router)
-					if(node!=END_USER_1_PORT && node!=END_USER_2_PORT) {
+					if(!endUsers.contains(node)) {
 						int nodesNextHop = path.get(i+1);
 						int hopCount = path.size()-(i+1);
 						i++;
@@ -224,82 +217,40 @@ public class Controller extends Node {
 	 */
 	public void fillNodeNames() {
 		//Handle network end users names and addresses
-		this.nodeNames.put(END_USER_1_PORT, "(END USER 1)");
-		this.endUsers.add(END_USER_1_PORT);
-		this.nodeNames.put(END_USER_2_PORT, "(END USER 2)");
-		this.endUsers.add(END_USER_2_PORT);
+		this.nodeNames.put(NET_18_PORT, "(NET 18)");
+		this.endUsers.add(NET_18_PORT);
+		this.nodeNames.put(NET_15_PORT, "(NET 15)");
+		this.endUsers.add(NET_15_PORT);
+		this.nodeNames.put(NET_28_PORT, "(NET 28)");
+		this.endUsers.add(NET_28_PORT);
+		this.nodeNames.put(NET_7_PORT, "(NET 7)");
+		this.endUsers.add(NET_7_PORT);
+		this.nodeNames.put(NET_5_PORT, "(NET 5)");
+		this.endUsers.add(NET_5_PORT);
+		this.nodeNames.put(NET_11_PORT, "(NET 11)");
+		this.endUsers.add(NET_11_PORT);
+		this.nodeNames.put(NET_21_PORT, "(NET 21)");
+		this.endUsers.add(NET_21_PORT);
+		this.nodeNames.put(NET_2_PORT, "(NET 2)");
+		this.endUsers.add(NET_2_PORT);
+		this.nodeNames.put(NET_10_PORT, "(NET 10)");
+		this.endUsers.add(NET_10_PORT);
 		
 		//Handle network router names and addresses
-		this.nodeNames.put(ROUTER_1_PORT, "(ROUTER 1)");
-		this.routers.add(ROUTER_1_PORT);
-		this.nodeNames.put(ROUTER_2_PORT, "(ROUTER 2)");
-		this.routers.add(ROUTER_2_PORT);
-		this.nodeNames.put(ROUTER_3_PORT, "(ROUTER 3)");
-		this.routers.add(ROUTER_3_PORT);
-		this.nodeNames.put(ROUTER_4_PORT, "(ROUTER 4)");
-		this.routers.add(ROUTER_4_PORT);
-		this.nodeNames.put(ROUTER_5_PORT, "(ROUTER 5)");
-		this.routers.add(ROUTER_5_PORT);
-		this.nodeNames.put(ROUTER_6_PORT, "(ROUTER 6)");
-		this.routers.add(ROUTER_6_PORT);
-		this.nodeNames.put(ROUTER_7_PORT, "(ROUTER 7)");
-		this.routers.add(ROUTER_7_PORT);
-		this.nodeNames.put(ROUTER_8_PORT, "(ROUTER 8)");
-		this.routers.add(ROUTER_8_PORT);
+		this.nodeNames.put(ROUTER_A_PORT, "(ROUTER A)");
+		this.routers.add(ROUTER_A_PORT);
+		this.nodeNames.put(ROUTER_B_PORT, "(ROUTER B)");
+		this.routers.add(ROUTER_B_PORT);
+		this.nodeNames.put(ROUTER_C_PORT, "(ROUTER C)");
+		this.routers.add(ROUTER_C_PORT);
+		this.nodeNames.put(ROUTER_D_PORT, "(ROUTER D)");
+		this.routers.add(ROUTER_D_PORT);
+		this.nodeNames.put(ROUTER_E_PORT, "(ROUTER E)");
+		this.routers.add(ROUTER_E_PORT);
+		this.nodeNames.put(ROUTER_F_PORT, "(ROUTER F)");
+		this.routers.add(ROUTER_F_PORT);
 	}
-	
-	public void hardCodeRoutingMap() {
-		
-		//Sequence Map for routeID = 1 (E1 to E2)
-		//Defines the next hop for each router for sequence
-		HashMap<Integer, Integer> sequenceMap1 = new HashMap<Integer, Integer>();
-		
-		//sequenceMap.put(ROUTER,NEXTHOP)
-		sequenceMap1.put(ROUTER_1_PORT, ROUTER_2_PORT);
-		sequenceMap1.put(ROUTER_2_PORT, ROUTER_3_PORT);
-		sequenceMap1.put(ROUTER_3_PORT, END_USER_2_PORT);
-		
-		// Sequence Map for routeID = 1 (E1 to E2)
-		// Defines the next hop for each router for sequence
-		HashMap<Integer, Integer> sequenceMap2 = new HashMap<Integer, Integer>();
-		
-		//sequenceMap.put(ROUTER,NEXTHOP)
-		sequenceMap2.put(ROUTER_1_PORT, END_USER_1_PORT);
-		sequenceMap2.put(ROUTER_2_PORT, ROUTER_1_PORT);
-		sequenceMap2.put(ROUTER_3_PORT, ROUTER_2_PORT);		
-		
-		this.routingMap.put(ROUTE_ID_1, sequenceMap1);
-		this.routingMap.put(ROUTE_ID_2, sequenceMap2);
-	}
-	
-	public void printRoutingMap() {
-		int routerAddress;;
-		int nextHop;
-		
-		terminal.println("\n***Routing Map for Route ID#1 (E1 to E2)***\n");
-		terminal.println("Router Address   |   NextHop" );
-		terminal.println("-------------------------------------------------------");
-		
-		for(Entry<Integer, Integer> entry : this.routingMap.get(ROUTE_ID_1).entrySet()) {
-		    
-			routerAddress = entry.getKey();
-			nextHop = entry.getValue();
-		     
-		    terminal.println("" + routerAddress + "               |       " + nextHop);
-		}
-		
-		terminal.println("\n***Routing Map for Route ID#2 (E2 to E1)***\n");
-		terminal.println("Router Address   |   NextHop" );
-		terminal.println("-------------------------------------------------------");
-		
-		for(Entry<Integer, Integer> entry : this.routingMap.get(ROUTE_ID_2).entrySet()) {
-		    
-			routerAddress = entry.getKey();
-			nextHop = entry.getValue();
-		     
-		    terminal.println("" + routerAddress + "               |       " + nextHop);
-		}
-	}
+
 	
 	public void printNetworkConnections() {
 		int nodeAddress;

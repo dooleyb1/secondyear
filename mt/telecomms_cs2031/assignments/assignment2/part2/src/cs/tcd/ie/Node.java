@@ -11,22 +11,24 @@ public abstract class Node {
 
 	static final String DEFAULT_DST_NODE = "localhost";
 	
-	static final int NETWORK_NODE_COUNT = 10;
+	static final int NETWORK_NODE_COUNT = 15;
 	
-	static final int END_USER_1_PORT = 40700;
-	static final int END_USER_2_PORT = 40701;
+	static final int NET_18_PORT = 40700;
+	static final int NET_15_PORT = 40701;
+	static final int NET_28_PORT = 40702;
+	static final int NET_7_PORT = 40703;
+	static final int NET_5_PORT = 40704;
+	static final int NET_11_PORT = 40705;
+	static final int NET_21_PORT = 40706;
+	static final int NET_2_PORT = 40707;
+	static final int NET_10_PORT = 40708;
 	
-	public static final int ROUTER_1_PORT = 40789;
-	public static final int ROUTER_2_PORT= 40790;
-	public static final int ROUTER_3_PORT = 40791;
-	public static final int ROUTER_4_PORT = 40792;
-	public static final int ROUTER_5_PORT = 40793;
-	public static final int ROUTER_6_PORT = 40794;
-	public static final int ROUTER_7_PORT = 40795;
-	public static final int ROUTER_8_PORT = 40796;
-	
-	public static final int ROUTE_ID_1 = 1; //ROUTE_ID_1 is when E1 sends packet to E2
-	public static final int ROUTE_ID_2 = 2; //ROUTE_ID_2 is when E2 sends packet to E1
+	public static final int ROUTER_A_PORT = 40789;
+	public static final int ROUTER_B_PORT= 40790;
+	public static final int ROUTER_C_PORT = 40791;
+	public static final int ROUTER_D_PORT = 40792;
+	public static final int ROUTER_E_PORT = 40793;
+	public static final int ROUTER_F_PORT = 40794;
 	
 	public static final int CONTROLLER_PORT = 50000;
 

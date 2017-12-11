@@ -25,6 +25,11 @@ public class Router extends Node {
 	ControllerInformPacket controllerPacket;
 	
 	/*
+	 * Hashmap to reference node names (for printing use)
+	 */
+	HashMap<Integer, String> nodeNames;
+	
+	/*
 	 * routingMap == Hashmap to store routing table within 
 	 * - <Integer> = destination address
 	 * - <RoutingElementKey> = object that holds hopCount (cost) and nextHop for each respective destination address;
@@ -40,6 +45,7 @@ public class Router extends Node {
 			this.routerPort = routerPort;
 			this.messagePacket = null;
 			this.routingMap = new HashMap<Integer, RoutingElementKey>();
+			this.nodeNames = new HashMap<Integer, String>();
 			
 			this.controllerAddress = new InetSocketAddress(Node.DEFAULT_DST_NODE, Node.CONTROLLER_PORT);
 			this.connectionCount = 0;
@@ -59,6 +65,10 @@ public class Router extends Node {
 		this.initialiseRoutingMap();
 		terminal.println("Sucess\n");
 		
+		terminal.println("Filling in node names in map...");
+		this.addNodeNames();
+		terminal.println("Success\n");
+		
 		terminal.println("Printing routing map at router (" + this.routerPort + ")...\n");
 		this.printRoutingMap();
 		
@@ -70,6 +80,28 @@ public class Router extends Node {
 		this.wait();
 	}
 
+	public void addNodeNames() {
+		//Handle network end users names and addresses
+				this.nodeNames.put(NET_18_PORT, "(NET 18)");
+				this.nodeNames.put(NET_15_PORT, "(NET 15)");
+				this.nodeNames.put(NET_28_PORT, "(NET 28)");
+				this.nodeNames.put(NET_7_PORT, "(NET 7)");
+				this.nodeNames.put(NET_5_PORT, "(NET 5)");
+				this.nodeNames.put(NET_11_PORT, "(NET 11)");
+				this.nodeNames.put(NET_21_PORT, "(NET 21)");
+				this.nodeNames.put(NET_2_PORT, "(NET 2)");
+				this.nodeNames.put(NET_10_PORT, "(NET 10)");
+				
+				//Handle network router names and addresses
+				this.nodeNames.put(ROUTER_A_PORT, "(ROUTER A)");
+				this.nodeNames.put(ROUTER_B_PORT, "(ROUTER B)");
+				this.nodeNames.put(ROUTER_C_PORT, "(ROUTER C)");
+				this.nodeNames.put(ROUTER_D_PORT, "(ROUTER D)");
+				this.nodeNames.put(ROUTER_E_PORT, "(ROUTER E)");
+				this.nodeNames.put(ROUTER_F_PORT, "(ROUTER F)");
+				
+				this.nodeNames.put(0, "(NULL)");
+	}
 	public synchronized void informController() throws IOException {
 		
 		initialiseConnections();
@@ -88,46 +120,41 @@ public class Router extends Node {
 				
 		//Initialise the distanceMap table for the router
 		switch(this.routerPort) {
-			//For router 1 do this
-			case ROUTER_1_PORT:
-				this.routingMap.put(END_USER_1_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_2_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_3_PORT, new RoutingElementKey(0,0));
+			//For router A do this
+			case ROUTER_A_PORT:
+				this.routingMap.put(NET_18_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_B_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_C_PORT, new RoutingElementKey(0,0));
 				break;
-			//For router 2 do this
-			case ROUTER_2_PORT:
-				this.routingMap.put(ROUTER_1_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_5_PORT, new RoutingElementKey(0,0));
+			//For router B do this
+			case ROUTER_B_PORT:
+				this.routingMap.put(NET_15_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(NET_28_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_A_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_D_PORT, new RoutingElementKey(0,0));
 				break;
 			//For router 3 do this
-			case ROUTER_3_PORT:
-				this.routingMap.put(ROUTER_1_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_4_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_6_PORT, new RoutingElementKey(0,0));
+			case ROUTER_C_PORT:
+				this.routingMap.put(NET_10_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_A_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_D_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_E_PORT, new RoutingElementKey(0,0));
 				break;
-			case ROUTER_4_PORT:
-				this.routingMap.put(ROUTER_3_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_5_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_7_PORT, new RoutingElementKey(0,0));
+			case ROUTER_D_PORT:
+				this.routingMap.put(NET_7_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_C_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_B_PORT, new RoutingElementKey(0,0));
 				break;
-			case ROUTER_5_PORT:
-				this.routingMap.put(ROUTER_2_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_4_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_7_PORT, new RoutingElementKey(0,0));
+			case ROUTER_E_PORT:
+				this.routingMap.put(NET_2_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(NET_21_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_C_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_F_PORT, new RoutingElementKey(0,0));
 				break;
-			case ROUTER_6_PORT:
-				this.routingMap.put(ROUTER_3_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_8_PORT, new RoutingElementKey(0,0));
-				break;
-			case ROUTER_7_PORT:
-				this.routingMap.put(ROUTER_4_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_5_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_8_PORT, new RoutingElementKey(0,0));
-				break;
-			case ROUTER_8_PORT:
-				this.routingMap.put(ROUTER_6_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(ROUTER_7_PORT, new RoutingElementKey(0,0));
-				this.routingMap.put(END_USER_2_PORT, new RoutingElementKey(0,0));
+			case ROUTER_F_PORT:
+				this.routingMap.put(NET_11_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(NET_5_PORT, new RoutingElementKey(0,0));
+				this.routingMap.put(ROUTER_E_PORT, new RoutingElementKey(0,0));
 				break;
 		}
 	}
@@ -139,62 +166,56 @@ public class Router extends Node {
 		
 		//Initialise the connections for the router
 		switch (this.routerPort) {
-		// For router 1 do this
-		case ROUTER_1_PORT:
+		// For router A do this
+		case ROUTER_A_PORT:
 			this.connectionCount = 3;
 			this.connections = new int[connectionCount];
-			this.connections[0] = END_USER_1_PORT;
-			this.connections[1] = ROUTER_2_PORT;
-			this.connections[2] = ROUTER_3_PORT;
+			this.connections[0] = NET_18_PORT;
+			this.connections[1] = ROUTER_B_PORT;
+			this.connections[2] = ROUTER_C_PORT;
 			break;
-			// For router 2 do this
-		case ROUTER_2_PORT:
-			this.connectionCount = 2;
+			// For router B do this
+		case ROUTER_B_PORT:
+			this.connectionCount = 4;
 			this.connections = new int[connectionCount];
-			this.connections[0] = ROUTER_1_PORT;
-			this.connections[1] = ROUTER_5_PORT;
+			this.connections[0] = NET_15_PORT;
+			this.connections[1] = NET_28_PORT;
+			this.connections[2] = ROUTER_A_PORT;
+			this.connections[3] = ROUTER_D_PORT;
 			break;
-			// For router 3 do this
-		case ROUTER_3_PORT:
+			// For router C do this
+		case ROUTER_C_PORT:
+			this.connectionCount = 4;
+			this.connections = new int[connectionCount];
+			this.connections[0] = NET_10_PORT;
+			this.connections[1] = ROUTER_A_PORT;
+			this.connections[2] = ROUTER_D_PORT;
+			this.connections[3] = ROUTER_E_PORT;
+			break;
+			// For router D do this
+		case ROUTER_D_PORT:
 			this.connectionCount = 3;
 			this.connections = new int[connectionCount];
-			this.connections[0] = ROUTER_1_PORT;
-			this.connections[1] = ROUTER_4_PORT;
-			this.connections[2] = ROUTER_6_PORT;
+			this.connections[0] = NET_7_PORT;
+			this.connections[1] = ROUTER_B_PORT;
+			this.connections[2] = ROUTER_C_PORT;
 			break;
-		case ROUTER_4_PORT:
+			// For router E do this
+		case ROUTER_E_PORT:
+			this.connectionCount = 4;
+			this.connections = new int[connectionCount];
+			this.connections[0] = NET_2_PORT;
+			this.connections[1] = NET_21_PORT;
+			this.connections[2] = ROUTER_C_PORT;
+			this.connections[3] = ROUTER_F_PORT;
+			break;
+			// For router F do this
+		case ROUTER_F_PORT:
 			this.connectionCount = 3;
 			this.connections = new int[connectionCount];
-			this.connections[0] = ROUTER_3_PORT;;
-			this.connections[1] = ROUTER_5_PORT;
-			this.connections[2] = ROUTER_7_PORT;
-			break;
-		case ROUTER_5_PORT:
-			this.connectionCount = 3;
-			this.connections = new int[connectionCount];
-			this.connections[0] = ROUTER_2_PORT;
-			this.connections[1] = ROUTER_2_PORT;
-			this.connections[2] = ROUTER_7_PORT;
-			break;
-		case ROUTER_6_PORT:
-			this.connectionCount = 2;
-			this.connections = new int[connectionCount];
-			this.connections[0] = ROUTER_3_PORT;
-			this.connections[1] = ROUTER_8_PORT;
-			break;
-		case ROUTER_7_PORT:
-			this.connectionCount = 3;
-			this.connections = new int[connectionCount];
-			this.connections[0] = ROUTER_4_PORT;
-			this.connections[1] = ROUTER_5_PORT;
-			this.connections[2] = ROUTER_8_PORT;
-			break;
-		case ROUTER_8_PORT:
-			this.connectionCount = 3;
-			this.connections = new int[connectionCount];
-			this.connections[0] = ROUTER_6_PORT;
-			this.connections[1] = ROUTER_7_PORT;
-			this.connections[2] = END_USER_2_PORT;
+			this.connections[0] = NET_11_PORT;
+			this.connections[1] = NET_5_PORT;
+			this.connections[2] = ROUTER_E_PORT;
 			break;
 		}
 		terminal.println("Connections initialised...");
@@ -207,7 +228,7 @@ public class Router extends Node {
 		int nextHop;
 		int hopCount;
 		
-		terminal.println("\n***Routing Map for Router(" + this.routerPort + ")***\n");
+		terminal.println("\n***Routing Map for Router" + this.nodeNames.get(this.routerPort) + "***\n");
 		terminal.println("Destination   |    NextHop    |   HopCount" );
 		terminal.println("-------------------------------------------------------");
 		
@@ -218,7 +239,7 @@ public class Router extends Node {
 		    nextHop = routingKey.nextDest;
 		    hopCount = routingKey.hopCount;
 		    
-		    terminal.println("" + destination + "       |       " + nextHop + "              |         " + hopCount);
+		    terminal.println("" + this.nodeNames.get(destination) + "       |       " + this.nodeNames.get(nextHop) + "              |         " + hopCount);
 		}
 	}
 	
@@ -261,7 +282,9 @@ public class Router extends Node {
 			packet.setSocketAddress(nextAddr);
 			socket.send(packet);
 			
-			if(nextHop == Node.END_USER_1_PORT || nextHop == Node.END_USER_2_PORT)
+			//If next hop is an end user do this 
+			if(nextHop == NET_18_PORT || nextHop == NET_15_PORT || nextHop == NET_28_PORT || nextHop == NET_7_PORT ||
+					nextHop == NET_5_PORT || nextHop == NET_11_PORT || nextHop == NET_21_PORT || nextHop == NET_2_PORT ||nextHop == NET_10_PORT)
 				terminal.println("\nPacket sent to end user(" + nextHop + ")...");
 			
 			else
