@@ -1,0 +1,615 @@
+
+#Random Memory Allocation Failure for Fun and Profit
+
+This is an example from my course on systems 
+programming (<a href="https://down.dsg.cs.tcd.ie/cs2014">CS2014</a>),
+the canonical URL for this is 
+<a href="https://down.dsg.cs.tcd.ie/cs2014/examples/bm/README.html">here</a>.
+
+##Files in this example:
+
+- [README.md](README.md) - this file in markdown format
+- [README.html](README.html) - this file, in HTML format (```'make html'``` to update that from .md)
+- [Makefile](Makefile) - to build the example and HTML (there's a clean target too)
+- [broken-malloc.h](broken-malloc.h) - the header file we'd include when using this
+- [broken-malloc.c](broken-malloc.c) - a C program to test our macros
+
+After running ```'make'``` then this file will be produced (if all
+goes well):
+
+- broken-malloc - the executable that runs the tests
+
+Note that most examples won't have the links to the files as per the above
+list, those are just there since this is our first one.
+
+##Background
+
+This example has my favourite line of code ever! I first wrote (a
+version of) this in the mid-1990's. It purpose is to break things, 
+for good.
+
+The context was that I was working in a large-ish software development
+team on a large codebase (maybe 10^6 LOC) where that code has lots of
+calls to ```malloc()```, and we suspected (knew actually:-) that not all bits 
+of calling code checked the return value from ```malloc()```.
+
+##The Core Line of Code
+
+The LOC itself:
+
+		#define malloc(__xxx__) (rand()%100<=30?0:malloc((__xxx__)))
+
+What does that do?
+
+
+------------------------------------------
+##First, some man pages...
+
+So, what is ```malloc()```? Let's use the unix/linux manual pages to find out... 
+
+		$ man malloc
+
+That produces this information...
+
+<pre>
+MALLOC(3)                                           Linux Programmer's Manual                                           MALLOC(3)
+
+NAME
+       malloc, free, calloc, realloc - allocate and free dynamic memory
+
+SYNOPSIS
+       #include &ltstdlib.h>
+
+       void *malloc(size_t size);
+       void free(void *ptr);
+       void *calloc(size_t nmemb, size_t size);
+       void *realloc(void *ptr, size_t size);
+
+DESCRIPTION
+       The  malloc() function allocates size bytes and returns a pointer to the allocated memory.  The memory is not initialized.
+       If size is 0, then malloc() returns either NULL, or a unique pointer value  that  can  later  be  successfully  passed  to
+       free().
+
+       The  free()  function  frees  the memory space pointed to by ptr, which must have been returned by a previous call to mal-
+       loc(), calloc(), or realloc().  Otherwise, or if free(ptr) has already been called before, undefined behavior occurs.   If
+       ptr is NULL, no operation is performed.
+
+       The  calloc()  function  allocates  memory  for an array of nmemb elements of size bytes each and returns a pointer to the
+       allocated memory.  The memory is set to zero.  If nmemb or size is 0, then calloc()  returns  either  NULL,  or  a  unique
+       pointer value that can later be successfully passed to free().
+
+       The  realloc()  function  changes  the  size  of  the  memory block pointed to by ptr to size bytes.  The contents will be
+       unchanged in the range from the start of the region up to the minimum of the old and new sizes.  If the new size is larger
+       than the old size, the added memory will not be initialized.  If ptr is NULL, then the call is equivalent to malloc(size),
+       for all values of size; if size is equal to zero, and ptr is not NULL, then the call is equivalent to  free(ptr).   Unless
+       ptr is NULL, it must have been returned by an earlier call to malloc(), calloc() or realloc().  If the area pointed to was
+       moved, a free(ptr) is done.
+
+RETURN VALUE
+       The malloc() and calloc() functions return a pointer to the allocated memory, which is suitably aligned for  any  built-in
+       type.   On  error, these functions return NULL.  NULL may also be returned by a successful call to malloc() with a size of
+       zero, or by a successful call to calloc() with nmemb or size equal to zero.
+
+       The free() function returns no value.
+
+       The realloc() function returns a pointer to the newly allocated memory, which is suitably aligned for  any  built-in  type
+       and may be different from ptr, or NULL if the request fails.  If size was equal to 0, either NULL or a pointer suitable to
+       be passed to free() is returned.  If realloc() fails, the original block is left untouched; it is not freed or moved.
+
+ERRORS
+       calloc(), malloc(), and realloc() can fail with the following error:
+
+       ENOMEM Out of memory.  Possibly, the application hit the RLIMIT_AS or RLIMIT_DATA limit described in getrlimit(2).
+
+ATTRIBUTES
+       For an explanation of the terms used in this section, see attributes(7).
+
+       +---------------------+---------------+---------+
+       |Interface            | Attribute     | Value   |
+       +---------------------+---------------+---------+
+       |malloc(), free(),    | Thread safety | MT-Safe |
+       |calloc(), realloc()  |               |         |
+       +---------------------+---------------+---------+
+CONFORMING TO
+       POSIX.1-2001, POSIX.1-2008, C89, C99.
+
+NOTES
+       By default, Linux follows an optimistic memory allocation strategy.  This means that when malloc() returns non-NULL  there
+       is  no  guarantee that the memory really is available.  In case it turns out that the system is out of memory, one or more
+       processes will be killed by the OOM killer.  For more information, see the description  of  /proc/sys/vm/overcommit_memory
+       and /proc/sys/vm/oom_adj in proc(5), and the Linux kernel source file Documentation/vm/overcommit-accounting.
+
+       Normally,  malloc()  allocates  memory  from  the heap, and adjusts the size of the heap as required, using sbrk(2).  When
+       allocating blocks of memory larger than MMAP_THRESHOLD bytes, the glibc malloc() implementation allocates the memory as  a
+       private  anonymous mapping using mmap(2).  MMAP_THRESHOLD is 128 kB by default, but is adjustable using mallopt(3).  Allo-
+       cations performed using mmap(2) are unaffected by the RLIMIT_DATA resource limit (see getrlimit(2)).
+
+       To avoid corruption in multithreaded applications, mutexes are used  internally  to  protect  the  memory-management  data
+       structures  employed by these functions.  In a multithreaded application in which threads simultaneously allocate and free
+       memory, there could be contention for these mutexes.  To scalably handle memory allocation in multithreaded  applications,
+       glibc creates additional memory allocation arenas if mutex contention is detected.  Each arena is a large region of memory
+       that is internally allocated by the system (using brk(2) or mmap(2)), and managed with its own mutexes.
+
+       SUSv2 requires malloc(), calloc(), and realloc() to set errno to ENOMEM upon failure.  Glibc assumes  that  this  is  done
+       (and  the  glibc  versions of these routines do this); if you use a private malloc implementation that does not set errno,
+       then certain library routines may fail without having a reason in errno.
+
+       Crashes in malloc(), calloc(), realloc(), or free() are almost always related to heap corruption, such as  overflowing  an
+       allocated chunk or freeing the same pointer twice.
+
+       The malloc() implementation is tunable via environment variables; see mallopt(3) for details.
+
+SEE ALSO
+       brk(2), mmap(2), alloca(3), malloc_get_state(3), malloc_info(3), malloc_trim(3), malloc_usable_size(3), mallopt(3),
+       mcheck(3), mtrace(3), posix_memalign(3)
+
+COLOPHON
+       This page is part of release 4.09 of the Linux man-pages project.  A description of the project, information about
+       reporting bugs, and the latest version of this page, can be found at https://www.kernel.org/doc/man-pages/.
+
+GNU                                                         2015-08-08                                                  MALLOC(3)
+</pre>
+
+------------------------------------------
+
+Ok, I can kinda guess what rand() might be, but how to confirm?
+
+Same plan. But note that ```man rand``` may not get you the right thing, (if you have openssl installed for example)
+so you need to go for section 3 of the
+manual pages, so we want ```man 3 rand``` in this case. There's a basic kind of search for topics that ```man```
+supports using the ```-k``` command line argument, so ```man -k rand``` will show us a list of the names
+of man pages and in this case we want the one in section 3, which is for library calls.
+You can of course find the same information via a web search (e.g. 
+<a href="https://duckduckgo.com/html?q=rand%20C%20function">https://duckduckgo.com/html?q=rand%20C%20function</a>)
+but maybe you'll read the wrong thing, and there are system-specifics that can differ from 
+OS to OS and even within different GNU/Linux distributions, so ```man``` is your best friend
+even if not as usable as a web search.
+
+		$ man 3 rand
+
+<pre>
+RAND(3)                                             Linux Programmer's Manual                                             RAND(3)
+
+NAME
+       rand, rand_r, srand - pseudo-random number generator
+
+SYNOPSIS
+       #include &ltstdlib.h>
+
+       int rand(void);
+
+       int rand_r(unsigned int *seedp);
+
+       void srand(unsigned int seed);
+
+   Feature Test Macro Requirements for glibc (see feature_test_macros(7)):
+
+       rand_r(): _POSIX_C_SOURCE
+
+DESCRIPTION
+       The  rand()  function  returns  a pseudo-random integer in the range 0 to RAND_MAX inclusive (i.e., the mathematical range
+       [0, RAND_MAX]).
+
+       The srand() function sets its argument as the seed for a new sequence of pseudo-random integers to be returned by  rand().
+       These sequences are repeatable by calling srand() with the same seed value.
+
+       If no seed value is provided, the rand() function is automatically seeded with a value of 1.
+
+       The  function  rand()  is not reentrant, since it uses hidden state that is modified on each call.  This might just be the
+       seed value to be used by the next call, or it might be something more elaborate.  In order to get reproducible behavior in
+       a threaded application, this state must be made explicit; this can be done using the reentrant function rand_r().
+
+       Like  rand(),  rand_r() returns a pseudo-random integer in the range [0, RAND_MAX].  The seedp argument is a pointer to an
+       unsigned int that is used to store state between calls.  If rand_r() is called with the same initial value for the integer
+       pointed to by seedp, and that value is not modified between calls, then the same pseudo-random sequence will result.
+
+       The  value  pointed to by the seedp argument of rand_r() provides only a very small amount of state, so this function will
+       be a weak pseudo-random generator.  Try drand48_r(3) instead.
+
+RETURN VALUE
+       The rand() and rand_r() functions return a value between 0 and RAND_MAX (inclusive).   The  srand()  function  returns  no
+       value.
+
+ATTRIBUTES
+       For an explanation of the terms used in this section, see attributes(7).
+
+       +--------------------------+---------------+---------+
+       |Interface                 | Attribute     | Value   |
+       +--------------------------+---------------+---------+
+       |rand(), rand_r(), srand() | Thread safety | MT-Safe |
+       +--------------------------+---------------+---------+
+CONFORMING TO
+       The  functions  rand()  and  srand()  conform  to  SVr4,  4.3BSD,  C89,  C99, POSIX.1-2001.  The function rand_r() is from
+       POSIX.1-2001.  POSIX.1-2008 marks rand_r() as obsolete.
+
+NOTES
+       The versions of rand() and srand() in the Linux C Library use the same random number  generator  as  random(3)  and  sran-
+       dom(3),  so  the lower-order bits should be as random as the higher-order bits.  However, on older rand() implementations,
+       and on current implementations on different systems, the lower-order bits are much less random than the higher-order bits.
+       Do not use this function in applications intended to be portable when good randomness is needed.  (Use random(3) instead.)
+
+EXAMPLE
+       POSIX.1-2001  gives  the  following example of an implementation of rand() and srand(), possibly useful when one needs the
+       same sequence on two different machines.
+
+           static unsigned long next = 1;
+
+           /* RAND_MAX assumed to be 32767 */
+           int myrand(void) {
+               next = next * 1103515245 + 12345;
+               return((unsigned)(next/65536) % 32768);
+           }
+
+           void mysrand(unsigned int seed) {
+               next = seed;
+           }
+
+       The following program can be used to display the pseudo-random sequence produced by rand() when given a particular seed.
+
+           #include &ltstdlib.h>
+           #include &ltstdio.h>
+
+           int
+           main(int argc, char *argv[])
+           {
+               int j, r, nloops;
+               unsigned int seed;
+
+               if (argc != 3) {
+                   fprintf(stderr, "Usage: %s &ltseed> &ltnloops>\n", argv[0]);
+                   exit(EXIT_FAILURE);
+               }
+
+               seed = atoi(argv[1]);
+               nloops = atoi(argv[2]);
+
+               srand(seed);
+               for (j = 0; j &lt nloops; j++) {
+                   r =  rand();
+                   printf("%d\n", r);
+               }
+
+               exit(EXIT_SUCCESS);
+           }
+
+SEE ALSO
+       drand48(3), random(3)
+
+COLOPHON
+       This page is part of release 4.09 of the Linux man-pages project.  A description of the project, information about report-
+       ing bugs, and the latest version of this page, can be found at https://www.kernel.org/doc/man-pages/.
+
+                                                            2016-03-15                                                    RAND(3)
+</pre>
+
+---------------------------------------
+
+##A program that uses ```malloc()```...
+
+Store the following as say p1.c
+
+		#include <stdio.h>
+		#include <stdlib.h>
+		int main(int argc, char **argv)
+		{
+			char *x=malloc(100);
+			if (!x) {
+				printf("Malloc failed!\n");
+			} else {
+				printf("Malloc succeeded!\n");
+				free(x);
+			}
+			return(0);
+		}
+
+If we compile, and run that:
+
+		$ gcc p1.c
+		$ ./a.out
+		Malloc succeeded!
+		$
+
+
+---------------------------------------
+
+##Now let's break that
+
+Edit p1.c (e.g. using ```vi```) and now also include broken-malloc.h which
+includes our fine LOC, (we'll look inside that in a bit)...
+
+		#include <stdio.h>
+		#include <stdlib.h>
+		#include "broken-malloc.h"
+		int main(int argc, char **argv)
+		{
+			char *x=malloc(100);
+			if (!x) {
+				printf("Malloc %d failed!\n");
+			} else {
+				printf("Malloc %d succeeded!\n");
+				free(x);
+			}
+			return(0);
+		}
+
+If we compile, and run that, we should see random fails:
+
+		$ gcc p1.c
+		$ ./a.out
+		Malloc failed!
+		$ ./a.out
+		Malloc succeeded!
+		$
+
+---------------------------------------
+
+##Let's add some more test code to save us time:
+
+
+This is basically broken-malloc.c...
+
+		#include <stdio.h>
+		#include <stdlib.h>
+		#include "broken-malloc.h"
+		
+		#define MINTESTS 0
+		#define MAXTESTS 100
+		
+		int main(int argc, char **argv)
+		{
+			int i;
+			int countfails=0;
+			int tests=10;
+		
+			if (argc==2) {
+				int maybetests=atoi(argv[1]);
+				if (maybetests <= MINTESTS || maybetests > MAXTESTS) {
+					fprintf(stderr,"Out of range argument (\"%s\") min: %d, max: %d - exiting\n",
+						argv[1],MINTESTS,MAXTESTS);
+					return(1);
+				}
+				tests=maybetests;
+			}
+		
+			for (i=1;i<=tests;i++) {
+				char *x=malloc(i);
+				if (!x) {
+					printf("Malloc %d failed!\n",i);
+					countfails++;
+				} else {
+					printf("Malloc %d succeeded!\n",i);
+					free(x);
+				}
+			}
+		
+			printf("Tests: %d, fails: %d\n",tests,countfails);
+			return(0);
+		}
+		
+
+Before we go further, please note the error checking of the 
+command line arguments - an important rule to remember is
+that YOU CANNOT TRUST INPUT VALUES. I'll say that again:
+YOU CANNOT TRUST INPUT VALUES!!
+Note also that we call the ```free()``` function to 
+release the memory allocated by ```malloc()``` as we go.
+If we handn't checked the inputs, and hadn't made 
+that call to ```free()``` then our little test tool
+could someday be turned into a pretty fine denial-of-service
+attack vector. And while it might seem unlikely that 
+that could happen, it might, say if someone decided to
+make a web-enabled version of this available for some
+reason, or if this kind of test was built into some
+nightly build environment that could be triggered
+remotely (e.g. via a git commit to a repo).
+
+The lesson (and it's a very very important lesson) is
+to always be cautious in coding, even if it seems that
+there's no need today. Your code may be re-used years
+later in ways and in an environment you never considered
+and would think crazy!
+
+Now we compile that using ```make``` and our executable
+file is now ```broken-malloc``` instead of ```a.out```:
+
+		$ make 
+		gcc     broken-malloc.c broken-malloc.h   -o broken-malloc
+		$ ./broken-malloc 
+		Malloc 1 succeeded!
+		Malloc 2 failed!
+		Malloc 3 succeeded!
+		Malloc 4 succeeded!
+		Malloc 5 failed!
+		Malloc 6 succeeded!
+		Malloc 7 failed!
+		Malloc 8 succeeded!
+		Malloc 9 succeeded!
+		Malloc 10 failed!
+		Tests: 10, fails: 4
+
+Or we can run it just 5 times:
+
+		$ ./broken-malloc 5
+		Malloc 1 succeeded!
+		Malloc 2 failed!
+		Malloc 3 succeeded!
+		Malloc 4 succeeded!
+		Malloc 5 failed!
+		Tests: 5, fails: 2
+
+Do you notice anything in the above outputs?
+
+--------------------------
+
+##Random but repeatable...
+
+Recall our fun LOC:
+
+		#define malloc(__xxx__) (rand()%100<=30?0:malloc((__xxx__)))
+
+With the above LOC, we didn't make any call to ```srand()``` so the
+PRNG is always initialised in the same way, and hence always produces
+the same set of random numbers, and hence our pattern of success/fail
+for ```malloc()``` calls will be the same, every time we run ```broken-malloc```.
+
+That might sound bad, but can be useful - when testing it is good to
+get the same result from two iterations of the same test, so you
+can debug things more easily. OTOH, sometimes we'd like to have 
+different things happen in each test, so this is a fine thing to
+instrument, so we can control whether tests are repeatable or
+not.
+
+So let's see what it'd look like if we have two variations of
+the test, one repeatable and one that differs each time.
+In doing this, we'll switch
+from using ```rand()``` to using ```random()``` which has a
+different initialisation method that fits better for the
+hack we're after here. (That's because ```initstate()```
+returns a value we can use, whereas ```srand()``` has 
+no return value.)
+
+Here's a version of broken-malloc.h that does that for us:
+
+		#include <stdlib.h>
+		#include <string.h>
+		#include <time.h>
+		
+		// comment this out for non-repetitive behaviour
+		//#define REPEAT 
+		
+		// what percentage of mallocs should fail?
+		#define PERCENTFAIL 30
+		
+		#ifdef REPEAT
+			// repeating version, no PRNG initialisation, same each time
+			#define malloc(__xxx__) (rand()%100<=PERCENTFAIL?0:malloc((__xxx__)))
+		#else
+			// PRNG initialisation => different behaviour each time 
+			char* __srand_inited__=NULL;
+			char __srand_state__[100];
+			#define malloc(__xxx__) (( \
+				( \
+					(__srand_inited__==NULL) \
+					? \
+						__srand_inited__=initstate(time(NULL),__srand_state__,100) \
+					:\
+						NULL \
+				), \
+				random() \
+				)%100<=PERCENTFAIL?0:malloc((__xxx__)))
+		
+		#endif
+
+Now when we run our tests we get variation in the behaviour:
+
+		$ ./broken-malloc 5
+		Malloc 1 succeeded!
+		Malloc 2 succeeded!
+		Malloc 3 succeeded!
+		Malloc 4 failed!
+		Malloc 5 failed!
+		Tests: 5, fails: 2
+		$ ./broken-malloc 5
+		Malloc 1 succeeded!
+		Malloc 2 failed!
+		Malloc 3 succeeded!
+		Malloc 4 failed!
+		Malloc 5 failed!
+		Tests: 5, fails: 3
+
+-------------------------
+
+##Lovely, so are we done?
+
+Well, not quite, if you look back to the ```malloc()``` man page, you'll
+see there are related functions like ```calloc()``` that is a little
+different, and we'd also like to catch those and make 'em randomly
+fail, so we should add a bit more to our header file...
+
+		void *__vxx__;
+		int __tsz__;
+		#define calloc(__sz__,__n__) (	\
+					(__tsz__=(__sz__)*(__n__))? \
+						( (__vxx__=malloc(__tsz__)) ?  \
+							memset(__vxx__,__tsz__,0) \
+						: 0 ) \
+					: 0)
+
+There's also ```realloc()``` but I'll leave that one to you
+as an exercise.
+
+------------------------------
+
+##What's in the Makefile?
+
+Here's the Makefile for all this:
+
+
+		# This is the Makefile for CS2014 bm example
+		
+		# markdown stuff
+		MDCMD=markdown_py 
+		# make sure -f is last
+		MDOPTS=-f
+		
+		# debug version
+		#CC=gcc -g
+		
+		# non-debug version
+		CC=gcc
+		
+		all: broken-malloc html
+		
+		broken-malloc: broken-malloc.c broken-malloc.h
+		
+		html: README.html
+		
+		clean:
+			@rm -f broken-malloc 
+		
+		reallyclean: clean
+			@rm -f README.html
+
+		%.html: %.md
+			$(MDCMD) $(MDOPTS) $(@) $(<) 
+
+
+----------------------------------
+
+##Warning!! broken-malloc.h is hacky!!
+
+You MUST NOT do things like broken-malloc.h in production code.
+It's meant to only be used during testing.
+That can be a bit tricky, as someone might compile their
+code with that included and failures will then occur in the
+real world, and not in a test harness, and that'd be bad.
+It does illustrate some of the goodness and badness of
+C coding though:-)
+
+Can you say what you think is good/bad about broken-malloc.h?
+
+In fact, broken-malloc.h is pretty 20-th Century
+and there are better tools available these days
+that we'll look at later in the course.
+
+------------------------------------
+
+#Conclusion
+
+We've skimmed over a good few things here but will
+go into more of them in detail as the course
+progresses. Those included:
+
+- man pages
+- make and Makefile
+- Editing, compiling and running C programs
+- ```malloc()``` and friends - a bit about memory handling
+- ```rand()``` and friends - a bit about randomness
+- ``argc`` and ```argv``` - command line arguments
+- We should be PARANOID ABOUT INPUT VALUES!
+- Header files and macros (#define)
+- Breaking things in testing
+- Hacky code isn't *always* bad, but mostly is:-)
+
+
+
