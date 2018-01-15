@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE repairs SYSTEM "repairs.dtd">
+<repairs>
+    <repair id="5689">
+        <vehicleID>2019</vehicleID>
+        <repairDescription>Flat tyres</repairDescription>
+        <repairType>Part replacement</repairType>
+        <partsNeeded>
+            <part id="49381405" quantity="4" />
+        </partsNeeded>
+    </repair>
+    <repair id="140596">
+        <vehicleID>4930</vehicleID>
+        <repairDescription>Door lock on passenger door broken</repairDescription>
+        <repairType>Part repair</repairType>
+    </repair>
+    <repair id="1458">
+        <vehicleID>13984</vehicleID>
+        <repairDescription>broken gear box</repairDescription>
+        <repairType>Part Replacment</repairType>
+        <partsNeeded>
+            <part id="4959383" quantity="1" />
+        </partsNeeded>
+    </repair>
+</repairs>

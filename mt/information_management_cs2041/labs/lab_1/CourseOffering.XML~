@@ -1,0 +1,51 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE CourseOffering [
+<!ELEMENT CourseOffering (year, semester, enrolment_quota, enrolment_open, student+)>
+<!ELEMENT year (#PCDATA)>
+<!ELEMENT semester (#PCDATA)>
+<!ELEMENT enrolment_quota (#PCDATA)>
+<!ELEMENT enrolment_open (#PCDATA)>
+<!ELEMENT student (student_id, student_name, current_fees, postgraduate?, undergraduate?)>
+<!ELEMENT student_id (#PCDATA)>
+<!ELEMENT student_name (#PCDATA)>
+<!ELEMENT current_fees (#PCDATA)>
+<!ELEMENT postgraduate (primary_degree_name, primary_degree_issued, supervisor_name)>
+<!ELEMENT primary_degree_name (#PCDATA)>
+<!ELEMENT primary_degree_issued (#PCDATA)>
+<!ELEMENT supervisor_name (#PCDATA)>
+<!ELEMENT undergraduate (tutor_name, matriculation_details)>
+<!ELEMENT tutor_name (#PCDATA)>
+<!ELEMENT matriculation_details (#PCDATA)>
+
+]>
+
+<CourseOffering>
+  <year>2017</year>
+  <semester>Michaelmas Term</semester>
+  <enrolment_quota>125</enrolment_quota>
+  <enrolment_open>True</enrolment_open>
+
+  <student>
+    <student_id>16327446</student_id>
+    <student_name>Brandon Dooley</student_name>
+    <current_fees>€1500</current_fees>
+    <postgraduate>
+      <primary_degree_name>Integrated Computer Science</primary_degree_name>
+      <primary_degree_issued>2020</primary_degree_issued>
+      <supervisor_name>Jonathan Dukes</supervisor_name>
+    </postgraduate>
+  </student>
+
+  <student>
+    <student_id>1632861</student_id>
+    <student_name>Paul Devaney</student_name>
+    <current_fees>0</current_fees>
+    <undergraduate>
+      <tutor_name>Mary Sharp</tutor_name>
+      <matriculation_details>......</matriculation_details>
+    </undergraduate>
+  </student>
+
+</CourseOffering>

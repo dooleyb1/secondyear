@@ -1,0 +1,68 @@
+<h1>C++ Program Examples#1</h1>
+<p>These are some C++ program examples from my course on systems 
+programming (<a href="https://down.dsg.cs.tcd.ie/cs2014">CS2014</a>),
+the canonical URL for this is 
+<a href="https://down.dsg.cs.tcd.ie/cs2014/examples/c++-1/README.html">here</a>.</p>
+<h2>Files in this example:</h2>
+<ul>
+<li>README.md - this file in markdown format</li>
+<li>README.html - this file, in HTML format (<code>'make html'</code> to update that from .md)</li>
+<li><a href="Makefile">Makefile</a> - to build the example and HTML (there's a clean target too)</li>
+<li><a href="hw.cpp">hw.cpp</a> - a version of hello world</li>
+<li><a href="ref.cpp">ref.cpp</a> - a crappy C++ trick to avoid</li>
+</ul>
+<p>After running <code>'make'</code> then these files will be produced (if all
+goes well):</p>
+<ul>
+<li>README.html - the html version of README.md</li>
+<li>hw - the hello world binary</li>
+</ul>
+<h2>Hello World</h2>
+<p><a href="hw.cpp">This</a> is the canonical first C program pretty much everyone
+has written for decades, but this time in C++. (<a href="https://www.thesoftwareguild.com/blog/the-history-of-hello-world/">Here's</a>
+some history, if you're interested.</p>
+<p>And here's the code:</p>
+<pre><code>    #include &lt;iostream&gt;
+    using namespace std;
+
+    int main()
+    {
+        cout &lt;&lt; "Hello World!\n";
+        return(0);
+    }
+</code></pre>
+<p>Let's go through it line-by-line since there are so few lines...</p>
+<pre><code>    #include &lt;iostream&gt;
+    using namespace std;
+</code></pre>
+<p>'C++' header files can also use use the <code>.h</code>
+file extension, and <code>make</code> and Makefiles know how to handle all that. </p>
+<p>Anyway, on we go...</p>
+<pre><code>    int main()
+    {
+        ...
+    }
+</code></pre>
+<p>Every C++ program needs a <code>main()</code> function, same as for C.</p>
+<p>The body of our one and only function has two statements,
+the first being...</p>
+<pre><code>        cout &lt;&lt; "Hello World!";
+</code></pre>
+<p>This is the meat of the program (slim pickings, eh!) and calls
+the standard <code>cout</code> object with one argument, that
+is the string we want to print. Note that the <code>\n</code> there
+means "add a new line when printing."</p>
+<p>Note that C++ is not (still, after decades) really as well supported as C in Linux and elsewhere. For
+example <code>man printf</code> produces useful information as expected, but <code>man
+cout</code> does not, even though <code>g++</code> is installed.  The standard C libraries
+(sockets etc.) that are available most everywhere don't all have C++
+equivalents. </p>
+<p>And finally, since we said <code>main()</code> would return an 
+integer result we better do that to be nice and tidy:</p>
+<pre><code>        return(0);
+</code></pre>
+<h3>C++ Details:</h3>
+<ul>
+<li>A nicely terse <a href="http://joule.bu.edu/~hazen/progr/cppcen.html">tutorial</a>, so good I have a <a href="../../materials/cppcen.html">local copy</a> </li>
+<li>some <a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-s096-introduction-to-c-and-c-january-iap-2013/lectures-and-assignments/">slideware</a></li>
+</ul>

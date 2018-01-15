@@ -1,0 +1,35 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE Student_Info [ <!ELEMENT Student_Info (Student)*>
+<!ELEMENT Student (name, favourite_music_groups, favourite_county, expected_date_of_graduation)>
+<!ATTLIST Student student_id CDATA #REQUIRED>
+<!ELEMENT student_id (#PCDATA)>
+<!ELEMENT name   (first_name, middle_name,surname)>
+<!ELEMENT first_name (#PCDATA)>
+<!ELEMENT middle_name (#PCDATA)>
+<!ELEMENT surname (#PCDATA)>
+<!ELEMENT favourite_music_groups (group+)>
+<!ELEMENT group (#PCDATA)>
+<!ELEMENT favourite_county (#PCDATA)>
+<!ELEMENT expected_date_of_graduation (#PCDATA)>
+]>
+
+<Student_Info>
+  <Student  student_id="105">
+    <name>
+	<first_name>Brandon</first_name>
+	<middle_name>Paul</middle_name>
+	<surname>Dooley</surname>
+    </name>
+
+    <favourite_music_groups>
+			<group>Oasis</group>
+			<group>U2</group>
+			<group>Fleetwood Mac</group>
+		</favourite_music_groups>
+
+		<favourite_county>Dublin</favourite_county>
+		<expected_date_of_graduation>21/06/2020</expected_date_of_graduation>
+  </Student>
+</Student_Info>

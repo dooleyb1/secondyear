@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This document contains the design for a file containing vehicle repairs data. -->
+
+<!ELEMENT repairs (repair+)>
+ <!-- Not all repairs will have parts needed so it is marked with ? cardinality. -->
+<!ELEMENT repair (vehicleID, repairDescription, repairType, partsNeeded?)>
+<!ATTLIST repair id CDATA #REQUIRED>
+<!ELEMENT vehicleID (#PCDATA)>
+
+<!ELEMENT repairDescription (#PCDATA)>
+<!ELEMENT repairType (#PCDATA)>
+<!-- Each parts needed contains parts elements with id attributes and quantity attributes.
+The id attribute is required and the default quantity is 1 -->
+<!ELEMENT partsNeeded (part+)>
+<!ELEMENT part EMPTY>
+<!ATTLIST part id CDATA #REQUIRED>
+<!ATTLIST part quantity CDATA "1">

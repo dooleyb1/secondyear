@@ -1,0 +1,58 @@
+QUERY 1 - Returns Payroll Information for all Mechanics (Brandon)
+
+declare function local:get_mechanics_payroll_info()
+{
+  let $c:= doc("secondyear/mt/infoman_cs2041/assignments/assignment_2_XML/mechanics_info.XML")
+ for $m in $c/Mechanics_Info/Mechanic
+  let $firstname := $m/name/first_name/text()
+  let $surname := $m/name/surname/text()
+  let $fullname := concat($firstname," ",$surname)
+ return
+ <payroll_info>
+   <mechanic id ="{ $m/@mechanic_id }" >
+      <name> {$fullname} </name>
+       {$m/details/bank_details}
+   </mechanic>
+ </payroll_info>
+};
+
+<Mechanics_Payroll_Info>
+{local:get_mechanics_payroll_info()}
+</Mechanics_Payroll_Info>
+
+
+QUERY 2 - Returns all free Mechanics (Brandon)
+
+declare function local:get_free_mechanics()
+{
+let $c:= doc("secondyear/mt/infoman_cs2041/assignments/assignment_2_XML/mechanics_info.XML")
+ for $m in $c/Mechanics_Info/Mechanic
+  where $m/is_servicing/text() = "false"
+  let $firstname := $m/name/first_name/text()
+  let $surname := $m/name/surname/text()
+  let $fullname := concat($firstname," ",$surname)
+
+ return
+   <mechanic id ="{ $m/@mechanic_id }" > 
+      <name> {$fullname} </name>
+   </mechanic>
+};
+
+<Free_Mechanics>
+{local:get_free_mechanics()}
+</Free_Mechanics>
+
+QUERY 3 - Get service history for mechanic x (Brandon)
+
+<Service_History>
+{
+for $m in /Mechanics_Info/Mechanic
+  let $fullname := concat($m/name/first_name/text()," ",$m/name/surname/text())
+  where $fullname = "Marsha Knight"
+ return
+ <Service_History>
+   {$m/vehicles_serviced}
+   </Service_History>
+ }
+</Service_History>
+

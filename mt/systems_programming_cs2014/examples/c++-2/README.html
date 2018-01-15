@@ -1,0 +1,60 @@
+<h1>C++ Program Examples#2</h1>
+<p>These are some C++ program examples from my course on systems 
+programming (<a href="https://down.dsg.cs.tcd.ie/cs2014">CS2014</a>),
+the canonical URL for this is 
+<a href="https://down.dsg.cs.tcd.ie/cs2014/examples/c++-2/README.html">here</a>.</p>
+<h2>Files in this example:</h2>
+<ul>
+<li>README.md - this file in markdown format</li>
+<li>README.html - this file, in HTML format (<code>'make html'</code> to update that from .md)</li>
+<li><a href="Makefile">Makefile</a> - to build the example and HTML (there's a clean target too)</li>
+<li><a href="OptionHandler/">OptionHandler</a> - a directory with an option handler</li>
+</ul>
+<p>After running <code>'make'</code> then these files will be produced (if all
+goes well):</p>
+<ul>
+<li>README.html - the html version of README.md</li>
+</ul>
+<h2>An option handler</h2>
+<p>As with C programming where we used <code>getopt()</code> we need something
+for handling options nicely. <a href="https://github.com/ryngonzalez/OptionHandler">This</a>
+option handler (from <a href="https://github.com/ryngonzalez">https://github.com/ryngonzalez</a>)
+seems useful to me and illustrates a few C++ design patterns.</p>
+<ul>
+<li>The <a href="OptionHandler/option_handler.h">header</a> file</li>
+<li>An <a href="OptionHandler/option_handler.h">example</a> program using that</li>
+</ul>
+<h2>What does this mean?</h2>
+<p>The first thing defined in OptionHandler is:</p>
+<pre><code>    class no_argument_for_required : public std::invalid_argument {
+        public:
+            no_argument_for_required(std::string option_name) :
+            std::invalid_argument("REQUIRED option '" + option_name + "' without argument") {}
+    };
+</code></pre>
+<p>That's saying that the new class being defined <code>no_argument_for_required</code> is derived
+from the <code>std::invalid_argument</code> class and that the constructor for our new class
+does nothing (the <code>{}</code> at the end) other than call the constructor of the
+base class with a tailored string. The "call the base class constructor" is done
+via the <code>:</code> and then the call to the base class constructor.</p>
+<ul>
+<li>See <a href="https://stackoverflow.com/questions/2785612/c-what-does-the-colon-after-a-constructor-mean">here</a>
+for an explanation.</li>
+<li>And see <a href="http://www.cplusplus.com/reference/stdexcept/invalid_argument/">here</a> for documentation
+of that base class (and other <code>std::</code> things).</li>
+</ul>
+<p>The net result is to throw an exception with a tailored error message that the
+exception catcher can then print.</p>
+<h2>And there's an example program to use the <code>Handler</code> class...</h2>
+<p>That's in <code>example.cpp</code></p>
+<p>Reading <code>argc</code> and <code>argv</code> into a vector is done as follows:</p>
+<pre><code>    Handler(int argc, char** argv) :
+        input(std::vector&lt;std::string&gt;(argv + 1, argv + argc))
+        {};
+</code></pre>
+<p><a href="https://stackoverflow.com/questions/6361606/save-argv-to-vector-or-string">This</a> describes
+what's going on when constructing the Handler in the example code.</p>
+<p>The rest is fairly obvious.</p>
+<h2>Debugging</h2>
+<p>As with C programs, if you compile with -g you can debug with <code>gdb</code>.</p>
+<p>With C++ there can be more going on when you step through code in the debugger of course.</p>

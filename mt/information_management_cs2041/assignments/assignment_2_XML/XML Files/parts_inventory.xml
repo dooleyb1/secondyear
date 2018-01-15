@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE partsInventory SYSTEM "parts_inventory.dtd">
+<partsInventory>
+    <part id="6582092" category="brakes" stock="12">
+        <make>ford</make>
+        <model year="1995-2000">transit</model>
+        <name>Master-Sport Brake Discs (pair)</name>
+        <partDescription>To fit ford transit From Jan 1995 to Nov 2000 1.8[125hp 1781cc]</partDescription>
+        <fittingPosition>front axle</fittingPosition>
+        <RRP currency="euro">58.16</RRP>
+    </part>
+    <part id="1492666" category="filters" stock="5">
+        <make>mercedes</make>
+        <model year="1982-1992">sprinter</model>
+        <name>Mann Fuel Filter</name>
+        <partDescription>To fit Mercedes Sprinter from Sep 1982 to Mar 1992 316i[100hp 1596cc]</partDescription>
+        <RRP currency="euro">20.99</RRP>
+        <specification>
+            <height metric="mm">164</height>
+            <inlet metric="mm"></inlet>
+            <outerDiameter metric="mm">74</outerDiameter>
+        </specification>
+    </part>
+    <part id="1701812" category="filters" stock="5">
+        <make>hyundai</make>
+        <model year="2002-2009">i40</model>
+        <name>Wix Filtron Air Filter</name>
+        <partDescription>
+            To fit Hyundai i40 from Mar 2011 to Dec 2016 E220 CDI 
+            (211.008)[170hp. 2148cc]
+        </partDescription>
+        <RRP currency="euro">22.99</RRP>
+        <specification>
+            <height metric="mm">434</height>
+            <outerDiameter metric="mm">120</outerDiameter>
+            <innerDiameter metric="mm">70</innerDiameter>
+            <shape>round</shape>
+        </specification>
+    </part>
+    <part id="1904414" category="clutch" stock="2">
+        <make>audi</make>
+        <model year="2003-2009">q7</model>
+        <name>Valeo Clutch Kit</name>
+        <partDescription>
+            To fit Audi Q7 from Oct 2015 to Feb 2017 2.0 
+            GTI[200hp 1984cc.]
+        </partDescription>
+        <RRP currency="euro">377.99</RRP>
+        <specification>
+            <transmissionType>manual</transmissionType>
+            <engineCode>CDLG</engineCode>
+            <weight metric="kg">6.88</weight>
+        </specification>
+    </part>
+    <part id="49381405" category="tyres" stock="20">
+        <make>ford</make>
+        <model year="2003-2009">transit</model>
+        <name>Low profile Continental Tyre</name>
+        <partDescription>
+            To fit Ford Transit from Oct 2015 to Feb 2017 2.0 
+            GTI[200hp 1984cc.]
+        </partDescription>
+        <RRP currency="euro">79.99</RRP>
+    </part>
+    <part id="4959383" category="gearbox" stock="1">
+        <make>mercedes</make>
+        <model year="2003-2009">sprinter</model>
+        <name>Mercedes Sprinter replacement gearbox</name>
+        <partDescription>
+            To fit Mercedes Sprinter from Oct 2015 to Feb 2017 2.0 
+            GTI[200hp 1984cc.]
+        </partDescription>
+        <RRP currency="euro">459.99</RRP>
+    </part>
+</partsInventory>

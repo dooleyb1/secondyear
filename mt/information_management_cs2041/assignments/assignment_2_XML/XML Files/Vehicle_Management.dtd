@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This document contains the design for the vehicle management data.
+The vehicle management class contains the vehicles that are in the fleet.
+The * is used for the Vehcile as there must be at least one vehcile in the system
+but cannot be an infinite amount. -->
+<!ELEMENT Vehicle_Management (Vehicle)*>
+
+<!-- Each vehcile requires to have the attributes VehicleID, NeedsService and isBeingServiced.
+These attributes are required so the mechanics can easily access the vehicles to see whether
+service is needed and if they have already been serviced.
+
+Each vehicle also has a list of its details which include the type of vehicle, the make, model,
+year, registration number, mileage and colour. These details are also accessed by the mechanics -->
+
+<!ATTLIST Vehicle VehicleID CDATA #REQUIRED>
+<!ATTLIST Vehicle NeedsService CDATA #REQUIRED>
+<!ATTLIST Vehicle isBeingServiced CDATA #REQUIRED>
+  <!ELEMENT Vehicle (VehicleDetails)>
+    <!ELEMENT VehicleDetails (Type, Make, Model, Year, RegNo, Mileage, Colour)>
+      <!ELEMENT Type (#PCDATA)>
+      <!ELEMENT Make (#PCDATA)>
+      <!ELEMENT Model (#PCDATA)>
+      <!ELEMENT Year (#PCDATA)>
+      <!ELEMENT RegNo (#PCDATA)>
+      <!ELEMENT Mileage (#PCDATA)>
+      <!ELEMENT Colour (#PCDATA)>
