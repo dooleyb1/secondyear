@@ -19,24 +19,8 @@
      */
     static double [] insertionSort (double a[]){
 
-        int n = a.length;
-
-	//Iterate through input array
-	for(int i=0; i<n; i++)
-	{		
-		int temp = a[i];
-		//Compare a[i] with a[i-1]
-		int j = i-1;
-		
-		//Iterate through all possible comparisons and swap accordingly	
-		while(j>=0 && a[j] < temp)
-		{
-			a[j+1] = a[j]
-			j = j-1;
-		}
-		a[j+1] = temp;
-		return a;
-    }
+        //todo: implement the sort
+    }//end insertionsort
 
     /**
      * Sorts an array of doubles using Quick Sort.
@@ -47,49 +31,9 @@
      */
     static double [] quickSort (double a[]){
 	
-		sort(a, 0, a.length-1);
-		
-		private static void sort(double a[], int lo, int hi){
+		 //todo: implement the sort
 
-			if(hi <= lo)
-				return;
-
-			int j = partition(a, low, high);
-
-			//Sort left partition
-			sort(a, low, j-1);
-
-			//Sort right partition
-			sort(a, j+1, high);
-		
-		}
-	
-		private static int partition(double a[], int lo, int hi){
-
-			int pivot = arr[hi];
-			int i = (lo-1);
-
-			for(int j=lo; j<hi; j++)
-			{
-				if(a[j] <= pivot)
-				{
-					i++;
-					
-					//Swap a[i] and a[j]
-					int temp = a[i];
-					a[i] = a[j];
-					a[j] = temp;
-				}
-			}
-
-			int temp = a[i+1];
-			a[i+1] = a[hi];
-			a[hi] = temp;
-			
-			return i+1;
-		}
-
-    }
+    }//end quicksort
 
     /**
      * Sorts an array of doubles using Merge Sort.
