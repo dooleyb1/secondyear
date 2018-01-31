@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 // -------------------------------------------------------------------------
 
 /**
@@ -13,6 +15,7 @@
     /**
      * Sorts an array of doubles using InsertionSort.
      * This method is static, thus it can be called as SortComparison.sort(a)
+     * Implemented using https://www.geeksforgeeks.org/insertion-sort/
      * @param a: An unsorted array of doubles.
      * @return array sorted in ascending order.
      *
@@ -29,7 +32,7 @@
 			int j = i-1;
 			
 			//Iterate through all possible comparisons and swap accordingly	
-			while(j>=0 && a[j] < temp)
+			while(j>=0 && a[j] > temp)
 			{
 				a[j+1] = a[j];
 				j = j-1;
@@ -299,7 +302,34 @@
 
     public static void main(String[] args) {
 
-        //todo: do experiments as per assignment instructions
+    	double jumbledArray[] = {21.3, 5.6, 1.2, 90.5, 10.1, 60.4, 99.0, 0.2, -1.0, 2.1, 1293.2, 6.3};
+    	double resultArray[] = new double[jumbledArray.length];
+    	
+    	System.out.println("Jumbled array is: \n " + Arrays.toString(jumbledArray) + "\n");
+    	
+    	double insSortArray[] = SortComparison.insertionSort(jumbledArray);
+    	System.out.println("Insertion sort on above array produces: \n " + Arrays.toString(insSortArray) + "\n");
+    	
+    	double quickSortArray[] = SortComparison.quickSort(jumbledArray);
+    	System.out.println("Quick sort on above array produces: \n " + Arrays.toString(quickSortArray) + "\n");
+    	
+    	double mergeSortArray[] = SortComparison.mergeSort(jumbledArray);
+    	System.out.println("Merge sort on above array produces: \n " + Arrays.toString(mergeSortArray) + "\n");
+    	
+    	double shellSortArray[] = SortComparison.shellSort(jumbledArray);
+    	System.out.println("Shell sort on above array produces: \n " + Arrays.toString(shellSortArray) + "\n");
+    	
+    	double selectionSortArray[] = SortComparison.selectionSort(jumbledArray);
+    	System.out.println("Selection sort on above array produces: \n " + Arrays.toString(selectionSortArray) + "\n");
+    	
+    	double bubbleSortArray[]= SortComparison.bubbleSort(jumbledArray);
+    	System.out.println("Bubble sort on above array produces: \n " + Arrays.toString(bubbleSortArray) + "\n");
+    	
+    	double x[] = {104.0};
+    	double y[] = SortComparison.insertionSort(x);
+    	System.out.println("One element array is : \n " + Arrays.toString(x) + "\n");
+    	System.out.println("Insertion sort on above array produces: \n " + Arrays.toString(y) + "\n");
+    	
     }
 
  }//end class
