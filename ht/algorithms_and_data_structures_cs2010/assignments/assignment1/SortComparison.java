@@ -22,24 +22,26 @@ import java.util.Arrays;
      */
     static double [] insertionSort (double a[]){
 
-        int n = a.length;
+    	double result[] = new double[a.length];
+ 		System.arraycopy(a, 0, result, 0, a.length);
+        int n = result.length;
 
 		//Iterate through input array
 		for(int i=0; i<n; i++)
 		{		
-			double temp = a[i];
+			double temp = result[i];
 			//Compare a[i] with a[i-1]
 			int j = i-1;
 			
 			//Iterate through all possible comparisons and swap accordingly	
-			while(j>=0 && a[j] > temp)
+			while(j>=0 && result[j] > temp)
 			{
-				a[j+1] = a[j];
+				result[j+1] = result[j];
 				j = j-1;
 			}
-			a[j+1] = temp;
+			result[j+1] = temp;
 		}
-		return a;
+		return result;
     }
 
     /**
@@ -52,11 +54,14 @@ import java.util.Arrays;
      */
     static double [] quickSort (double a[]){
 	
+
+   	    double result[] = new double[a.length];
+ 		System.arraycopy(a, 0, result, 0, a.length);
     	int low = 0;
-    	int high = a.length-1;
+    	int high = result.length-1;
     	
-    	qSort(a, low, high);
-    	return a;
+    	qSort(result, low, high);
+    	return result;
     }
     
     /**
@@ -118,13 +123,15 @@ import java.util.Arrays;
      */
     static double [] mergeSort (double a[]){
 
+    	 double result[] = new double[a.length];
+  		 System.arraycopy(a, 0, result, 0, a.length);
 		 int low = 0;
-		 int high = a.length - 1;
+		 int high = result.length - 1;
 		 
 		 double tmp[] = new double[a.length];
 		 
-		 mSort(a, tmp, low, high);
-		 return a;
+		 mSort(result, tmp, low, high);
+		 return result;
 	
     }
     
@@ -205,6 +212,8 @@ import java.util.Arrays;
      */
     static double [] shellSort (double a[]){
 
+    	 double result[] = new double[a.length];
+   		 System.arraycopy(a, 0, result, 0, a.length);	
 		 int n = a.length;
 		 
 		 //Start with a gap of a.length/2, keep reducing by half
@@ -214,21 +223,21 @@ import java.util.Arrays;
 			 for(int i = gap; i < n; i += 1) {
 				
 				 //Store a[i] into tmp
-				 double tmp = a[i];
+				 double tmp = result[i];
 				 
 				 //Shift earlier gap-sorted elements up until a[i] position is found
 				 int j;
-				 for(j=i; j>=gap && a[j-gap] > tmp; j -= gap) {
+				 for(j=i; j>=gap && result[j-gap] > tmp; j -= gap) {
 					 
-					 a[j] = a[j-gap];
+					 result[j] = result[j-gap];
 					 
 				 }
 				 
 				 //Place tmp in its correct location
-				 a[j] = tmp;
+				 result[j] = tmp;
 			 }
 		 }
-		 return a;
+		 return result;
     }
 
     /**
@@ -241,23 +250,25 @@ import java.util.Arrays;
      */
     static double [] selectionSort (double a[]){
 
-         int n = a.length;
+    	double result[] = new double[a.length];
+   		System.arraycopy(a, 0, result, 0, a.length); 
+    	int n = a.length;
          double tmp;
          //Increment the unsorted array index by one
          for(int i = 0; i < n-1; i++) {
         	 //Find index of min element 
         	 int min = i;
         	 for(int j = i+1; j < n; j++) {
-        		 if(a[j] < a[min])
+        		 if(result[j] < result[min])
         			 min = j;
         	 }
         	 
         	 //Swap the found min with the element a[i]
-        	 tmp = a[min];
-        	 a[min] = a[i];
-        	 a[i] = tmp;
+        	 tmp = result[min];
+        	 result[min] = result[i];
+        	 result[i] = tmp;
          }
-         return a;
+         return result;
 
     }
 
@@ -270,7 +281,9 @@ import java.util.Arrays;
      *
      */
     static double [] bubbleSort (double a[]){
-
+    	
+    	 double result[] = new double[a.length];
+    	 System.arraycopy(a, 0, result, 0, a.length);
          int n = a.length;
          int i, j;
          double tmp;
@@ -283,10 +296,10 @@ import java.util.Arrays;
         	 for(j = 0; j < n-i-1; j++) {
         		 
         		 //Swap a[j] with a[j+1] if larger
-        		 if(a[j] > a[j+1]) {
-        			 tmp = a[j];
-        			 a[j] = a[j+1];
-        			 a[j+1] = tmp;
+        		 if(result[j] > result[j+1]) {
+        			 tmp = result[j];
+        			 result[j] = result[j+1];
+        			 result[j+1] = tmp;
         			 swapped = true;
         		 }
         	 }
@@ -295,7 +308,7 @@ import java.util.Arrays;
         	 if(!swapped)
         		 break;
          }
-         return a;
+         return result;
 		 
     }
 
@@ -307,8 +320,8 @@ import java.util.Arrays;
     	
     	System.out.println("Jumbled array is: \n " + Arrays.toString(jumbledArray) + "\n");
     	
-    	double insSortArray[] = SortComparison.insertionSort(jumbledArray);
-    	System.out.println("Insertion sort on above array produces: \n " + Arrays.toString(insSortArray) + "\n");
+    	//double insSortArray[] = SortComparison.insertionSort(jumbledArray);
+    	//System.out.println("Insertion sort on above array produces: \n " + Arrays.toString(insSortArray) + "\n");
     	
     	double quickSortArray[] = SortComparison.quickSort(jumbledArray);
     	System.out.println("Quick sort on above array produces: \n " + Arrays.toString(quickSortArray) + "\n");
@@ -316,19 +329,21 @@ import java.util.Arrays;
     	double mergeSortArray[] = SortComparison.mergeSort(jumbledArray);
     	System.out.println("Merge sort on above array produces: \n " + Arrays.toString(mergeSortArray) + "\n");
     	
-    	double shellSortArray[] = SortComparison.shellSort(jumbledArray);
-    	System.out.println("Shell sort on above array produces: \n " + Arrays.toString(shellSortArray) + "\n");
+    	System.out.println("Jumbled array is: \n " + Arrays.toString(jumbledArray) + "\n");
     	
-    	double selectionSortArray[] = SortComparison.selectionSort(jumbledArray);
-    	System.out.println("Selection sort on above array produces: \n " + Arrays.toString(selectionSortArray) + "\n");
+    	//double shellSortArray[] = SortComparison.shellSort(jumbledArray);
+    	//System.out.println("Shell sort on above array produces: \n " + Arrays.toString(shellSortArray) + "\n");
     	
-    	double bubbleSortArray[]= SortComparison.bubbleSort(jumbledArray);
-    	System.out.println("Bubble sort on above array produces: \n " + Arrays.toString(bubbleSortArray) + "\n");
+    	//double selectionSortArray[] = SortComparison.selectionSort(jumbledArray);
+    	//System.out.println("Selection sort on above array produces: \n " + Arrays.toString(selectionSortArray) + "\n");
     	
-    	double x[] = {104.0};
-    	double y[] = SortComparison.insertionSort(x);
-    	System.out.println("One element array is : \n " + Arrays.toString(x) + "\n");
-    	System.out.println("Insertion sort on above array produces: \n " + Arrays.toString(y) + "\n");
+    	//double bubbleSortArray[]= SortComparison.bubbleSort(jumbledArray);
+    	//System.out.println("Bubble sort on above array produces: \n " + Arrays.toString(bubbleSortArray) + "\n");
+    	
+    	//double x[] = {104.0};
+    	//double y[] = SortComparison.insertionSort(x);
+    	//System.out.println("One element array is : \n " + Arrays.toString(x) + "\n");
+    	//System.out.println("Insertion sort on above array produces: \n " + Arrays.toString(y) + "\n");
     	
     }
 
