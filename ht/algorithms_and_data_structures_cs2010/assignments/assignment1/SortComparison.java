@@ -1,4 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Scanner;
 
 // -------------------------------------------------------------------------
 
@@ -22,26 +25,24 @@ import java.util.Arrays;
      */
     static double [] insertionSort (double a[]){
 
-    	double result[] = new double[a.length];
- 		System.arraycopy(a, 0, result, 0, a.length);
-        int n = result.length;
+        int n = a.length;
 
 		//Iterate through input array
 		for(int i=0; i<n; i++)
 		{		
-			double temp = result[i];
+			double temp = a[i];
 			//Compare a[i] with a[i-1]
 			int j = i-1;
 			
 			//Iterate through all possible comparisons and swap accordingly	
-			while(j>=0 && result[j] > temp)
+			while(j>=0 && a[j] > temp)
 			{
-				result[j+1] = result[j];
+				a[j+1] = a[j];
 				j = j-1;
 			}
-			result[j+1] = temp;
+			a[j+1] = temp;
 		}
-		return result;
+		return a;
     }
 
     /**
@@ -54,14 +55,11 @@ import java.util.Arrays;
      */
     static double [] quickSort (double a[]){
 	
-
-   	    double result[] = new double[a.length];
- 		System.arraycopy(a, 0, result, 0, a.length);
     	int low = 0;
-    	int high = result.length-1;
+    	int high = a.length-1;
     	
-    	qSort(result, low, high);
-    	return result;
+    	qSort(a, low, high);
+    	return a;
     }
     
     /**
@@ -117,45 +115,36 @@ import java.util.Arrays;
     /**
      * Sorts an array of doubles using Merge Sort.
      * This method is static, thus it can be called as SortComparison.sort(a)
+     * Implemented using https://www.geeksforgeeks.org/merge-sort/
      * @param a: An unsorted array of doubles.
      * @return array sorted in ascending order
      *
      */
     static double [] mergeSort (double a[]){
 
-    	 double result[] = new double[a.length];
-  		 System.arraycopy(a, 0, result, 0, a.length);
-		 int low = 0;
-		 int high = result.length - 1;
-		 
-		 double tmp[] = new double[a.length];
-		 
-		 mSort(result, tmp, low, high);
-		 return result;
+  		 double tmp[] = new double[a.length];
+  		 
+		 mSort(a, tmp,  0,  a.length - 1);
+		 return a;
 	
     }
     
     /**
      * Performs mergesort recursively within the given indices low and high
      * @param a: An unsorted array of doubles
-     * @param tmp: Temp array to be used for the mergesort.
+     * @param tmp: Temp array to be used in the mergesort.
      * @param low: Lower index
      * @param high: Higher index
      */
     private static void mSort(double a[], double tmp[], int low, int high) {
     	
-    	//If low is smaller than high array is unsorted
-		if(low < high) {
-			//Get index of middle element
-			int middle = low + (high - low) / 2;
-			//Sort left array
+    	if(low < high)
+		{
+			int middle = (low + high) / 2;
 			mSort(a, tmp, low, middle);
-			//Sort right array
 			mSort(a, tmp, middle + 1, high);
-			//Combine them both
-			merge(a, tmp, low, middle, high);
-			
-		 }
+			merge(a, tmp, low, middle + 1, high);
+		}
     	
     }
     
@@ -168,38 +157,27 @@ import java.util.Arrays;
      * @param middle: Index of middle element.
      * @param high: Index of higher element.
      */
-    private static void merge(double a[], double tmp[], int low, int middle, int high) {
-    	
-    	 // Copy both parts into the tmp array
-        for (int i = low; i <= high; i++) {
-            tmp[i] = a[i];
-        }
-        
-        int i = low;
-        int j = middle + 1;
-        int k = low;
-        
-    	// Copy the smallest values from either the left or the right side back
-        // to the original array
-        while (i <= middle && j <= high) {
-            if (tmp[i] <= tmp[j]) {
-                a[k] = a[i];
-                i++;
-            } else {
-               a[k] = tmp[j];
-                j++;
-            }
-            k++;
-        }
-        // Copy the rest of the left side of the array into the target array
-        while (i <= middle) {
-            a[k] = tmp[i];
-            k++;
-            i++;
-        }
-        // Since we are sorting in-place any leftover elements from the right side
-        // are already at the right position.
-    	
+    private static void merge(double a[], double tmp[], int left, int right, int rightEnd )
+    {
+        int leftEnd = right - 1;
+        int k = left;
+        int num = rightEnd - left + 1;
+
+        while(left <= leftEnd && right <= rightEnd)
+            if(a[left] <= a[right])
+                tmp[k++] = a[left++];
+            else
+                tmp[k++] = a[right++];
+
+        while(left <= leftEnd)    // Copy rest of first half
+            tmp[k++] = a[left++];
+
+        while(right <= rightEnd)  // Copy rest of right half
+            tmp[k++] = a[right++];
+
+        // Copy tmp back
+        for(int i = 0; i < num; i++, rightEnd--)
+            a[rightEnd] = tmp[rightEnd];
     }
 
     /**
@@ -211,9 +189,7 @@ import java.util.Arrays;
      *
      */
     static double [] shellSort (double a[]){
-
-    	 double result[] = new double[a.length];
-   		 System.arraycopy(a, 0, result, 0, a.length);	
+	
 		 int n = a.length;
 		 
 		 //Start with a gap of a.length/2, keep reducing by half
@@ -223,21 +199,21 @@ import java.util.Arrays;
 			 for(int i = gap; i < n; i += 1) {
 				
 				 //Store a[i] into tmp
-				 double tmp = result[i];
+				 double tmp = a[i];
 				 
 				 //Shift earlier gap-sorted elements up until a[i] position is found
 				 int j;
-				 for(j=i; j>=gap && result[j-gap] > tmp; j -= gap) {
+				 for(j=i; j>=gap && a[j-gap] > tmp; j -= gap) {
 					 
-					 result[j] = result[j-gap];
+					 a[j] = a[j-gap];
 					 
 				 }
 				 
 				 //Place tmp in its correct location
-				 result[j] = tmp;
+				 a[j] = tmp;
 			 }
 		 }
-		 return result;
+		 return a;
     }
 
     /**
@@ -249,26 +225,25 @@ import java.util.Arrays;
      *
      */
     static double [] selectionSort (double a[]){
-
-    	double result[] = new double[a.length];
-   		System.arraycopy(a, 0, result, 0, a.length); 
+ 
     	int n = a.length;
-         double tmp;
-         //Increment the unsorted array index by one
+    	double tmp;
+    	
+        //Increment the unsorted array index by one
          for(int i = 0; i < n-1; i++) {
         	 //Find index of min element 
         	 int min = i;
         	 for(int j = i+1; j < n; j++) {
-        		 if(result[j] < result[min])
+        		 if(a[j] < a[min])
         			 min = j;
         	 }
         	 
         	 //Swap the found min with the element a[i]
-        	 tmp = result[min];
-        	 result[min] = result[i];
-        	 result[i] = tmp;
+        	 tmp = a[min];
+        	 a[min] = a[i];
+        	 a[i] = tmp;
          }
-         return result;
+         return a;
 
     }
 
@@ -282,8 +257,6 @@ import java.util.Arrays;
      */
     static double [] bubbleSort (double a[]){
     	
-    	 double result[] = new double[a.length];
-    	 System.arraycopy(a, 0, result, 0, a.length);
          int n = a.length;
          int i, j;
          double tmp;
@@ -296,10 +269,10 @@ import java.util.Arrays;
         	 for(j = 0; j < n-i-1; j++) {
         		 
         		 //Swap a[j] with a[j+1] if larger
-        		 if(result[j] > result[j+1]) {
-        			 tmp = result[j];
-        			 result[j] = result[j+1];
-        			 result[j+1] = tmp;
+        		 if(a[j] > a[j+1]) {
+        			 tmp = a[j];
+        			 a[j] = a[j+1];
+        			 a[j+1] = tmp;
         			 swapped = true;
         		 }
         	 }
@@ -308,43 +281,53 @@ import java.util.Arrays;
         	 if(!swapped)
         		 break;
          }
-         return result;
+         return a;
 		 
     }
 
+    public static double[] populateArray(File file, int n) throws FileNotFoundException {
+    	
+    	double[] result = new double[n];
+    	Scanner in = new Scanner(file);
+    	
+    	for(int i=0; i<result.length; i++) {
+    		result[i] = in.nextDouble();
+    	}
+    	
+    	//Uncomment for printing 
+    	/*
+    	for (double d : result) {
+            System.out.println(d); 
+        }
+        */
+    	
+    	in.close();
+    	return result;
+    }
+    
+    public static void main(String[] args) throws FileNotFoundException {
 
-    public static void main(String[] args) {
+    File tenFile = new File("numbers10.txt");
+    double[] array10 = populateArray(tenFile, 10);
+	
+	File hundredFile = new File("numbers100.txt");
+	double[] array100 = populateArray(hundredFile, 100);
 
-    	double jumbledArray[] = {21.3, 5.6, 1.2, 90.5, 10.1, 60.4, 99.0, 0.2, -1.0, 2.1, 1293.2, 6.3};
-    	double resultArray[] = new double[jumbledArray.length];
-    	
-    	System.out.println("Jumbled array is: \n " + Arrays.toString(jumbledArray) + "\n");
-    	
-    	//double insSortArray[] = SortComparison.insertionSort(jumbledArray);
-    	//System.out.println("Insertion sort on above array produces: \n " + Arrays.toString(insSortArray) + "\n");
-    	
-    	double quickSortArray[] = SortComparison.quickSort(jumbledArray);
-    	System.out.println("Quick sort on above array produces: \n " + Arrays.toString(quickSortArray) + "\n");
-    	
-    	double mergeSortArray[] = SortComparison.mergeSort(jumbledArray);
-    	System.out.println("Merge sort on above array produces: \n " + Arrays.toString(mergeSortArray) + "\n");
-    	
-    	System.out.println("Jumbled array is: \n " + Arrays.toString(jumbledArray) + "\n");
-    	
-    	//double shellSortArray[] = SortComparison.shellSort(jumbledArray);
-    	//System.out.println("Shell sort on above array produces: \n " + Arrays.toString(shellSortArray) + "\n");
-    	
-    	//double selectionSortArray[] = SortComparison.selectionSort(jumbledArray);
-    	//System.out.println("Selection sort on above array produces: \n " + Arrays.toString(selectionSortArray) + "\n");
-    	
-    	//double bubbleSortArray[]= SortComparison.bubbleSort(jumbledArray);
-    	//System.out.println("Bubble sort on above array produces: \n " + Arrays.toString(bubbleSortArray) + "\n");
-    	
-    	//double x[] = {104.0};
-    	//double y[] = SortComparison.insertionSort(x);
-    	//System.out.println("One element array is : \n " + Arrays.toString(x) + "\n");
-    	//System.out.println("Insertion sort on above array produces: \n " + Arrays.toString(y) + "\n");
-    	
+	File thousandFile = new File("numbers1000.txt");
+	double[] array1000 = populateArray(thousandFile, 1000);
+	
+	File thousandDuplicates = new File("numbers1000Duplicates.txt");
+	double[] array1000Duplicates = populateArray(thousandDuplicates, 1000);
+    
+	File thousandNearlyOrdered = new File("numbersNearlyOrdered1000.txt");
+	double[] array1000NearlyOrdered = populateArray(thousandNearlyOrdered, 1000);
+	
+	File thousandReverse = new File("numbersReverse1000.txt");
+	double[] array1000Reverse = populateArray(thousandReverse, 100);
+	
+	File thousandSorted = new File("numbersSorted1000.txt");
+	double[] array1000Sorted = populateArray(thousandSorted, 100);
+	
     }
 
  }//end class
