@@ -9,8 +9,29 @@ import java.util.Scanner;
  *  This class contains static methods that implementing sorting of an array of numbers
  *  using different sort algorithms.
  *
- *  @author
+ *  @author Brandon Dooley
  *  @version HT 2018
+ *  
+ *  
+ *  Find below the performance analysis of each respective algorithm using the supplied text files as described
+ *  per CS2010 HT Assignment 1
+ *  
+ *  
+ *  					| Insert (ns)	| Quick (ns)	| Merge (ns)	| Shell (ns)	|Selection (ns)	| Bubble (ns)	|
+ *  -----------------------------------------------------------------------------------------------------------------------
+ *  10 Random			|			  	|				|				|				|				|				|
+ *  -----------------------------------------------------------------------------------------------------------------------
+ *  100 Random			|				| 				|				|				|				|				|
+ *  -----------------------------------------------------------------------------------------------------------------------
+ *  1000 Random			|				|				|				|				|				|				|
+ *  -----------------------------------------------------------------------------------------------------------------------
+ *  1000 Few Unique		|				|				|				|				|				|				|
+ *  -----------------------------------------------------------------------------------------------------------------------
+ *  1000 Nearly Ordered	|				|				|				|				|				|				|
+ *  -----------------------------------------------------------------------------------------------------------------------
+ *  1000 Reverse Order	|				|				|				|				|				|				|
+ *  -----------------------------------------------------------------------------------------------------------------------
+ *  1000 Sorted			|				|				|				|				|				|				|
  */
 
  class SortComparison {
@@ -305,7 +326,235 @@ import java.util.Scanner;
     	return result;
     }
     
-    public static void main(String[] args) throws FileNotFoundException {
+    /*
+     * Calculates the total of 3 seperate runs of insertion sort on a given array.
+     */
+    public static long insertionSortTimer(double[] a) {
+    	
+    	long startTime, endTime, performanceTime;
+    	long total = 0;
+    	
+    	//Run experiment three times
+    	for(int i=0; i<3; i++) {
+    		//Create duplicate of array, since sorts in place
+    		double[] x = new double[a.length];
+    		System.arraycopy(a, 0, x, 0, a.length);
+    		
+    		//Time start clock
+    		startTime = 0;
+    		startTime = System.nanoTime();
+    		
+    		x = SortComparison.insertionSort(a);
+        	
+        	//Time end clock
+        	endTime = 0;
+        	endTime = System.nanoTime();
+        	
+        	//p(t) = endTime - startTime
+        	performanceTime = endTime - startTime;
+        	
+        	total+= performanceTime;
+    	}
+    	return total;
+    }
+    
+    /*
+     * Calculates the total of 3 seperate runs of quick sort on a given array.
+     */
+    public static long quickSortTimer(double[] a) {
+    	
+    	long startTime, endTime, performanceTime;
+    	long total = 0;
+    	
+    	//Run experiment three times
+    	for(int i=0; i<3; i++) {
+    		//Create duplicate of array, since sorts in place
+    		double[] x = new double[a.length];
+    		System.arraycopy(a, 0, x, 0, a.length);
+    		
+    		//Time start clock
+    		startTime = 0;
+    		startTime = System.nanoTime();
+    		
+    		x = SortComparison.quickSort(a);
+        	
+        	//Time end clock
+        	endTime = 0;
+        	endTime = System.nanoTime();
+        	
+        	//p(t) = endTime - startTime
+        	performanceTime = endTime - startTime;
+        	
+        	total+= performanceTime;
+    	}
+    	return total;
+    }
+    
+    /*
+     * Calculates the total of 3 seperate runs of merge sort on a given array.
+     */
+    public static long mergeSortTimer(double[] a) {
+    	
+    	long startTime, endTime, performanceTime;
+    	long total = 0;
+    	
+    	//Run experiment three times
+    	for(int i=0; i<3; i++) {
+    		//Create duplicate of array, since sorts in place
+    		double[] x = new double[a.length];
+    		System.arraycopy(a, 0, x, 0, a.length);
+    		
+    		//Time start clock
+    		startTime = 0;
+    		startTime = System.nanoTime();
+    		
+    		x = SortComparison.mergeSort(a);
+        	
+        	//Time end clock
+        	endTime = 0;
+        	endTime = System.nanoTime();
+        	
+        	//p(t) = endTime - startTime
+        	performanceTime = endTime - startTime;
+        	
+        	total+= performanceTime;
+    	}
+    	return total;
+    }
+
+    /*
+     * Calculates the total of 3 seperate runs of shell sort on a given array.
+     */
+    public static long shellSortTimer(double[] a) {
+    	
+    	long startTime, endTime, performanceTime;
+    	long total = 0;
+    	
+    	//Run experiment three times
+    	for(int i=0; i<3; i++) {
+    		//Create duplicate of array, since sorts in place
+    		double[] x = new double[a.length];
+    		System.arraycopy(a, 0, x, 0, a.length);
+    		
+    		//Time start clock
+    		startTime = 0;
+    		startTime = System.nanoTime();
+    		
+    		x = SortComparison.shellSort(a);
+        	
+        	//Time end clock
+        	endTime = 0;
+        	endTime = System.nanoTime();
+        	
+        	//p(t) = endTime - startTime
+        	performanceTime = endTime - startTime;
+        	
+        	total+= performanceTime;
+    	}
+    	return total;
+    }
+
+    /*
+     * Calculates the total of 3 seperate runs of selection sort on a given array.
+     */
+    public static long selectionSortTimer(double[] a) {
+    	
+    	long startTime, endTime, performanceTime;
+    	long total = 0;
+    	
+    	//Run experiment three times
+    	for(int i=0; i<3; i++) {
+    		//Create duplicate of array, since sorts in place
+    		double[] x = new double[a.length];
+    		System.arraycopy(a, 0, x, 0, a.length);
+    		
+    		//Time start clock
+    		startTime = 0;
+    		startTime = System.nanoTime();
+    		
+    		x = SortComparison.selectionSort(a);
+        	
+        	//Time end clock
+        	endTime = 0;
+        	endTime = System.nanoTime();
+        	
+        	//p(t) = endTime - startTime
+        	performanceTime = endTime - startTime;
+        	
+        	total+= performanceTime;
+    	}
+    	return total;
+    }
+
+    /*
+     * Calculates the total of 3 seperate runs of bubble sort on a given array.
+     */
+    public static long bubbleSortTimer(double[] a) {
+    	
+    	long startTime, endTime, performanceTime;
+    	long total = 0;
+    	
+    	//Run experiment three times
+    	for(int i=0; i<3; i++) {
+    		//Create duplicate of array, since sorts in place
+    		double[] x = new double[a.length];
+    		System.arraycopy(a, 0, x, 0, a.length);
+    		
+    		//Time start clock
+    		startTime = 0;
+    		startTime = System.nanoTime();
+    		
+    		x = SortComparison.bubbleSort(a);
+        	
+        	//Time end clock
+        	endTime = 0;
+        	endTime = System.nanoTime();
+        	
+        	//p(t) = endTime - startTime
+        	performanceTime = endTime - startTime;
+        	
+        	total+= performanceTime;
+    	}
+    	return total;
+    }
+    
+    public static long avgTimeFor(double[] a, int sortMethod) {
+    	
+    	
+    	long avg = 0;
+    	long total = 0;
+    	
+    	switch(sortMethod) {
+    	case 0:
+    		total = insertionSortTimer(a);
+    		break;
+    	case 1:
+    		total = quickSortTimer(a);
+    		break;
+    	case 2:
+    		total = mergeSortTimer(a);
+    		break;
+    	case 3:
+    		total = shellSortTimer(a);
+    		break;
+    	case 4:
+    		total = selectionSortTimer(a);
+    		break;
+    	case 5:
+    		total = bubbleSortTimer(a);
+    		break;
+    	default:
+    		total = 0;
+    		break;
+    	}
+    	
+    	
+    	avg = total / 3;
+    	return avg;
+    }
+    
+    
+public static void main(String[] args) throws FileNotFoundException {
 
     File tenFile = new File("numbers10.txt");
     double[] array10 = populateArray(tenFile, 10);
@@ -327,6 +576,69 @@ import java.util.Scanner;
 	
 	File thousandSorted = new File("numbersSorted1000.txt");
 	double[] array1000Sorted = populateArray(thousandSorted, 100);
+	
+	String a = "insertion sort";
+	String b = "quick sort";
+	String c = "merge sort";
+	String d = "shell sort";
+	String e = "selection sort";
+	String f = "bubble sort";
+	
+	int insertion = 0;
+	int quick = 1;
+	int merge = 2;
+	int shell = 3;
+	int selection = 4;
+	int bubble = 5;
+	
+	System.out.println("\n\nAvg time for " + a + " with numbers10.txt = " + avgTimeFor(array10, insertion) + " (ns)");
+	System.out.println("Avg time for " + a + " with numbers100.txt = " + avgTimeFor(array100, insertion) + " (ns)");
+	System.out.println("Avg time for " + a + " with numbers1000.txt = " + avgTimeFor(array1000, insertion) + " (ns)");
+	System.out.println("Avg time for " + a + " with numbers1000Duplicates.txt = " + avgTimeFor(array1000Duplicates, insertion) + " (ns)");
+	System.out.println("Avg time for " + a + " with numbersNearlyOrdered1000.txt = " + avgTimeFor(array1000NearlyOrdered, insertion) + " (ns)");
+	System.out.println("Avg time for " + a + " with numbersReverse1000.txt = " + avgTimeFor(array1000Reverse, insertion) + " (ns)");
+	System.out.println("Avg time for " + a + " with numbersSorted1000.txt = " + avgTimeFor(array1000Sorted, insertion) + " (ns)");
+	
+	System.out.println("\n\nAvg time for " + b + " with numbers10.txt = " + avgTimeFor(array10, quick) + " (ns)");
+	System.out.println("Avg time for " + b + " with numbers100.txt = " + avgTimeFor(array100, quick) + " (ns)");
+	System.out.println("Avg time for " + b + " with numbers1000.txt = " + avgTimeFor(array1000, quick) + " (ns)");
+	System.out.println("Avg time for " + b + " with numbers1000Duplicates.txt = " + avgTimeFor(array1000Duplicates, quick) + " (ns)");
+	System.out.println("Avg time for " + b + " with numbersNearlyOrdered1000.txt = " + avgTimeFor(array1000NearlyOrdered, insertion) + " (ns)");
+	System.out.println("Avg time for " + b + " with numbersReverse1000.txt = " + avgTimeFor(array1000Reverse, quick) + " (ns)");
+	System.out.println("Avg time for " + b + " with numbersSorted1000.txt = " + avgTimeFor(array1000Sorted, quick) + " (ns)");
+	
+	System.out.println("\n\nAvg time for " + c + " with numbers10.txt = " + avgTimeFor(array10, merge) + " (ns)");
+	System.out.println("Avg time for " + c + " with numbers100.txt = " + avgTimeFor(array100, merge) + " (ns)");
+	System.out.println("Avg time for " + c + " with numbers1000.txt = " + avgTimeFor(array1000, merge) + " (ns)");
+	System.out.println("Avg time for " + c + " with numbers1000Duplicates.txt = " + avgTimeFor(array1000Duplicates, merge) + " (ns)");
+	System.out.println("Avg time for " + c + " with numbersNearlyOrdered1000.txt = " + avgTimeFor(array1000NearlyOrdered, merge) + " (ns)");
+	System.out.println("Avg time for " + c + " with numbersReverse1000.txt = " + avgTimeFor(array1000Reverse, merge) + " (ns)");
+	System.out.println("Avg time for " + c + " with numbersSorted1000.txt = " + avgTimeFor(array1000Sorted, merge) + " (ns)");
+	
+	System.out.println("\n\nAvg time for " + d + " with numbers10.txt = " + avgTimeFor(array10, shell) + " (ns)");
+	System.out.println("Avg time for " + d + " with numbers100.txt = " + avgTimeFor(array100, shell) + " (ns)");
+	System.out.println("Avg time for " + d + " with numbers1000.txt = " + avgTimeFor(array1000, shell) + " (ns)");
+	System.out.println("Avg time for " + d + " with numbers1000Duplicates.txt = " + avgTimeFor(array1000Duplicates, shell) + " (ns)");
+	System.out.println("Avg time for " + d + " with numbersNearlyOrdered1000.txt = " + avgTimeFor(array1000NearlyOrdered, shell) + " (ns)");
+	System.out.println("Avg time for " + d + " with numbersReverse1000.txt = " + avgTimeFor(array1000Reverse, shell) + " (ns)");
+	System.out.println("Avg time for " + d + " with numbersSorted1000.txt = " + avgTimeFor(array1000Sorted, shell) + " (ns)");
+	
+	System.out.println("\n\nAvg time for " + e + " with numbers10.txt = " + avgTimeFor(array10, selection) + " (ns)");
+	System.out.println("Avg time for " + e + " with numbers100.txt = " + avgTimeFor(array100, selection) + " (ns)");
+	System.out.println("Avg time for " + e + " with numbers1000.txt = " + avgTimeFor(array1000, selection) + " (ns)");
+	System.out.println("Avg time for " + e + " with numbers1000Duplicates.txt = " + avgTimeFor(array1000Duplicates, selection) + " (ns)");
+	System.out.println("Avg time for " + e + " with numbersNearlyOrdered1000.txt = " + avgTimeFor(array1000NearlyOrdered, selection) + " (ns)");
+	System.out.println("Avg time for " + e + " with numbersReverse1000.txt = " + avgTimeFor(array1000Reverse, selection) + " (ns)");
+	System.out.println("Avg time for " + e + " with numbersSorted1000.txt = " + avgTimeFor(array1000Sorted, selection) + " (ns)");
+	
+	System.out.println("\n\nAvg time for " + f + " with numbers10.txt = " + avgTimeFor(array10, bubble) + " (ns)");
+	System.out.println("Avg time for " + f + " with numbers100.txt = " + avgTimeFor(array100, bubble) + " (ns)");
+	System.out.println("Avg time for " + f + " with numbers1000.txt = " + avgTimeFor(array1000, bubble) + " (ns)");
+	System.out.println("Avg time for " + f + " with numbers1000Duplicates.txt = " + avgTimeFor(array1000Duplicates, bubble) + " (ns)");
+	System.out.println("Avg time for " + f + " with numbersNearlyOrdered1000.txt = " + avgTimeFor(array1000NearlyOrdered, bubble) + " (ns)");
+	System.out.println("Avg time for " + f + " with numbersReverse1000.txt = " + avgTimeFor(array1000Reverse, bubble) + " (ns)");
+	System.out.println("Avg time for " + f + " with numbersSorted1000.txt = " + avgTimeFor(array1000Sorted, bubble) + " (ns)");
+	
 	
     }
 
