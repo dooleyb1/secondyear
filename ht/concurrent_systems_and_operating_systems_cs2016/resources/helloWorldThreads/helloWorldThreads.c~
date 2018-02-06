@@ -14,7 +14,7 @@ int main (int argc, const char * argv[]) {
 	int rc,t; 
 	for (t=0;t<NUM_THREADS;t++) { 
 		printf("Creating thread %d\n",t); 
-		rc = pthread_create(&threads[t],NULL,PrintHello,(void *)t); 
+		rc = pthread_create(&threads[t],NULL,PrintHello,(void *)t, 1); 
 		if (rc) { 
 			printf("ERROR return code from pthread_create(): %d\n",rc); 
 			exit(-1); 
