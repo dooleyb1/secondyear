@@ -13,6 +13,13 @@
 float y[20], x[20], so, se, h, x0, xn;
 int n, i;
 
+struct integration_struct	{
+    //Or whatever information that you need
+    int *n;
+    int *i;
+    float *h;
+};
+
 //Method returns desired function result for input x
 float f(float x)
 {
@@ -20,13 +27,18 @@ float f(float x)
 }
 
 //Integration by parts (threaded)
-void *integrate(void *threadid){
-
-        x[i]=x0+i*h;
-        y[i]=f(x[i]);
-        printf("\n%f\n",y[i]);
-		i++;
-
+void *integrate(void *args){
+	
+	struct integration_struct* (struct integration_struct*) actual_args = args;
+	
+    printf("i = %i\n",actual_args->i);
+	printf("h = %f\n",actual_args->h);
+	x[actual_args->i]=x0+(actual_args->i)*(actual_args->h);
+	printf("x[i] = %f\n",x[actual_args->i]);
+	y[actual_args->i]=f(x[actual_args->i]);
+	printf("f(x[i]) = %f\n\n",y[actual_args->i]);
+	free(actual_args);
+	return 0;
 }
 
 int main (int argc, const char * argv[]) { 
@@ -52,9 +64,13 @@ int main (int argc, const char * argv[]) {
     h=(xn-x0)/n;	
 	
 	//Create threads and perform integration
-	for (t=0;t<n;t++) { 
+	for (t=0;t<n;++t) { 
+		struct integration_struct *args = malloc(sizeof *args);
+		args->n = &n;
+        args->i = &t;
+		args->h = &h;
 		printf("Creating thread %d\n",t); 
-		rc = pthread_create(&threads[t],NULL,integrate,(void *)t); 
+		rc = pthread_create(&threads[t],NULL,integrate,args); 
 		if (rc) { 
 			printf("ERROR return code from pthread_create(): %d\n",rc); 
 			exit(-1); 
@@ -64,9 +80,10 @@ int main (int argc, const char * argv[]) {
 	// wait for threads to exit 
 	for(t=0;t<NUM_THREADS;t++) { 
 		pthread_join( threads[t], NULL); 
-	} 	
+		printf("Threads exited");
+	}	 	
 
-	so=0;
+    so=0;
     se=0;
 
 	//Seperate even & odd indexed elements
