@@ -4,20 +4,18 @@
 #include <math.h>
 #include <curses.h>
 
-#define NUM_THREADS 6 
-#define N 1000
-
 //Purpose of this program is to perform integration of the function f(x) = 4 / 1 + x^2 over the integral
 //from limits 0 to 1
 
-float y[20], x[20], so, se, h, x0, xn;
-int n, i;
+float y[20], x[20];
 
+//Struct used to house parameters for integration by parts
 struct integration_struct	{
     //Or whatever information that you need
-    int n;
+    int intervalCount;
     int i;
-    float h;
+    float lowerLimit;
+    float sizeOfIntervals;
 };
 
 //Method returns desired function result for input x
@@ -30,80 +28,89 @@ float f(float x)
 void *integrate(void *args){
 	
 	struct integration_struct* actual_args = args;
-	int iz = actual_args->i;
-	int nz = actual_args->n;
-	float hz = actual_args->h;
+	int i = actual_args->i;
+	float lowerLimit = actual_args->lowerLimit;
+	int intervalCount = actual_args->intervalCount;
+	float sizeOfIntervals = actual_args->sizeOfIntervals;
 	
-    	printf("i = %i\n",iz);
-	printf("h = %f\n",hz);
-	x[iz]=x0+((iz)*(hz));
-	printf("x[i=%i] = %f\n",iz,x[iz]);
-	y[iz]=f(x[iz]);
-	printf("f(x[i=%i]) = %f\n\n",iz,y[iz]);
+    printf("i = %i\n",i);
+	printf("sizeOfIntervals = %f\n",sizeOfIntervals);
+	x[i]=lowerLimit+((i)*(sizeOfIntervals));
+	printf("x[i=%i] = %f\n",i,x[i]);
+	y[i]=f(x[i]);
+	printf("f(x[i=%i]) = %f\n\n",i,y[i]);
 	free(actual_args);
 	return 0;
 }
 
 int main (int argc, const char * argv[]) { 
 	
-	float ans;
-	int t, rc;
+	int t, returnCode;
 
 	//Upper and lower limits
-	x0 = 0;
-	xn = 1;
-	h = 0.1;
-	i = 0;
-    n=(xn-x0)/h;
-    printf("%i",n);
+	float lowerLimit = 0;
+	float upperLimit = 1;
+	int sizeOfIntervals = 0.1;
+	int i = 0;
+    int intervalCount=(upperLimit-lowerLimit)/sizeOfIntervals;
+    printf("Amount of intervals = %i",intervalCount);
 	
-	pthread_t threads[n];
+	pthread_t threads[intervalCount];
 	
-    if(n%2==1)
+    if(intervalCount%2==1)
     {
-        n=n+1;
+        intervalCount=intervalCount+1;
     }
 
-    h=(xn-x0)/n;	
+    sizeOfIntervals=(upperLimit-lowerLimit)/intervalCount;	
 	
 	//Create threads and perform integration
-	for (t=0;t<=n;t++) { 
+	for (t=0;t<=intervalCount;t++) { 
+	    //Create struct to hold arguments for thread
 		struct integration_struct *args = malloc(sizeof *args);
-		args->n = n;
+		
+		//Pass arguments to struct
+		args->intervalCount = intervalCount;
+		args->lowerLimit = lowerLimit;
         args->i = t;
-		args->h = h;
-		printf("Creating thread %d\n",t); 
-		rc = pthread_create(&threads[t],NULL,integrate,args); 
-		if (rc) { 
-			printf("ERROR return code from pthread_create(): %d\n",rc); 
+		args->sizeOfIntervals = sizeOfIntervals;
+		
+		printf("Creating thread number %i\n",t); 
+		
+		//Create integration thread and pass arguments for current interval
+		returnCode = pthread_create(&threads[t],NULL,integrate,args); 
+		if (returnCode) { 
+			printf("ERROR return code from pthread_create(): %d\n",returnCode); 
 			exit(-1); 
 		} 
 	}
 
-	// wait for threads to exit 
-	for(t=0;t<NUM_THREADS;t++) { 
-		pthread_join( threads[t], NULL); 
+	//Wait for threads to exit
+	for(t=0;t<intervalCount;t++) { 
+		pthread_join(threads[t], NULL); 
 		printf("Threads exited");
 	}	 	
 
-    so=0;
-    se=0;
+    //sumOfOddIndexElements = s
+    float sumOfOddIndexElements=0;
+    float sumOfEvenIndexElements=0;
 
 	//Seperate even & odd indexed elements
-    for(i=1; i<n; i++)
+    for(i=1; i<intervalCount; i++)
     {
         if(i%2==1)
         {
-            so=so+y[i];
+            sumOfOddIndexElements=sumOfOddIndexElements+y[i];
         }
         else
         {
-            se=se+y[i];
+            sumOfEvenIndexElements=sumOfEvenIndexElements+y[i];
         }
     }
 
-    ans=h/3*(y[0]+y[n]+4*so+2*se);
-    printf("\nfinal integration is %f \n",ans);
+    //Calculate final answer
+    float ans=sizeOfIntervals/3*(y[0]+y[intervalCount]+4*sumOfOddIndexElements+2*sumOfEvenIndexElements);
+    printf("\nFinal integration result is: %f \n",ans);
     getch();
 
 }
