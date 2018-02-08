@@ -7,14 +7,13 @@
 //Purpose of this program is to perform integration of the function f(x) = 4 / 1 + x^2 over the integral
 //from limits 0 to 1
 
-float y[20], x[20];
+float y[20], x[20], sumOfOddIndexElements, sumOfEvenIndexElements, sizeOfIntervals, lowerLimit, upperLimit;
+int intervalCount, i;
 
 //Struct used to house parameters for integration by parts
 struct integration_struct	{
     //Or whatever information that you need
-    int intervalCount;
     int i;
-    float lowerLimit;
     float sizeOfIntervals;
 };
 
@@ -28,17 +27,15 @@ float f(float x)
 void *integrate(void *args){
 	
 	struct integration_struct* actual_args = args;
-	int i = actual_args->i;
-	float lowerLimit = actual_args->lowerLimit;
-	int intervalCount = actual_args->intervalCount;
-	float sizeOfIntervals = actual_args->sizeOfIntervals;
+	int index = actual_args->i;
+	float hz = actual_args->sizeOfIntervals;
 	
-    printf("i = %i\n",i);
-	printf("sizeOfIntervals = %f\n",sizeOfIntervals);
-	x[i]=lowerLimit+((i)*(sizeOfIntervals));
-	printf("x[i=%i] = %f\n",i,x[i]);
-	y[i]=f(x[i]);
-	printf("f(x[i=%i]) = %f\n\n",i,y[i]);
+    printf("i = %i\n",index);
+	printf("sizeOfIntervals = %f\n",hz);
+	x[index]=lowerLimit+((index)*(hz));
+	printf("x[i=%i] = %f\n",index,x[index]);
+	y[index]=f(x[index]);
+	printf("f(x[i=%i]) = %f\n\n",index,y[index]);
 	free(actual_args);
 	return 0;
 }
@@ -48,11 +45,11 @@ int main (int argc, const char * argv[]) {
 	int t, returnCode;
 
 	//Upper and lower limits
-	float lowerLimit = 0;
-	float upperLimit = 1;
-	int sizeOfIntervals = 0.1;
-	int i = 0;
-    int intervalCount=(upperLimit-lowerLimit)/sizeOfIntervals;
+	lowerLimit = 0;
+	upperLimit = 1;
+	sizeOfIntervals = 0.1;
+	i = 0;
+    intervalCount=(upperLimit-lowerLimit)/sizeOfIntervals;
     printf("Amount of intervals = %i",intervalCount);
 	
 	pthread_t threads[intervalCount];
@@ -71,7 +68,6 @@ int main (int argc, const char * argv[]) {
 		
 		//Pass arguments to struct
 		args->intervalCount = intervalCount;
-		args->lowerLimit = lowerLimit;
         args->i = t;
 		args->sizeOfIntervals = sizeOfIntervals;
 		
@@ -86,14 +82,14 @@ int main (int argc, const char * argv[]) {
 	}
 
 	//Wait for threads to exit
-	for(t=0;t<NUM_THREADS;t++) { 
+	for(t=0;t<intervalCount;t++) { 
 		pthread_join(threads[t], NULL); 
 		printf("Threads exited");
 	}	 	
 
     //sumOfOddIndexElements = s
-    float sumOfOddIndexElements=0;
-    float sumOfEvenIndexElements=0;
+    sumOfOddIndexElements=0;
+    sumOfEvenIndexElements=0;
 
 	//Seperate even & odd indexed elements
     for(i=1; i<intervalCount; i++)
@@ -112,5 +108,4 @@ int main (int argc, const char * argv[]) {
     float ans=sizeOfIntervals/3*(y[0]+y[intervalCount]+4*sumOfOddIndexElements+2*sumOfEvenIndexElements);
     printf("\nFinal integration result is: %f \n",ans);
     getch();
-
 }
