@@ -15,9 +15,9 @@ int n, i;
 
 struct integration_struct	{
     //Or whatever information that you need
-    int *n;
-    int *i;
-    float *h;
+    int n;
+    int i;
+    float h;
 };
 
 //Method returns desired function result for input x
@@ -29,14 +29,17 @@ float f(float x)
 //Integration by parts (threaded)
 void *integrate(void *args){
 	
-	struct integration_struct* (struct integration_struct*) actual_args = args;
+	struct integration_struct* actual_args = args;
+	int iz = actual_args->i;
+	int nz = actual_args->n;
+	float hz = actual_args->h;
 	
-    printf("i = %i\n",actual_args->i);
-	printf("h = %f\n",actual_args->h);
-	x[actual_args->i]=x0+(actual_args->i)*(actual_args->h);
-	printf("x[i] = %f\n",x[actual_args->i]);
-	y[actual_args->i]=f(x[actual_args->i]);
-	printf("f(x[i]) = %f\n\n",y[actual_args->i]);
+    	printf("i = %i\n",iz);
+	printf("h = %f\n",hz);
+	x[iz]=x0+((iz)*(hz));
+	printf("x[i=%i] = %f\n",iz,x[iz]);
+	y[iz]=f(x[iz]);
+	printf("f(x[i=%i]) = %f\n\n",iz,y[iz]);
 	free(actual_args);
 	return 0;
 }
@@ -64,11 +67,11 @@ int main (int argc, const char * argv[]) {
     h=(xn-x0)/n;	
 	
 	//Create threads and perform integration
-	for (t=0;t<n;++t) { 
+	for (t=0;t<=n;t++) { 
 		struct integration_struct *args = malloc(sizeof *args);
-		args->n = &n;
-        args->i = &t;
-		args->h = &h;
+		args->n = n;
+        args->i = t;
+		args->h = h;
 		printf("Creating thread %d\n",t); 
 		rc = pthread_create(&threads[t],NULL,integrate,args); 
 		if (rc) { 
