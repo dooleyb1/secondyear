@@ -4,6 +4,7 @@
 
 char str[200];
 char exitChar[4] = "quit";
+pthread_t printer_thread;
 
 //Printer thread struct
 struct printer_struct {
@@ -47,7 +48,12 @@ void *consumerThread(void *args){
 	int id = actual_args->id;
 	int status = actual_args->status;
 	
-	printf("Successfuly created thread #%i\n\n",id);
+	//While status = 0, do nothing and wait until status is 1
+	while(status!=1){
+		if(status=0)
+			
+			
+	}
 	
 	free(actual_args);
 	return 0;

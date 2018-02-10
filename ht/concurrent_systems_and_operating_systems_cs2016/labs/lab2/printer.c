@@ -50,7 +50,7 @@ void *consumerThread(void *args){
 	
 	//While status = 0, do nothing and wait until status is 1
 	while(status!=1){
-		if(status=0)
+		if(status==1)
 			
 			
 	}
