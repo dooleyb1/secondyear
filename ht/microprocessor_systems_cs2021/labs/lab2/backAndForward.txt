@@ -1,0 +1,49 @@
+//Forward
+reset	
+	LDR R6, =0				;counter
+
+while
+	CMP R6, R5				;while(counter<=arraySize)
+	BGE reset
+	
+	LDR R2,=IOSET0			;Set address
+	LDR R3, [R4, R6, LSL #2];value = valAt(array.startAddress+offset)
+	STR R3,[R2]				;Make pin = value
+
+delay
+	;delay for about a half second
+	ldr	R8,=0x2000000
+dloop	subs	R8,R8,#1
+	bne	dloop
+	
+	LDR R2,=IOCLR0			;Clear address
+	STR R3, [R2]			;Clear pins
+	ADD R6, R6, #1			;counter++
+	B while
+
+//Backwards
+reset	
+	LDR R9, =4				;multiplier
+	MUL R7, R5, R9			;offset = arraySize+4
+	LDR R6, =0				;counter
+
+while
+	CMP R6, R5				;while(counter<=arraySize)
+	BGE reset
+	
+	LDR R2,=IOSET0			;Set address
+	LDR R3, [R4, R7]		;value = valAt(array.startAddress+offset)
+	STR R3,[R2]				;Make pin = value
+
+delay
+	;delay for about a half second
+	ldr	R8,=0x2000000
+dloop	subs	R8,R8,#1
+	bne	dloop
+	
+	LDR R2,=IOCLR0			;Clear address
+	STR R3, [R2]			;Clear pins
+	ADD R6, R6, #1			;counter++
+	SUB R7, R7, #4			;offset
+	B while
+	

@@ -1,0 +1,55 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.16a
+Copyright (C) 2015 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: user Computer Science and S, Trinity College Dublin, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.16a
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC_505u2\Bin
+C Compiler:      Armcc.exe V5.05 update 2 (build 169)
+Assembler:       Armasm.exe V5.05 update 2 (build 169)
+Linker/Locator:  ArmLink.exe V5.05 update 2 (build 169)
+Library Manager: ArmAr.exe V5.05 update 2 (build 169)
+Hex Converter:   FromElf.exe V5.05 update 2 (build 169)
+CPU DLL:         SARM.DLL V5.16a
+Dialog DLL:      DARMP.DLL V1.51
+Target DLL:      UL2ARM.DLL V1.74.6.0
+Dialog DLL:      TARMP.DLL V1.51
+ 
+<h2>Project:</h2>
+C:\Users\dooleyb1\Downloads\lab2\SampleCApp\SampleCApp\app.uvproj
+Project File Date:  02/12/2018
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.05 update 2 (build 169)', folder: 'C:\Keil_v5\ARM\ARMCC_505u2\Bin'
+Rebuild target 'App'
+compiling main.c...
+C:\Keil_v5\ARM\Inc\Philips\LPC21XX.H(163): warning:  #47-D: incompatible redefinition of macro "U0IER" (declared at line 182 of "C:\Keil_v5\ARM\Inc\Philips\LPC213x.H")
+  #define U0IER          (*((volatile unsigned char *) 0xE000C004))
+C:\Keil_v5\ARM\Inc\Philips\LPC21XX.H(164): warning:  #47-D: incompatible redefinition of macro "U0IIR" (declared at line 183 of "C:\Keil_v5\ARM\Inc\Philips\LPC213x.H")
+  #define U0IIR          (*((volatile unsigned char *) 0xE000C008))
+C:\Keil_v5\ARM\Inc\Philips\LPC21XX.H(169): warning:  #47-D: incompatible redefinition of macro "U0FDR" (declared at line 191 of "C:\Keil_v5\ARM\Inc\Philips\LPC213x.H")
+  #define U0FDR          (*((volatile unsigned char *) 0xE000C028))
+C:\Keil_v5\ARM\Inc\Philips\LPC21XX.H(176): warning:  #47-D: incompatible redefinition of macro "U1IER" (declared at line 197 of "C:\Keil_v5\ARM\Inc\Philips\LPC213x.H")
+  #define U1IER          (*((volatile unsigned char *) 0xE0010004))
+C:\Keil_v5\ARM\Inc\Philips\LPC21XX.H(177): warning:  #47-D: incompatible redefinition of macro "U1IIR" (declared at line 198 of "C:\Keil_v5\ARM\Inc\Philips\LPC213x.H")
+  #define U1IIR          (*((volatile unsigned char *) 0xE0010008))
+C:\Keil_v5\ARM\Inc\Philips\LPC21XX.H(184): warning:  #47-D: incompatible redefinition of macro "U1FDR" (declared at line 208 of "C:\Keil_v5\ARM\Inc\Philips\LPC213x.H")
+  #define U1FDR          (*((volatile unsigned char *) 0xE0010028))
+main.c(12): warning:  #1295-D: Deprecated declaration delay - give arg types
+  void delay();  // delay function
+main.c(30): warning:  #111-D: statement is unreachable
+       return 0;
+main.c: 8 warnings, 0 errors
+linking...
+Program Size: Code=664 RO-data=32 RW-data=52 ZI-data=1164  
+FromELF: creating hex file...
+".\app.axf" - 0 Error(s), 8 Warning(s).
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>

@@ -1,0 +1,301 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             AsmTemplate, CODE, READONLY
+    2 00000000                 IMPORT           main
+    3 00000000         
+    4 00000000         ; sample program makes the 4 LEDs P1.16, P1.17, P1.18, P
+                       1.19 go on and off in sequence
+    5 00000000         ; (c) Mike Brady, 2011.
+    6 00000000         
+    7 00000000                 EXPORT           start
+    8 00000000         start
+    9 00000000         
+   10 00000000 E0028008 
+                       IODIR0  EQU              0xE0028008
+   11 00000000 E0028004 
+                       IOSET0  EQU              0xE0028004
+   12 00000000 E002800C 
+                       IOCLR0  EQU              0xE002800C
+   13 00000000 E0028000 
+                       IOPIN0  EQU              0xE0028000
+   14 00000000 E002C000 
+                       PINSEL0 EQU              0xE002C000
+   15 00000000         
+   16 00000000 E59F0054        LDR              R0,=PINSEL0
+   17 00000004 E3A01000        LDR              R1,=0x00000000
+   18 00000008 E5801000        STR              R1,[R0]     ;Select port 0 as G
+                                                            PIO mode
+   19 0000000C E59F004C        LDR              R0,=IODIR0
+   20 00000010 E3A01CFF        LDR              R1,=0X0000FF00 ;Mask to select 
+                                                            P.08 as start pin o
+                                                            f output
+   21 00000014 E5801000        STR              R1, [R0]
+   22 00000018         
+   23 00000018 E59F4044        LDR              R4, =array  ;array.address
+   24 0000001C E59F5044        LDR              R5, =arrayN
+   25 00000020 E5955000        LDR              R5, [R5]    ;arraySize
+   26 00000024         reset
+   27 00000024 E3A06000        LDR              R6, =0      ;counter
+   28 00000028         
+   29 00000028         while
+   30 00000028 E1560005        CMP              R6, R5      ;while(counter<=arr
+                                                            aySize)
+   31 0000002C AAFFFFFC        BGE              reset
+   32 00000030         
+   33 00000030 E59F2034        LDR              R2,=IOSET0  ;Set address
+   34 00000034 E7943106        LDR              R3, [R4, R6, LSL #2] ;value = v
+                                                            alAt(array.startAdd
+                                                            ress+offset)
+   35 00000038 E5823000        STR              R3,[R2]     ;Make pin = value
+   36 0000003C         
+   37 0000003C         delay
+   38 0000003C         ;delay for about a half second
+   39 0000003C E3A08402        ldr              R8,=0x2000000
+   40 00000040 E2588001 
+                       dloop   subs             R8,R8,#1
+   41 00000044 1AFFFFFD        bne              dloop
+   42 00000048         
+   43 00000048 E59F2020        LDR              R2,=IOCLR0  ;Clear address
+   44 0000004C E5823000        STR              R3, [R2]    ;Clear pins
+   45 00000050 E2866001        ADD              R6, R6, #1  ;counter++
+   46 00000054 EAFFFFF3        B                while
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   47 00000058         
+   48 00000058         
+   49 00000058         ;ldr r1,=IO1DIR
+   50 00000058         ;ldr r2,=0x000f0000 ;select P1.19--P1.16
+   51 00000058         ;str r2,[r1]  ;make them outputs
+   52 00000058         ;ldr r1,=IO1SET
+   53 00000058         ;str r2,[r1]  ;set them to turn the LEDs off
+   54 00000058         ;ldr r2,=IO1CLR
+   55 00000058         ; r1 points to the SET register
+   56 00000058         ; r2 points to the CLEAR register
+   57 00000058         
+   58 00000058         ;ldr r5,=0x00100000 ; end when the mask reaches this val
+                       ue
+   59 00000058         ;wloop ldr r3,=0x00010000 ; start with P1.16.
+   60 00000058         ;floop str r3,[r2]     ; clear the bit -> turn on the LE
+                       D
+   61 00000058         
+   62 00000058         ;delay for about a half second
+   63 00000058         ;ldr r4,=2000000
+   64 00000058         ;dloop subs r4,r4,#1
+   65 00000058         ;bne dloop
+   66 00000058         
+   67 00000058         ;str r3,[r1]  ;set the bit -> turn off the LED
+   68 00000058         ;mov r3,r3,lsl #1 ;shift up to next bit. P1.16 -> P1.17 
+                       etc.
+   69 00000058         ;cmp r3,r5
+   70 00000058         ;bne floop
+   71 00000058         ;b wloop
+   72 00000058 EAFFFFFE 
+                       stop    B                stop
+   73 0000005C         
+   74 0000005C E002C000 
+              E0028008 
+              00000000 
+              00000000 
+              E0028004 
+              E002800C         AREA             TestArray, DATA, READWRITE
+   75 00000000         
+   76 00000000         ; Array Size
+   77 00000000 00000010 
+                       arrayN  DCD              16
+   78 00000004         
+   79 00000004         ; Array Elements
+   80 00000004 00003F00 
+              00000600 
+              00005B00 
+              00004F00 
+              00006600 
+              00006D00 
+              00007D00 
+              00000700 
+              00007F00 
+              00006F00 
+              00007700 
+              00007C00 
+              00003900 
+              00005E00 
+              00007900 
+              00007100 array   DCD              0x00003F00,0x00000600,0x00005B0
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+0,0x00004F00,0x00006600,0x00006D00,0x00007D00,0x00000700,0x00007F00,0x00006F00,
+0x00007700,0x00007C00,0x00003900,0x00005E00,0x00007900, 0x00007100
+   81 00000044         
+   82 00000044                 END
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\a
+pp.d -o.\app.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include -IC:\Ke
+il_v5\ARM\Inc\Philips --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 
+1" --predefine="__UVISION_VERSION SETA 516" --list=.\listings\app.lst App.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+AsmTemplate 00000000
+
+Symbol: AsmTemplate
+   Definitions
+      At line 1 in file App.s
+   Uses
+      None
+Comment: AsmTemplate unused
+delay 0000003C
+
+Symbol: delay
+   Definitions
+      At line 37 in file App.s
+   Uses
+      None
+Comment: delay unused
+dloop 00000040
+
+Symbol: dloop
+   Definitions
+      At line 40 in file App.s
+   Uses
+      At line 41 in file App.s
+Comment: dloop used once
+reset 00000024
+
+Symbol: reset
+   Definitions
+      At line 26 in file App.s
+   Uses
+      At line 31 in file App.s
+Comment: reset used once
+start 00000000
+
+Symbol: start
+   Definitions
+      At line 8 in file App.s
+   Uses
+      At line 7 in file App.s
+Comment: start used once
+stop 00000058
+
+Symbol: stop
+   Definitions
+      At line 72 in file App.s
+   Uses
+      At line 72 in file App.s
+Comment: stop used once
+while 00000028
+
+Symbol: while
+   Definitions
+      At line 29 in file App.s
+   Uses
+      At line 46 in file App.s
+Comment: while used once
+7 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+TestArray 00000000
+
+Symbol: TestArray
+   Definitions
+      At line 74 in file App.s
+   Uses
+      None
+Comment: TestArray unused
+array 00000004
+
+Symbol: array
+   Definitions
+      At line 80 in file App.s
+   Uses
+      At line 23 in file App.s
+Comment: array used once
+arrayN 00000000
+
+Symbol: arrayN
+   Definitions
+      At line 77 in file App.s
+   Uses
+      At line 24 in file App.s
+Comment: arrayN used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+IOCLR0 E002800C
+
+Symbol: IOCLR0
+   Definitions
+      At line 12 in file App.s
+   Uses
+      At line 43 in file App.s
+Comment: IOCLR0 used once
+IODIR0 E0028008
+
+Symbol: IODIR0
+   Definitions
+      At line 10 in file App.s
+   Uses
+      At line 19 in file App.s
+Comment: IODIR0 used once
+IOPIN0 E0028000
+
+Symbol: IOPIN0
+   Definitions
+      At line 13 in file App.s
+   Uses
+      None
+Comment: IOPIN0 unused
+IOSET0 E0028004
+
+Symbol: IOSET0
+   Definitions
+      At line 11 in file App.s
+   Uses
+      At line 33 in file App.s
+Comment: IOSET0 used once
+PINSEL0 E002C000
+
+Symbol: PINSEL0
+   Definitions
+      At line 14 in file App.s
+   Uses
+      At line 16 in file App.s
+Comment: PINSEL0 used once
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 2 in file App.s
+   Uses
+      None
+Comment: main unused
+1 symbol
+351 symbols in table
