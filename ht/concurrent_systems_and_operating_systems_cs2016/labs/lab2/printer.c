@@ -7,14 +7,17 @@
 
 char buf[200];
 char exitChar[4] = "quit";
-pthread_mutex_t mutex;
-pthread_cond_t prod, cons, print;
 
 //Main thread data struct
 struct shared_state {
 	int done; 		
 	int value_available;
 	int printing;
+	int printing_thread_id;
+	pthread_mutex_t mutex;
+	pthread_cond_t cond;
+	pthread_cond_t print_cond;
+	pthread_cond_t main_cond;
 } state;
 
 
@@ -24,74 +27,78 @@ void *printerThread(void *args){
 	//While !quit
 	while(!state.done){
 		
-		pthread_mutex_lock(&mutex);
+		//printf("Locking mutex @ printer...\n\n");
+		pthread_mutex_lock(&state.mutex);
+		//printf("Mutex locked @ printer...\n\n");
 		
 		//While theres no input to print available, wait
-		while(!state.printing)
-			pthread_cond_wait(&print,&mutex);
+		if(!state.value_available)
+			pthread_cond_wait(&state.print_cond,&state.mutex);
 				
-		//Start printing 
-		state.printing = 1;
-		printf("\nYou entered: %s", buf);
+		printf("\n%i: %s", state.printing_thread_id,buf);
 		state.printing = 0;
 		state.value_available = 0;
+		state.printing_thread_id = 9;
 		
-		//Unlock mutex and tell producer to produce 
-		pthread_cond_broadcast(&prod);
-		pthread_mutex_unlock(&mutex);
+		//Signal mainline printing is finished
+		pthread_cond_signal(&state.main_cond);
+		//Unlock mutex
+		pthread_mutex_unlock(&state.mutex);
 	}
+	pthread_exit(0);
 }
 
 //Consumer thread
-void *consumerThread(void *threadId){
+void *consumerThread(void *args){
 	
-	printf("Consumer %d successfully created...\n\n", threadId);
+	int threadId = *((int *) args);
+	//printf("Consumer %p successfully created...\n\n", threadId);
 	//While !quit
 	while(!state.done){
 		
-		printf("Locking mutex @ consumer %d...\n\n", threadId);
-		pthread_mutex_lock(&mutex);
-		printf("Mutex locked @ consumer %d...\n\n", threadId);
+		//printf("Locking mutex @ consumer %p...\n\n", threadId);
+		pthread_mutex_lock(&state.mutex);
+		//printf("Mutex locked @ consumer %p...\n\n", threadId);
 		
 		//While theres no input available, wait
-		while(!state.value_available)
-			pthread_cond_wait(&cons,&mutex);
+		if(!state.value_available)
+			pthread_cond_wait(&state.cond,&state.mutex);
 			
-		//If printer is printing, wait
-		while(state.printing)
-			pthread_cond_wait(&print,&mutex);
-			
-		//Tell printer to print
-		pthread_cond_broadcast(&print);
-		pthread_mutex_unlock(&mutex);
+		//When condition signal recieved, signal printer to print
+		if(!state.done){
+			state.printing_thread_id = threadId;
+			pthread_cond_signal(&state.print_cond);
+		}	
+		pthread_mutex_unlock(&state.mutex);
 	}
+	free(args);
+	pthread_exit(0);
 }
 
-//Main thread (producer)
-void *producerThread(void *args){
+int main( ) {
 	
 	pthread_t consumer_threads[3];
 	pthread_t printer_thread;
-	int t, returnCode, carryOn, i;;
-	
-	//Initialize shared variables
-	mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
-	prod = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
-	cons = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
-	print = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
+	int t, returnCode, carryOn, i;
 	
 	//Initialize struct variables
 	state.done = 0;
 	state.value_available = 0;
 	state.printing = 0;
+	state.printing_thread_id = 9;
+	state.mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
+	state.cond = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
+	state.print_cond = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
+	state.main_cond = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
 	
 	//Create consumer threads
 	for(t=1;t<=3;t++){
 		
-		printf("Creating consumer thread number %i\n\n",t); 
-		
+		//printf("Creating consumer thread number %i\n\n",t); 
+		int *arg = malloc(sizeof(*arg));
+		*arg = t;
 		//Create integration thread and pass arguments for current interval
-		returnCode = pthread_create(&consumer_threads[t],NULL,consumerThread,(void *) t); 
+		returnCode = pthread_create(&consumer_threads[t],NULL,consumerThread,arg); 
 		if (returnCode) { 
 			printf("ERROR return code from pthread_create() at consumerThread: %d\n",returnCode); 
 			exit(-1); 
@@ -99,8 +106,8 @@ void *producerThread(void *args){
 	}
 	
 	//Create printer thread
-	printf("Creating printer thread\n\n"); 
-	returnCode = pthread_create(&printer_thread,NULL,printerThread,args); 
+	//printf("Creating printer thread...\n\n"); 
+	returnCode = pthread_create(&printer_thread,NULL,printerThread,NULL); 
 	if (returnCode) { 
 		printf("ERROR return code from pthread_create() at consumerThread: %d\n",returnCode); 
 		exit(-1); 
@@ -108,20 +115,13 @@ void *producerThread(void *args){
 	
 	carryOn = 1;
     printf("Enter 'quit' to exit program...\n\n");
+    printf("Enter a string: ");
     
 	while(!state.done) {
-		//Lock producer mutex
-		pthread_mutex_lock(&mutex);
 	
-		//If a value is waiting to be printed, wait
-		while(state.value_available)
-			pthread_cond_wait(&prod, &mutex);
-			
 		//Get string from user
-		printf("Enter a string: ");
 	  	fgets(buf, 200, stdin);
-	  	printf( "\nYou entered: %s\nChecking string...\n\n", buf);
-	  	state.value_available = 1;
+	  	//printf( "\nYou entered: %s", buf);
 	
 	 	/* remove newline, if present */
 	  	i = strlen(buf)-1;
@@ -136,31 +136,20 @@ void *producerThread(void *args){
 			return 0;
 		}
 		
-		printf("Sending input to consumer...\n\n");
+		//printf("Sending input to consumer...\n\n");
 		
 		//Tell any waiting consumer to consume
-		pthread_cond_broadcast(&cons);
-		pthread_mutex_unlock(&mutex);   	
-	}
-}
-
-
-
-int main( ) {
-	int t, returnCode;
-	
-	//Declare and create main thread (producer)
-	pthread_t producer_thread;
-	
-	printf("Creating producer thread (main thread) \n\n"); 
+		pthread_mutex_lock(&state.mutex);
 		
-	returnCode = pthread_create(&producer_thread,NULL,producerThread, (void *) t); 
-	if (returnCode) { 
-		printf("ERROR return code from pthread_create() at producer_thread: %d\n",returnCode); 
-		exit(-1); 
-	} 
-	
-	while(!state.done){
-	
-	}
+		state.value_available = 1; 
+		state.printing = 1;
+		pthread_cond_signal(&state.cond);
+		
+		//While printing wait
+		if(state.printing)
+			pthread_cond_wait(&state.main_cond,&state.mutex);
+			printf("\n\nEnter a string: ");	
+		
+		pthread_mutex_unlock(&state.mutex);   	
+	}	
 }
