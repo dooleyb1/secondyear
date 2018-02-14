@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2017.4 (64-bit)
+# SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
+# IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+# Start of session at: Wed Feb 14 12:16:03 2018
+# Process ID: 7192
+# Current directory: U:/CS2022 - Computer Architecture/8_registers/8_registers.runs/synth_1
+# Command line: vivado.exe -log register_file.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source register_file.tcl
+# Log file: U:/CS2022 - Computer Architecture/8_registers/8_registers.runs/synth_1/register_file.vds
+# Journal file: U:/CS2022 - Computer Architecture/8_registers/8_registers.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source register_file.tcl -notrace
