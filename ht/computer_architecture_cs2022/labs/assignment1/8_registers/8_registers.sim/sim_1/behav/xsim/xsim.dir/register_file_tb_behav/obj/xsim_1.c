@@ -45,6 +45,7 @@
 typedef void (*funcp)(char *, char *);
 extern int main(int, char**);
 extern void execute_50(char*, char *);
+extern void execute_51(char*, char *);
 extern void execute_42(char*, char *);
 extern void execute_43(char*, char *);
 extern void execute_44(char*, char *);
@@ -66,12 +67,12 @@ extern void execute_39(char*, char *);
 extern void execute_41(char*, char *);
 extern void transaction_6(char*, char*, unsigned, unsigned, unsigned);
 extern void vhdl_transfunc_eventcallback(char*, char*, unsigned, unsigned, unsigned, char *);
-funcp funcTab[22] = {(funcp)execute_50, (funcp)execute_42, (funcp)execute_43, (funcp)execute_44, (funcp)execute_45, (funcp)execute_46, (funcp)execute_47, (funcp)execute_48, (funcp)execute_49, (funcp)execute_14, (funcp)execute_30, (funcp)execute_31, (funcp)execute_32, (funcp)execute_33, (funcp)execute_34, (funcp)execute_35, (funcp)execute_36, (funcp)execute_37, (funcp)execute_39, (funcp)execute_41, (funcp)transaction_6, (funcp)vhdl_transfunc_eventcallback};
-const int NumRelocateId= 22;
+funcp funcTab[23] = {(funcp)execute_50, (funcp)execute_51, (funcp)execute_42, (funcp)execute_43, (funcp)execute_44, (funcp)execute_45, (funcp)execute_46, (funcp)execute_47, (funcp)execute_48, (funcp)execute_49, (funcp)execute_14, (funcp)execute_30, (funcp)execute_31, (funcp)execute_32, (funcp)execute_33, (funcp)execute_34, (funcp)execute_35, (funcp)execute_36, (funcp)execute_37, (funcp)execute_39, (funcp)execute_41, (funcp)transaction_6, (funcp)vhdl_transfunc_eventcallback};
+const int NumRelocateId= 23;
 
 void relocate(char *dp)
 {
-	iki_relocate(dp, "xsim.dir/register_file_tb_behav/xsim.reloc",  (void **)funcTab, 22);
+	iki_relocate(dp, "xsim.dir/register_file_tb_behav/xsim.reloc",  (void **)funcTab, 23);
 	iki_vhdl_file_variable_register(dp + 9856);
 	iki_vhdl_file_variable_register(dp + 9912);
 
