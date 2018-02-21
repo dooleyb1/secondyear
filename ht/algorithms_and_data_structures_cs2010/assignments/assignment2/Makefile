@@ -7,7 +7,7 @@ BUILD = junit-4.11.jar:json-simple-1.1.jar.
 .SUFFIXES: .java .class .jar
 
 default:
-	$(JC) $(JFLAGS) $(BUILD) *.java
+	$(JC) $(JFLAGS) $(BUILD) KMPSearch.java KMPSearchTest.java
 
 kmp:
 	$(JVM) $(JFLAGS) $(TEST) KMPSearch

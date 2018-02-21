@@ -75,8 +75,7 @@ public class KMPSearch {
             j = dfa[txt.charAt(i)][j];
         }
         if (j == m) return i - m;    // found
-        return n;                    // not found
-    return -1;
+        return -1;                    // not found
   }
 
   /*
@@ -84,7 +83,7 @@ public class KMPSearch {
    */
   public static int searchAll(String txt, String pat) {
     //First create dfa
-    creataDFA(pat);
+    createDFA(pat);
     String tmp = txt;
     int count = 0;
     int result;
@@ -98,7 +97,7 @@ public class KMPSearch {
     	if(result != -1){
     		count++;
     		//**
-    		tmp = tmp.substring(result+pat.length);
+    		tmp = tmp.substring(result+pat.length());
     	}
     	else
     		carryOn = false;
@@ -110,4 +109,25 @@ public class KMPSearch {
     else 
     	return count;
   }
+
+  public static void main(String[] args)
+  {
+	String pat = args[0];
+    String txt = args[1];
+
+    System.out.println("\nPattern entered = " + pat);
+    System.out.println("Text entered = " + txt);
+
+    System.out.println("\nChecking if text '" + txt + "' contains the pattern '" + pat + "'...\n");
+    boolean result = contains(txt, pat);
+
+    if(result){
+    	System.out.println("Pattern found!\n");
+    	System.out.println("First index pattern occurs at is at index " + searchFirst(txt, pat));
+    	System.out.println("Total number of occurances is " + searchAll(txt, pat));
+    }
+
+    else
+    	System.out.println("Pattern not found!\n\n");
+   }
 }
