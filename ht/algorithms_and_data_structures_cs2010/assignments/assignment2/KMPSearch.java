@@ -29,7 +29,7 @@ public class KMPSearch {
     *
     */
 
-  private int[][] dfa;       // the KMP automoton
+  public static int[][] dfa;       // the KMP automoton
 
   public static boolean contains(String txt, String pat) {
     //If pattern is found in string, return true
@@ -46,7 +46,6 @@ public class KMPSearch {
    */
   public static void createDFA(String pat){
         int R = 256;
-        String pat = pat;
 
         // build DFA from pattern
         int m = pat.length();
@@ -84,7 +83,31 @@ public class KMPSearch {
    * The method returns the number of non-overlapping occurences of a pattern pat in String txt.
    */
   public static int searchAll(String txt, String pat) {
-    //TODO: Implementation
-    return -1;
+    //First create dfa
+    creataDFA(pat);
+    String tmp = txt;
+    int count = 0;
+    int result;
+    boolean carryOn = true;
+
+    //Recursively search for string, slicing 
+    while(carryOn){
+    	result = searchFirst(tmp, pat);
+
+    	//If pattern found in text continue
+    	if(result != -1){
+    		count++;
+    		//**
+    		tmp = tmp.substring(result+pat.length);
+    	}
+    	else
+    		carryOn = false;
+    }
+
+    if(count!=0)
+    	return count;
+
+    else 
+    	return count;
   }
 }
