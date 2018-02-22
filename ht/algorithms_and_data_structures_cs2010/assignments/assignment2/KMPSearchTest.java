@@ -12,6 +12,25 @@ public class KMPSearchTest {
     assertFalse("Empty text or pattern is invalid",KMPSearch.contains("",""));
   }
 
+   @Test
+  public void testContains(){
+    String pat = "needle";
+    String txt = "haystackneedlesgahsasneedlenaaghdhasudasdneeeedlewqhdqhwneedle";
+    assertEquals("Checking index result if pattern is contained in text", 8,KMPSearch.searchFirst(txt,pat));
+    assertEquals("Checking occurances count if pattern is contained in text",3,KMPSearch.searchAll(txt,pat));
+    assertFalse("Checking boolean result if pattern is contained in text",!KMPSearch.contains(txt,pat));
+  }
+
+  @Test
+  public void testDoesNotContain(){
+    String pat = "youcantfindme";
+    String txt = "haystackneedlesgahsasneedlenaaghdhasudasdneeeedlewqhdqhwneedle";
+
+    assertEquals("Checking index result if pattern is not contained in text", -1,KMPSearch.searchFirst(txt,pat));
+    assertEquals("Checking occurances count if pattern is not contained in text",0,KMPSearch.searchAll(txt,pat));
+    assertFalse("Checking boolean result if pattern is not contained in text",KMPSearch.contains(txt,pat));
+  }
+
   // ----------------------------------------------------------
   /**
    *  Main Method.
@@ -21,12 +40,6 @@ public class KMPSearchTest {
    */
    public static void main(String[] args)
    {
-   		System.out.println("Hello");
-		String pat = args[0];
-        String txt = args[1];
-
-        System.out.println("Pattern entered = " + pat);
-        System.out.println("Text entered = " + txt);
-    }
+   }
 }
 

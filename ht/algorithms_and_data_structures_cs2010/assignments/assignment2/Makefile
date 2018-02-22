@@ -1,7 +1,8 @@
 JFLAGS = -cp
 JC = javac
 JVM = java
-TEST = *:. 
+
+TEST = .:hamcrest-core-1.3.jar:junit-4.11.jar org.junit.runner.JUnitCore 
 BUILD = *:. 
 
 .SUFFIXES: .java .class .jar

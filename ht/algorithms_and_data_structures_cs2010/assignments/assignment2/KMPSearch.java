@@ -50,6 +50,9 @@ public class KMPSearch {
    * Standard radix of 256 
    */
   public static void createDFA(String pat){
+        if(pat.length()==0)
+        	return;
+
         int R = 256;
 
         // build DFA from pattern
@@ -70,6 +73,9 @@ public class KMPSearch {
    */
   public static int searchFirst(String txt, String pat) {
     //First create dfa
+    if(txt.length() == 0 || pat.length() == 0)
+    	return -1;
+
     createDFA(pat);
 
     // simulate operation of DFA on text
@@ -87,6 +93,9 @@ public class KMPSearch {
    * The method returns the number of non-overlapping occurences of a pattern pat in String txt.
    */
   public static int searchAll(String txt, String pat) {
+  	if(txt.length() == 0 || pat.length() == 0)
+    	return 0;
+
     //First create dfa
     createDFA(pat);
     String tmp = txt;
@@ -117,6 +126,7 @@ public class KMPSearch {
 
   public static void main(String[] args) throws IOException
   {
+  	/*
 	String vehiclePat = "VehicleNo";
 	String vehicleNum1 = "16555";
 	String location = "HAMPTON PARK";
@@ -141,9 +151,11 @@ public class KMPSearch {
 	
 	System.out.println("\nChecking if VehicleID " + vehicleNum2 + " is present...");
     System.out.println(contains(jsonFile, vehicleNum2));
+	*/
 
+    String pat = args[0];
+    String txt = args[1];
 
-    /*
     System.out.println("\nPattern entered = " + pat);
     System.out.println("Text entered = " + txt);
 
@@ -158,7 +170,7 @@ public class KMPSearch {
 
     else
     	System.out.println("Pattern not found!\n\n");
-    */
+    
    }
    
 
