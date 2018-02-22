@@ -5,48 +5,57 @@
 
 //https://stackoverflow.com/questions/37245312/single-producer-and-multiple-consumers
 
-char buf[200];
-char exitChar[4] = "quit";
 
-//Main thread data struct
-struct shared_state {
-	int done; 		
+char exitChar[4] = "quit";
+char buf[200];
+int done;
+
+//Consumer data struct
+struct consumer_state {		
 	int value_available;
+	char* buf;
+	pthread_mutex_t mutex;
+	pthread_cond_t cond;
+} cons_state;
+
+//Printer data struct
+struct printer_state {
 	int printing;
+	char* buf;
 	int printing_thread_id;
 	pthread_mutex_t mutex;
 	pthread_cond_t cond;
-	pthread_cond_t print_cond;
 	pthread_cond_t main_cond;
-} state;
+} print_state;
 
 
 //Printer thread 
 void *printerThread(void *args){
 	
 	//While !quit
-	while(!state.done){
+	while(!done){
 		
 		//printf("Locking mutex @ printer...\n\n");
-		pthread_mutex_lock(&state.mutex);
+		pthread_mutex_lock(&print_state.mutex);
 		//printf("Mutex locked @ printer...\n\n");
 		
 		//While theres no input to print available, wait
-		if(!state.value_available)
-			pthread_cond_wait(&state.print_cond,&state.mutex);
+		if(!cons_state.value_available)
+			pthread_cond_wait(&print_state.cond,&print_state.mutex);
 		
-		if(!state.done){		
-			printf("\n%i: %s", state.printing_thread_id,buf);
-			state.printing = 0;
-			state.value_available = 0;
-			state.printing_thread_id = 9;
+		if(!done){		
+			printf("\n%i: %s", print_state.printing_thread_id,print_state.buf);
+			//Reset variables after printing
+			print_state.printing = 0;
+			cons_state.value_available = 0;
+			print_state.printing_thread_id = 9;
+			//Signal mainline printing is finished
+			pthread_cond_signal(&print_state.main_cond);
 		}
-		
-		//Signal mainline printing is finished
-		pthread_cond_signal(&state.main_cond);
 		//Unlock mutex
-		pthread_mutex_unlock(&state.mutex);
+		pthread_mutex_unlock(&print_state.mutex);
 	}
+	free(args);
 	pthread_exit(0);
 }
 
@@ -55,19 +64,20 @@ void *consumerThread(void *args){
 	
 	int threadId = *((int *) args);
 	//While !quit
-	while(!state.done){
-		pthread_mutex_lock(&state.mutex);
+	while(!done){
+		pthread_mutex_lock(&cons_state.mutex);
 		
 		//While theres no input available, wait
-		if(!state.value_available)
-			pthread_cond_wait(&state.cond,&state.mutex);
+		if(!cons_state.value_available)
+			pthread_cond_wait(&cons_state.cond,&cons_state.mutex);
 			
 		//When condition signal recieved & text != quit, signal printer to print
-		if(!state.done){
-			state.printing_thread_id = threadId;
-			pthread_cond_signal(&state.print_cond);
+		if(!done){
+			print_state.printing_thread_id = threadId;
+			print_state.buf = cons_state.buf;
+			pthread_cond_signal(&print_state.cond);
 		}	
-		pthread_mutex_unlock(&state.mutex);
+		pthread_mutex_unlock(&cons_state.mutex);
 	}
 	free(args);
 	pthread_exit(0);
@@ -75,19 +85,22 @@ void *consumerThread(void *args){
 
 int main( ) {
 	
+	int done = 0;
 	pthread_t consumer_threads[3];
 	pthread_t printer_thread;
 	int t, returnCode, carryOn, i;
 	
-	//Initialize struct variables
-	state.done = 0;
-	state.value_available = 0;
-	state.printing = 0;
-	state.printing_thread_id = 9;
-	state.mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
-	state.cond = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
-	state.print_cond = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
-	state.main_cond = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
+	//Initialize consumer struct variables
+	cons_state.value_available = 0;
+	cons_state.mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
+	cons_state.cond = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
+
+	//Initialize printer struct variables
+	print_state.printing = 0;
+	print_state.printing_thread_id = 9;
+	print_state.mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
+	print_state.cond = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
+	print_state.main_cond = (pthread_cond_t)PTHREAD_COND_INITIALIZER;
 	
 	//Create consumer threads
 	for(t=1;t<=3;t++){
@@ -103,6 +116,7 @@ int main( ) {
 		} 
 	}
 	
+	
 	//Create printer thread
 	//printf("Creating printer thread...\n\n"); 
 	returnCode = pthread_create(&printer_thread,NULL,printerThread,NULL); 
@@ -115,7 +129,7 @@ int main( ) {
     printf("Enter 'quit' to exit program...\n\n");
     printf("Enter a string: ");
     
-	while(!state.done) {
+	while(!done) {
 	
 		//Get string from user
 	  	fgets(buf, 200, stdin);
@@ -126,32 +140,31 @@ int main( ) {
 	  	if( buf[ i ] == '\n') 
 		  	buf[i] = '\0';
 	   
-	   	//If input != quit
+	   	//If input = quit
     	if(strcmp(buf, exitChar) == 0){
-    		pthread_mutex_lock(&state.mutex);
 			carryOn = 0;
-			state.done = 1;
+			done = 1;
 			//This allows threads to exit
-			pthread_cond_broadcast(&state.cond);
-			pthread_cond_signal(&state.print_cond);
-			pthread_mutex_unlock(&state.mutex);
+			pthread_cond_broadcast(&cons_state.cond);
+			pthread_cond_signal(&print_state.cond);
 			printf("Goodbye!\n");
 		}
 		
-		if(!state.done) {
+		if(!done) {
 			//Tell any waiting consumer to consume
-			pthread_mutex_lock(&state.mutex);
-			
-			state.value_available = 1; 
-			state.printing = 1;
-			pthread_cond_signal(&state.cond);
-			
+			pthread_mutex_lock(&cons_state.mutex);
+			cons_state.buf = strdup(buf);
+			cons_state.value_available = 1;
+			print_state.printing = 1;
+			pthread_cond_signal(&cons_state.cond);
+	
 			//While printing wait
-			if(state.printing)
-				pthread_cond_wait(&state.main_cond,&state.mutex);
-				printf("\n\nEnter a string: ");	
-			
-			pthread_mutex_unlock(&state.mutex);   
+			if(print_state.printing)
+				pthread_cond_wait(&print_state.main_cond,&cons_state.mutex);
+
+			//Get next string
+			printf("\n\nEnter a string: "); 
+			pthread_mutex_unlock(&cons_state.mutex);   
 		}	
 	}
 
@@ -161,5 +174,4 @@ int main( ) {
 
     pthread_join(printer_thread,NULL);
     printf("Successfully exited all threads!\n");
-
 }
