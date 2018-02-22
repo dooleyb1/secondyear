@@ -3,7 +3,7 @@ JC = javac
 JVM = java
 
 TEST = .:hamcrest-core-1.3.jar:junit-4.11.jar org.junit.runner.JUnitCore 
-RUN = .:hamcrest-core-1.3.jar
+RUN = .:hamcrest-core-1.3.jar:json-simple-1.1.jar
 BUILD = *:. 
 
 .SUFFIXES: .java .class .jar

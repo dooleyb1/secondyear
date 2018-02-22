@@ -1,5 +1,14 @@
 
 import java.util.LinkedList;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Iterator;
 
 
 public class TST<Value> {
@@ -185,7 +194,7 @@ public class TST<Value> {
 
 	//If node has a value, push prefix+c onto list
 	if(x.val != null)
-		list.push(prefix.toString() + x.c);
+		list.add(prefix.toString() + x.c);
 
 	//Search middle for keys containing prefix+c
 	getKeysWithPrefix(x.mid, prefix.append(x.c), list);
@@ -204,28 +213,52 @@ public class TST<Value> {
     return list;
   }
 
-  public static void main(String[] args){
-  	// build symbol table from standard input
-        TST<Integer> st = new TST<Integer>();
-        for (int i = 0; !StdIn.isEmpty(); i++) {
-            String key = StdIn.readString();
-            st.put(key, i);
-        }
+  public static void main(String[] args) throws IOException, FileNotFoundException, ParseException{
+  	
+  	/*
+    TST<Integer> st = new TST<Integer>();
+    for (int i = 0; !StdIn.isEmpty(); i++) {
+        String key = StdIn.readString();
+        st.put(key, i);
+    }
 
-        LinkedList<String> keysList = st.getAllKeys();
-        // print results
-        if (st.size() < 100) {
-            StdOut.println("keys(\"\"):");
-            for (String key : keysList) {
-                StdOut.println(key + " " + st.get(key));
-            }
-            StdOut.println();
+    LinkedList<String> keysList = st.getAllKeys();
+    // print results
+    if (st.size() < 100) {
+        StdOut.println("keys(\"\"):");
+        for (String key : keysList) {
+            StdOut.println(key + " " + st.get(key));
         }
-
-        StdOut.println("keysWithPrefix(\"shor\"):");
-        for (String s : st.keysWithPrefix("se"))
-            StdOut.println(s);
         StdOut.println();
+    }
+
+    StdOut.println("keysWithPrefix(\"a\"):");
+    for (String s : st.keysWithPrefix("a"))
+        StdOut.println(s);
+    StdOut.println();
+    */
+
+    JSONParser parser = new JSONParser();
+    Object obj = parser.parse(new FileReader("BUSES_SERVICE_0.json"));
+    JSONArray jsonArray = (JSONArray) obj;
+
+     //Iterate over employee array
+     jsonArray.forEach( bus -> parseBusObject( (JSONObject) bus ) );
   }
 
+  private static void parseBusObject(JSONObject employee)
+    {
+        //Get employee object within list
+        System.out.println("VehicleNo = " + employee.get("VehicleNo"));
+        System.out.println("TripId = " + employee.get("TripId"));
+        System.out.println("RouteNo = " + employee.get("RouteNo"));
+        System.out.println("Direction = " + employee.get("Direction"));
+        System.out.println("Destination = " + employee.get("Destination"));
+        System.out.println("Pattern = " + employee.get("Pattern"));
+        System.out.println("Latitude = " + employee.get("Latitude"));
+        System.out.println("Longitude = " + employee.get("Longitude"));
+        System.out.println("RecordedTime = " + employee.get("RecordedTime"));
+        System.out.println("RouteMap = " + employee.get("RouteMap") + "\n\n");
+        
+    }
 }
