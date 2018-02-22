@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+
 
 public class KMPSearch {
 
@@ -110,11 +115,35 @@ public class KMPSearch {
     	return count;
   }
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws IOException
   {
-	String pat = args[0];
-    String txt = args[1];
+	String vehiclePat = "VehicleNo";
+	String vehicleNum1 = "16555";
+	String location = "HAMPTON PARK";
+	String vehicleNum2 = "9043409";
+    String jsonFile = new String(Files.readAllBytes(Paths.get("BUSES_SERVICE_0.json")));
+    int result;
 
+    System.out.println("\nGetting total number of vehicles...");
+    System.out.println(searchAll(jsonFile, vehiclePat));
+
+    System.out.println("\nChecking if VehicleID " + vehicleNum1 + " is present...");
+    System.out.println(contains(jsonFile, vehicleNum1));
+
+    System.out.println("\nLocating first record about location '" + location + "'...");
+    result = searchFirst(jsonFile, location);
+
+    if(result != -1)
+    	System.out.println("Found at index " + result);
+
+    else
+    	System.out.println("Location not found");
+	
+	System.out.println("\nChecking if VehicleID " + vehicleNum2 + " is present...");
+    System.out.println(contains(jsonFile, vehicleNum2));
+
+
+    /*
     System.out.println("\nPattern entered = " + pat);
     System.out.println("Text entered = " + txt);
 
@@ -129,5 +158,8 @@ public class KMPSearch {
 
     else
     	System.out.println("Pattern not found!\n\n");
+    */
    }
+   
+
 }
