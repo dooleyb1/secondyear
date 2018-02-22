@@ -3,12 +3,13 @@ JC = javac
 JVM = java
 
 TEST = .:hamcrest-core-1.3.jar:junit-4.11.jar org.junit.runner.JUnitCore 
+RUN = .:hamcrest-core-1.3.jar
 BUILD = *:. 
 
 .SUFFIXES: .java .class .jar
 
 default:
-	$(JC) $(JFLAGS) $(BUILD) KMPSearch.java KMPSearchTest.java
+	$(JC) $(JFLAGS) $(BUILD) TST.java StdIn.java StdOut.java
 
 kmp:
 	$(JVM) $(JFLAGS) $(TEST) KMPSearch
@@ -17,7 +18,7 @@ kmptest:
 	$(JVM) $(JFLAGS) $(TEST) KMPSearchTest
 		
 tst:
-	$(JVM) $(JFLAGS) $(TEST) TST
+	$(JVM) $(JFLAGS) $(RUN) TST
 
 tsttest:
 	$(JVM) $(JFLAGS) $(TEST) TSTTest

@@ -32,14 +32,19 @@ public class TST<Value> {
   /* A Node in your trie containing a Value val and a pointer to its children */
   private static class TrieNode<Value> {
 		private char c;                        // character
-        private Node<Value> left, mid, right;  // left, middle, and right subtries
+        private TrieNode<Value> left, mid, right;  // left, middle, and right subtries
         private Value val;                     // value associated with string
   }
 
   /* a pointer to the start of your trie */
   private TrieNode root = new TrieNode();
   /* initialise size to 0 */
-  private int n = 0
+  private int n = 0;
+
+  //Create empty string symbol table
+  public TST(){
+
+  }
 
   /*
    * Returns the number of words in the trie
@@ -53,7 +58,7 @@ public class TST<Value> {
    */
   public boolean contains(String key) {
     if(key == null)
-    	return false
+    	return false;
 
     else
     	//If key is found, return true
@@ -67,35 +72,42 @@ public class TST<Value> {
     if(key == null || key.length() == 0)
     	return null;
 
+    TrieNode<Value> x = new TrieNode<Value>();
+    x = get(root, key, 0);
+
+    if(x == null)
+    	return null;
+
     else
-    	Node<Value> x = get(root, key, 0);
+    	return x.val;
   }
 
   /*
    * return the subtrie corresponding to given key
    */
-  public Node<Value> get(Node<Value> x, String key, int d){
+  public TrieNode<Value> get(TrieNode<Value> x, String key, int d){
+  	char c;
   	if(x == null || key.length() == 0)
   		return null;
 
-  	else
-  		char c = key.charAt(d);
+  	
+  	c = key.charAt(d);
 
-  		//If character is less than node x's character, go left
-  		if(c<x.c)
-  			return get(x.left, key, d);
+  	//If character is less than node x's character, go left
+  	if(c<x.c)
+  		return get(x.left, key, d);
 
-  		//If character is more than node x's character, go right
-  		else if(c>x.c)
-  			return get(x.right, key, d);
+  	//If character is more than node x's character, go right
+  	else if(c>x.c)
+  		return get(x.right, key, d);
 
-  		//Otherwise, if d is still within range, go middle
-  		else if(d<key.length()-1)
-  			return get(x.mid, key, d+1);
+  	//Otherwise, if d is still within range, go middle
+  	else if(d<key.length()-1)
+  		return get(x.mid, key, d+1);
 
-  		//Otherwise, at end. Return x
-  		else 
-  			return x;
+  	//Otherwise, at end. Return x
+  	else 
+  		return x;
   }
 
   /*
@@ -107,18 +119,18 @@ public class TST<Value> {
 
   	else
   		if(!contains(key))
-  			n++
+  			n++;
 
   		root = put(root, key, val, 0);
   }
 
-  private Node<Value> put(Node<Value> x, String key, Value val, int d){
+  private TrieNode<Value> put(TrieNode<Value> x, String key, Value val, int d){
   	char c = key.charAt(d);
 
   	//If null node, create new node for char c 
   	if(x == null){
-  		x = new Node<Value>();
-  		x.c = x;
+  		x = new TrieNode<Value>();
+  		x.c = c;
   	}
 
   	//If char is less than char of x, go left
@@ -135,8 +147,9 @@ public class TST<Value> {
 
   	//Otherwise return current node
   	else 
-  		return x 
+  		x.val = val;
 
+  	return x;
   }
 
   /*
@@ -148,7 +161,7 @@ public class TST<Value> {
     	return null;
 
     LinkedList<String> linkedList = new LinkedList<String>();
-    Node<Value> x = get(root, prefix, 0);
+    TrieNode<Value> x = get(root, prefix, 0);
 
     //If no keys found, return null LinkedList
     if(x == null)
@@ -156,14 +169,14 @@ public class TST<Value> {
 
     //If x has a value, add prefix to linked list
     if(x.val != null);
-    	linkedList.push(prefix);
+    	//linkedList.push(prefix);
 
     //Get remaining keys with prefix from x.mid onwards
     getKeysWithPrefix(x.mid, new StringBuilder(prefix), linkedList);
     return linkedList;
   }
 
-  private void getKeysWithPrefix{Node<Value> x, StringBuilder prefix, LinkedList<String> list){
+  private void getKeysWithPrefix(TrieNode<Value> x, StringBuilder prefix, LinkedList<String> list){
 	if(x == null)
 		return;
 
@@ -180,6 +193,39 @@ public class TST<Value> {
 	//Remove c from end of prefix and search right
 	prefix.deleteCharAt(prefix.length()-1);
 	getKeysWithPrefix(x.right, prefix, list);
+  }
+
+  /*
+   * Returns all the keys in TST in the form of a LinkedList
+   */
+  public LinkedList<String> getAllKeys(){
+  	LinkedList<String> list = new LinkedList<String>();
+    getKeysWithPrefix(root, new StringBuilder(), list);
+    return list;
+  }
+
+  public static void main(String[] args){
+  	// build symbol table from standard input
+        TST<Integer> st = new TST<Integer>();
+        for (int i = 0; !StdIn.isEmpty(); i++) {
+            String key = StdIn.readString();
+            st.put(key, i);
+        }
+
+        LinkedList<String> keysList = st.getAllKeys();
+        // print results
+        if (st.size() < 100) {
+            StdOut.println("keys(\"\"):");
+            for (String key : keysList) {
+                StdOut.println(key + " " + st.get(key));
+            }
+            StdOut.println();
+        }
+
+        StdOut.println("keysWithPrefix(\"shor\"):");
+        for (String s : st.keysWithPrefix("se"))
+            StdOut.println(s);
+        StdOut.println();
   }
 
 }
