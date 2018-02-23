@@ -10,6 +10,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.io.FileWriter;
+import java.util.Calendar;
+
 
 public class TST<Value> {
 
@@ -240,14 +246,42 @@ public class TST<Value> {
 
     JSONParser parser = new JSONParser();
     Object obj = parser.parse(new FileReader("BUSES_SERVICE_0.json"));
-    JSONArray jsonArray = (JSONArray) obj;
+    JSONArray busArray = (JSONArray) obj;
 
-     //Iterate over employee array
-     jsonArray.forEach( bus -> parseBusObject( (JSONObject) bus ) );
+    TST<Integer> busTST = new TST<Integer>();
+    JSONObject tmp = new JSONObject();
+    
+
+    //Iterate over employee array
+    busArray.forEach( bus -> parseBusObject( (JSONObject) bus, busTST ) );
+
+    //Printing results to txt file
+    BufferedWriter writer = null;
+    //create a temporary file
+    String title = "bus_json_TST_keys_log";
+    File resultsFile = new File(title);
+
+    // This will output the full path where the file will be written to...
+    System.out.println(resultsFile.getCanonicalPath());
+    writer = new BufferedWriter(new FileWriter(resultsFile)); 
+
+    LinkedList<String> keysList = busTST.getAllKeys();
+    // print results
+    if (busTST.size() < 1000) {
+        //StdOut.println("keys(\"\"):");
+        writer.write("keys(\"\"):\n"); 
+        for (String key : keysList) {
+            //StdOut.println(key + " " + busTST.get(key));
+            writer.write(key + " " + busTST.get(key) + "\n"); 
+        }
+        writer.close();
+    }
+
   }
 
-  private static void parseBusObject(JSONObject employee)
+  private static void parseBusObject(JSONObject route, TST<Integer> busTST)
     {
+    	/*
         //Get employee object within list
         System.out.println("VehicleNo = " + employee.get("VehicleNo"));
         System.out.println("TripId = " + employee.get("TripId"));
@@ -259,6 +293,25 @@ public class TST<Value> {
         System.out.println("Longitude = " + employee.get("Longitude"));
         System.out.println("RecordedTime = " + employee.get("RecordedTime"));
         System.out.println("RouteMap = " + employee.get("RouteMap") + "\n\n");
-        
+        */
+        String dest = "";
+    	int val = 0;
+        dest = (String) route.get("Destination");
+    	//System.out.println("\n\nExtracted object with destination = " + dest);
+
+    	//If TST already contains a record for destination increment value (count)
+    	if(busTST.contains(dest)){
+    		//System.out.println("TST contains record of destination " + dest);
+    		val = busTST.get(dest);
+    		//System.out.println("Record count = " + val);
+    		busTST.put(dest, val+1);
+    		//System.out.println("Updating TST for " + dest + " with new count " + (val+1));
+    	}
+
+    	else{
+    		//System.out.println("\n\nNo record found in TST for destination " + dest);
+    		//System.out.println("Creating a record now...");
+    		busTST.put(dest, 1);
+    	}
     }
 }
