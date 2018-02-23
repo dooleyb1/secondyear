@@ -30,15 +30,15 @@ public class TST<Value> {
    *
    * Google Books Common Words Questions:
    * 4. How many words is there in the file?
-   *    //TODO
+   *    96765
    * 5. What is the frequency of the word "ALGORITHM"?
-   *    //TODO
+   *    14433021
    * 6. Is the word "EMOJI" present?
-   *   //TODO
+   *    No.
    * 7. IS the word "BLAH" present?
-   *   //TODO
+   *    No.
    * 8. How many words are there that start with "TEST"?
-   *    //TODO
+   *    38
    */
 
   //Implemented using Sedgewick and Waynes version found here https://algs4.cs.princeton.edu/52trie/TST.java.html
@@ -220,8 +220,9 @@ public class TST<Value> {
   }
 
   public static void main(String[] args) throws IOException, FileNotFoundException, ParseException{
-  	
+
   	/*
+  	//Test using .txt input file (sheShells.txt)
     TST<Integer> st = new TST<Integer>();
     for (int i = 0; !StdIn.isEmpty(); i++) {
         String key = StdIn.readString();
@@ -244,6 +245,8 @@ public class TST<Value> {
     StdOut.println();
     */
 
+    /*
+    //Test for reading .json files
     JSONParser parser = new JSONParser();
     Object obj = parser.parse(new FileReader("BUSES_SERVICE_0.json"));
     JSONArray busArray = (JSONArray) obj;
@@ -277,9 +280,45 @@ public class TST<Value> {
         writer.close();
     }
 
-    /*
     StdOut.println("keysWithPrefix(\"DOWN\"):");
     for (String s : busTST.keysWithPrefix("DOWN")){
+        StdOut.println(s);
+    	StdOut.println(busTST.get(s));
+    }
+    StdOut.println();
+	*/
+
+    //Tests for google supplied .txt file
+    TST<Long> googleTST = new TST<Long>();
+    for (int i = 0; !StdIn.isEmpty(); i++) {
+        String key = StdIn.readString();
+        Long val = StdIn.readLong();
+        googleTST.put(key, val);
+    }
+
+    LinkedList<String> keysList = googleTST.getAllKeys();
+    // print results
+    //StdOut.println("keys(\"\"):");
+    for (String key : keysList) {
+    	//StdOut.println(key + " " + googleTST.get(key));
+    }
+    StdOut.println();
+
+    StdOut.println("Total words in file = " + googleTST.size());
+    StdOut.println("\nFrequency of word 'ALGORITHM' is " + googleTST.get("ALGORITHM"));
+    StdOut.println("\nIs 'EMOJI' present in the text file? " + googleTST.contains("EMOJI"));
+    StdOut.println("Is 'BLAH' present in the text file? " + googleTST.contains("EMOJI"));
+
+    StdOut.println("\nCounting keys with prefix 'TEST'...");
+    int n = 0;
+
+    for (String s : googleTST.keysWithPrefix("TEST"))
+        n++;
+    StdOut.println("Found " + n + " keys with prefix 'TEST'");
+
+    /*   
+    StdOut.println("keysWithPrefix(\"DOWN\"):");
+    for (String s : googleTST.keysWithPrefix("DOWN")){
         StdOut.println(s);
     	StdOut.println(busTST.get(s));
     }
