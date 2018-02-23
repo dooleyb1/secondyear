@@ -22,11 +22,11 @@ public class TST<Value> {
   /*
    * Bus Service Questions:
    * 1. How many unique destinations is there in the file?
-   *    //TODO
+   *    51.
    * 2. Is there a bus going to the destination "SOUTHSIDE"?
-   *    //TODO
+   *    No.
    * 3. How many records is there about the buses going to the destination beginning with "DOWN"?
-   *    //TODO
+   *    Only destination is 'DOWNTOWN' which has 70 records.
    *
    * Google Books Common Words Questions:
    * 4. How many words is there in the file?
@@ -277,6 +277,14 @@ public class TST<Value> {
         writer.close();
     }
 
+    /*
+    StdOut.println("keysWithPrefix(\"DOWN\"):");
+    for (String s : busTST.keysWithPrefix("DOWN")){
+        StdOut.println(s);
+    	StdOut.println(busTST.get(s));
+    }
+    StdOut.println();
+	*/
   }
 
   private static void parseBusObject(JSONObject route, TST<Integer> busTST)
