@@ -31,7 +31,8 @@ signal tmp_out1: std_logic_vector(15 downto 0);
 signal tmp_out2: std_logic_vector(15 downto 0);
 signal tmp_out3: std_logic_vector(15 downto 0);
 signal tmp_out4: std_logic_vector(15 downto 0);
-signal tmp: std_logic_vector(15 downto 0);
+signal tmp_out5: std_logic_vector(15 downto 0);
+signal tmp_out6: std_logic_vector(15 downto 0);
 
 begin
 -- instantiate Verilog N-bit Adder in VHDL code 
@@ -123,7 +124,7 @@ case(ALUctrl) is
  if ALUOUT = x"0000" then
  	Z <= 1;
  
- if ALUOUT(17) = 1 then
+ if ALUOUT(15) = 1 then
  	N <= 1;
  	
 end process;

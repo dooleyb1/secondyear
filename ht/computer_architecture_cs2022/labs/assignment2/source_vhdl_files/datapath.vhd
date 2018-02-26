@@ -3,25 +3,40 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-entity register_file is
-Port ( src: in std_logic_vector(1 downto 0);	
-	des : in std_logic(1 downto 0;
-	data_src : in std_logic;
-	data : in std_logic_vector(15 downto 0);
-	a_out : out std_logic_vector(15 downto 0)
-	b_out : out std_logic_vectro(15 downto 0));
-end register_file;
+entity datapath is
+Port (data_in : in std_logic_vector(15 downto 0);
+	constant_in : in std_logic_vector(15 downto 0);
+	a_address : in std_logic_vector(2 downto 0);
+	b_address : in std_logic_vector(2 downto 0);
+	d_address : in std_logic_vector(2 downto 0);
+	mb_select : in std_logic;
+	md_select : in std_logic;
+	bus_a_adr_out : out std_logic_vector(15 downto 0);
+	bus_b_data_out : out std_logic_vector(15 downto 0));
+end datapath;
 
-architecture Behavioral of register_file is
+architecture Behavioral of datapath is
 -- components
 
-	-- 4 bit Register for register file
-	COMPONENT reg16
+	-- 16 Bit Register File
+	COMPONENT register_file
 	PORT(
-		D : IN std_logic_vector(15 downto 0);
-		load : IN std_logic;
-		Clk : IN std_logic;
-		Q : OUT std_logic_vector(15 downto 0)
+	src_s0 : in std_logic;
+	src_s1 : in std_logic;
+	src_s2 : in std_logic;	
+	des_A0 : in std_logic;
+	des_A1 : in std_logic;
+	des_A2 : in std_logic;
+	data_src : in std_logic;
+	data : in std_logic_vector(15 downto 0);
+	reg0 : out std_logic_vector(15 downto 0);
+	reg1 : out std_logic_vector(15 downto 0);
+	reg2 : out std_logic_vector(15 downto 0);
+	reg3 : out std_logic_vector(15 downto 0);
+	reg4 : out std_logic_vector(15 downto 0);
+	reg5 : out std_logic_vector(15 downto 0);
+	reg6 : out std_logic_vector(15 downto 0);
+	reg7 : out std_logic_vector(15 downto 0))
 		);
 	END COMPONENT;
 	
@@ -183,8 +198,6 @@ architecture Behavioral of register_file is
 		S2 => src_s2,
 		Z => src_reg
 	);
-	
-	
 	
 	reg0 <= reg0_q;
 	reg1 <= reg1_q;

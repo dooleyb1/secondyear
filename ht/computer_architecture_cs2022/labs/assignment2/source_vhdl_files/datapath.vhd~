@@ -4,12 +4,23 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity register_file is
-Port ( src: in std_logic_vector(1 downto 0);	
-	des : in std_logic(1 downto 0;
+Port ( src_s0 : in std_logic;
+	src_s1 : in std_logic;
+	src_s2 : in std_logic;	
+	des_A0 : in std_logic;
+	des_A1 : in std_logic;
+	des_A2 : in std_logic;
+	Clk : in std_logic;
 	data_src : in std_logic;
 	data : in std_logic_vector(15 downto 0);
-	a_out : out std_logic_vector(15 downto 0)
-	b_out : out std_logic_vectro(15 downto 0));
+	reg0 : out std_logic_vector(15 downto 0);
+	reg1 : out std_logic_vector(15 downto 0);
+	reg2 : out std_logic_vector(15 downto 0);
+	reg3 : out std_logic_vector(15 downto 0);
+	reg4 : out std_logic_vector(15 downto 0);
+	reg5 : out std_logic_vector(15 downto 0);
+	reg6 : out std_logic_vector(15 downto 0);
+	reg7 : out std_logic_vector(15 downto 0));
 end register_file;
 
 architecture Behavioral of register_file is
@@ -183,8 +194,6 @@ architecture Behavioral of register_file is
 		S2 => src_s2,
 		Z => src_reg
 	);
-	
-	
 	
 	reg0 <= reg0_q;
 	reg1 <= reg1_q;
