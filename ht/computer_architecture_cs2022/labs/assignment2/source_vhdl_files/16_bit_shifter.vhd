@@ -5,7 +5,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
  
 entity 16_bit_shifter is
 Port (B : in STD_LOGIC_VECTOR (15 downto 0);
-Hsel : in STD_LOGIC_VECTOR (1 downto 0);
+FS : in STD_LOGIC_VECTOR (4 downto 0);
 Lr : in STD_LOGIC;
 Ll : in STD_LOGIC;
 H : out STD_LOGIC_VECTOR (15 downto 0));
@@ -25,6 +25,10 @@ end component;
 ;
  
 begin
+
+signal Hsel : std_logic_vector(1 downto 0)
+
+Hsel<= '01' when FS = '10100' else '10' when FS = '11000' else '00' after 5 ns; 
  
 -- Port Mapping Shifter 16 times
 S0: shifter port map(

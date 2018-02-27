@@ -17,12 +17,12 @@ end decoder_3to8;
 
 architecture Behavioral of decoder_3to8 is
 begin
-Q0<= '1' when des = '000' else '0' after 5 ns;
-Q1<= '1' when des = '001' else '0' after 5 ns;
-Q2<= '1' when des = '010' else '0' after 5 ns;
-Q3<= '1' when des = '011' else '0' after 5 ns;
-Q4<= '1' when des = '100' else '0' after 5 ns;
-Q5<= '1' when des = '101' else '0' after 5 ns;
-Q6<= '1' when des = '110' else '0' after 5 ns;
-Q7<= '1' when des = '111' else '0' after 5 ns;
+Q0<= '1' when des = '000' after 5 ns;
+Q1<= '1' when des = '001' after 5 ns;
+Q2<= '1' when des = '010' after 5 ns;
+Q3<= '1' when des = '011' after 5 ns;
+Q4<= '1' when des = '100' after 5 ns;
+Q5<= '1' when des = '101' after 5 ns;
+Q6<= '1' when des = '110' after 5 ns;
+Q7<= '1' when des = '111' after 5 ns;
 end Behavioral;

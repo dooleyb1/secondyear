@@ -4,34 +4,32 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity register_file is
-Port ( src: in std_logic_vector(1 downto 0);	
-	des : in std_logic(1 downto 0;
-	data_src : in std_logic;
+Port ( a_sel: in std_logic_vector(2 downto 0);	
+	b_sel : in std_logic_vector(2 downto 0);
+	d_sel : in std_logic_vector(2 downto 0);
+	load : in std_logic;
 	data : in std_logic_vector(15 downto 0);
 	a_out : out std_logic_vector(15 downto 0)
-	b_out : out std_logic_vectro(15 downto 0));
+	b_out : out std_logic_vector(15 downto 0));
 end register_file;
 
 architecture Behavioral of register_file is
 -- components
 
-	-- 4 bit Register for register file
+	-- 8 bit Register for register file
 	COMPONENT reg16
 	PORT(
 		D : IN std_logic_vector(15 downto 0);
 		load : IN std_logic;
-		Clk : IN std_logic;
 		Q : OUT std_logic_vector(15 downto 0)
 		);
 	END COMPONENT;
 	
 	
-	-- 3 to 8 Decoder
+	-- 3 to 8 Decoder (D Address Select)
 	COMPONENT decoder_3to8
 	PORT(
-		A0 : IN std_logic;
-		A1 : IN std_logic;
-		A2 : IN std_logic;
+		des : IN std_logic_vector(2 downto 0);
 		Q0 : OUT std_logic;
 		Q1 : OUT std_logic;
 		Q2 : OUT std_logic;
@@ -43,18 +41,8 @@ architecture Behavioral of register_file is
 		);
 	END COMPONENT;
 	
-	-- 2 to 1 line multiplexer
-	COMPONENT mux2_16bit
-	PORT(
-		In0 : IN std_logic_vector(15 downto 0);
-		In1 : IN std_logic_vector(15 downto 0);
-		s : IN std_logic;
-		Z : OUT std_logic_vector(15 downto 0)
-		);
-	END COMPONENT;
 	
-	
-	-- 4 to 1 line multiplexer
+	-- 8 to 1 line multiplexer (ABUS, BBUS)
 	COMPONENT mux8_16bit
 	PORT(
 		In0 : IN std_logic_vector(15 downto 0);
@@ -65,133 +53,122 @@ architecture Behavioral of register_file is
 		In5 : IN std_logic_vector(15 downto 0);
 		In6 : IN std_logic_vector(15 downto 0);
 		In7 : IN std_logic_vector(15 downto 0);
-		S0 : IN std_logic;
-		S1 : IN std_logic;
-		S2 : IN std_logic;
+		src : IN std_logic_vector(2 downto 0);
 		Z : OUT std_logic_vector(15 downto 0)
 		);
 	END COMPONENT;
 	
 	-- signals
-	signal load_reg0, load_reg1, load_reg2, load_reg3, load_reg4, load_reg5,
-		load_reg6, load_reg7  : std_logic;
-	signal reg0_q, reg1_q, reg2_q, reg3_q, reg4_q, reg5_q, reg6_q,
-		reg7_q, data_src_mux_out, src_reg : std_logic_vector(15 downto 0);
+	signal 	d_out0, d_out1, d_out2, d_out3, d_out4, d_out5, d_out6 ,d_out7   : std_logic;
+	signal reg0_out, reg1_out, reg2_out, reg3_out, reg4_out, reg5_out, reg6_out, reg7_out : std_logic_vector(15 downto 0);
 		
 	begin
 	-- port maps ;-)
 	
 	-- register 0
 	reg00: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg0,
-		Clk => Clk,
-		Q => reg0_q
+		D => data,
+		load => load,
+		d_sel => d_out0,
+		Q => reg0_out
 	);
 	
 	-- register 1
 	reg01: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg1,
-		Clk => Clk,
-		Q => reg1_q
+		D => data,
+		load => load,
+		d_sel => d_out1,
+		Q => reg1_out
 	);
 	
 	-- register 2
 	reg02: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg2,
-		Clk => Clk,
-		Q => reg2_q
+		D => data,
+		load => load,
+		d_sel => d_out2,
+		Q => reg2_out
 	);
 	
 	-- register 3
 	reg03: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg3,
-		Clk => Clk,
-		Q => reg3_q
+		D => data,
+		load => load,
+		d_sel => d_out3,
+		Q => reg3_out
 	);
 	
 	-- register 4
 	reg04: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg4,
-		Clk => Clk,
-		Q => reg4_q
+		D => data,
+		load => load,
+		d_sel => d_out4,
+		Q => reg4_out
 	);
 	
 	-- register 5
 	reg05: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg5,
-		Clk => Clk,
-		Q => reg5_q
+		D => data,
+		load => load,
+		d_sel => d_out5,
+		Q => reg5_out
 	);
 	
 	-- register 6
 	reg06: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg6,
-		Clk => Clk,
-		Q => reg6_q
+		D => data,
+		load => load,
+		d_sel => d_out6,
+		Q => reg6_out
 	);
 	
 	-- register 7
 	reg07: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg7,
-		Clk => Clk,
-		Q => reg7_q
+		D => data,
+		load => load,
+		d_sel => d_out7,
+		Q => reg7_out
 	);
 	
-	-- Destination register decoder
+	-- Destination register decoder (D decoder)
 	des_decoder_3to8: decoder_3to8 PORT MAP(
-		A0 => des_A0,
-		A1 => des_A1,
-		A2 => des_A2,
-		Q0 => load_reg0,
-		Q1 => load_reg1,
-		Q2 => load_reg2,
-		Q3 => load_reg3,
-		Q4 => load_reg4,
-		Q5 => load_reg5,
-		Q6 => load_reg6,
-		Q7 => load_reg7
+		des => d_sel,
+		Q0 => d_out0,
+		Q1 => d_out1,
+		Q2 => d_out2,
+		Q3 => d_out3,
+		Q4 => d_out4,
+		Q5 => d_out5,
+		Q6 => d_out6,
+		Q7 => d_out7
 	);
 	
-	-- 2 to 1 Data source multiplexer
-	data_src_mux2_16bit: mux2_16bit PORT MAP(
-		In0 => data,
-		In1 => src_reg,
-		s => data_src,
-		Z => data_src_mux_out
+	-- 8 to 1 source register multiplexer (ABUS mux)
+	A_mux8_16bit: mux8_16bit PORT MAP(
+		In0 => reg0_out,
+		In1 => reg1_out,
+		In2 => reg2_out,
+		In3 => reg3_out,
+		In4 => reg4_out,
+		In5 => reg5_out,
+		In6 => reg6_out,
+		In7 => reg7_out,
+		src => a_sel,
+		Z => a_out
 	);
 	
-	-- 8 to 1 source register multiplexer
-	Inst_mux8_16bit: mux8_16bit PORT MAP(
-		In0 => reg0_q,
-		In1 => reg1_q,
-		In2 => reg2_q,
-		In3 => reg3_q,
-		In4 => reg4_q,
-		In5 => reg5_q,
-		In6 => reg6_q,
-		In7 => reg7_q,
-		S0 => src_s0,
-		S1 => src_s1,
-		S2 => src_s2,
-		Z => src_reg
+	-- 8 to 1 source register multiplexer (BBUS mux)
+	B_mux8_16bit: mux8_16bit PORT MAP(
+		In0 => reg0_out,
+		In1 => reg1_out,
+		In2 => reg2_out,
+		In3 => reg3_out,
+		In4 => reg4_out,
+		In5 => reg5_out,
+		In6 => reg6_out,
+		In7 => reg7_out,
+		src => b_sel,
+		Z => b_out
 	);
 	
 	
-	
-	reg0 <= reg0_q;
-	reg1 <= reg1_q;
-	reg2 <= reg2_q;
-	reg3 <= reg3_q;
-	reg4 <= reg4_q;
-	reg5 <= reg5_q;
-	reg6 <= reg6_q;
-	reg7 <= reg7_q;
 end Behavioral;

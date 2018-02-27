@@ -54,19 +54,21 @@ architecture Behavioral of function_unit is
 	END COMPONENT;
 	
 	-- signals
-	signal vflag, cflag, nflag, zflag, Ll, Lr, MDsel  : std_logic;
-	signal ABUS, BBUS, G, H,  : std_logic_vector(15 downto 0);
+	signal vflag, cflag, nflag, zflag, Ll, Lr, MFsel  : std_logic;
+	signal G, H,  : std_logic_vector(15 downto 0);
 	signal Hsel : std_logic_vector(3 downto 0);
 	signal Gsel : std_logic_vector(1 downto 0);
 		
+	MFsel <= '0' when FS(4) = '0' else '1' when FS(4) = '1';
+	
 	begin
 	-- port maps ;-)
 	
 	-- Arithmetic Logic Unit (ALU)
 	alu: 16_bit_ALU PORT MAP(
-		A => ABUS,
-		B => BBUS,
-		ALUctrl => Gsel,
+		A => A,
+		B => B,
+		ALUctrl => FS,
 		ALUOUT => G,
 		V => vlag,
 		C => cflag,
@@ -76,8 +78,8 @@ architecture Behavioral of function_unit is
 	
 	-- 16 Bit Shifter
 	shifter: 16_bit_shifter PORT MAP(
-		B => BBUS,
-		HSEL => Hsel,
+		B => B,
+		FS => FS,
 		Lr => Lr,
 		Ll => Ll,
 		H => H
@@ -87,8 +89,8 @@ architecture Behavioral of function_unit is
 	MUXF: mux2_16bit PORT MAP(
 		In0 => G,
 		In1 => H,
-		s => MDsel,
-		Z => reg2_q
+		s => MFsel,
+		Z => F
 	);
 
 end Behavioral;
