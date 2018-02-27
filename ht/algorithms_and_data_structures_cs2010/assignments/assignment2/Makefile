@@ -2,15 +2,14 @@ JFLAGS = -cp
 JC = javac
 JVM = java
 
-TEST = .:hamcrest-core-1.3.jar:junit-4.11.jar org.junit.runner.JUnitCore 
-RUN = .:hamcrest-core-1.3.jar:json-simple-1.1.jar
+TEST = ./jars:hamcrest-core-1.3.jar:junit-4.11.jar org.junit.runner.JUnitCore 
+RUN = ./jars:hamcrest-core-1.3.jar:json-simple-1.1.jar
 BUILD = *:. 
 
 .SUFFIXES: .java .class .jar
 
 default:
-	$(JC) $(JFLAGS) $(BUILD) TST.java StdIn.java StdOut.java
-
+	$(JC) $(JFLAGS) $(BUILD) *.java
 kmp:
 	$(JVM) $(JFLAGS) $(TEST) KMPSearch
 
