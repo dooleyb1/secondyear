@@ -1,0 +1,17 @@
+To Do:
+---------------
+
+Part One:
+-Decoder 3to8
+-Mux 2to1
+-Mux 8to1
+-Reg16
+-Register File
+
+Part Two:
+-ALU
+-Ripple Adder (X)
+-Shifter (16) (X)
+-Datapath
+-Full Adder (X)
+-Shifter (1) (X)

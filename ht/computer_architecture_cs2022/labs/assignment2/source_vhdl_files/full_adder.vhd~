@@ -9,7 +9,7 @@ entity full_adder is
  Cin : in STD_LOGIC;
  S : out STD_LOGIC;
  Cout : out STD_LOGIC);
-end full_adder;
+end full_adder_vhdl_code;
  
 architecture Behavioral of full_adder is
  
