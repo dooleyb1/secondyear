@@ -61,8 +61,7 @@ architecture Behavioral of datapath is
 	END COMPONENT
 	
 	-- signals
-	signal l : std_logic;
-	signal a_data, b_data, bus_b : std_logic_vector(15 downto 0);
+	signal a_data, b_data, mb_out, f_out, md_out: std_logic_vector(15 downto 0);
 		
 	begin
 	-- port maps ;-)
@@ -73,7 +72,7 @@ architecture Behavioral of datapath is
 		b_sel => b_address,
 		d_sel => d_address,
 		load => write,
-		data => data_in,
+		data => md_out,
 		a_out => a_data,
 		b_out => b_data	
 	);
@@ -83,106 +82,30 @@ architecture Behavioral of datapath is
 		In0 => b_data,
 		In1 => constant_in,
 		s => mb_select,
-		Z => bus_b,
+		Z => mb_out,
 	);
 	
 	-- Function Unit
 	function_unit: function_unit PORT MAP(
 		A => a_data,
-		B => bus_b,
+		B => mb_out,
 		FS => FS,
-		V => ,
-		C => ,
-		N => ,
-		Z => ,	
-		F => 
+		V => v_out,
+		C => c_out,
+		N => n_out,
+		Z => z_out,	
+		F => f_out
 	);
 	
-	-- register 3
-	reg03: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg3,
-		Clk => Clk,
-		Q => reg3_q
+	-- MUX D
+	mux_d: mux2_16bit PORT MAP(
+		In0 => f_out,
+		In1 => data_in,
+		s => md_select,
+		Z => md_out,
 	);
 	
-	-- register 4
-	reg04: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg4,
-		Clk => Clk,
-		Q => reg4_q
-	);
-	
-	-- register 5
-	reg05: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg5,
-		Clk => Clk,
-		Q => reg5_q
-	);
-	
-	-- register 6
-	reg06: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg6,
-		Clk => Clk,
-		Q => reg6_q
-	);
-	
-	-- register 7
-	reg07: reg16 PORT MAP(
-		D => data_src_mux_out,
-		load => load_reg7,
-		Clk => Clk,
-		Q => reg7_q
-	);
-	
-	-- Destination register decoder
-	des_decoder_3to8: decoder_3to8 PORT MAP(
-		A0 => des_A0,
-		A1 => des_A1,
-		A2 => des_A2,
-		Q0 => load_reg0,
-		Q1 => load_reg1,
-		Q2 => load_reg2,
-		Q3 => load_reg3,
-		Q4 => load_reg4,
-		Q5 => load_reg5,
-		Q6 => load_reg6,
-		Q7 => load_reg7
-	);
-	
-	-- 2 to 1 Data source multiplexer
-	data_src_mux2_16bit: mux2_16bit PORT MAP(
-		In0 => data,
-		In1 => src_reg,
-		s => data_src,
-		Z => data_src_mux_out
-	);
-	
-	-- 8 to 1 source register multiplexer
-	Inst_mux8_16bit: mux8_16bit PORT MAP(
-		In0 => reg0_q,
-		In1 => reg1_q,
-		In2 => reg2_q,
-		In3 => reg3_q,
-		In4 => reg4_q,
-		In5 => reg5_q,
-		In6 => reg6_q,
-		In7 => reg7_q,
-		S0 => src_s0,
-		S1 => src_s1,
-		S2 => src_s2,
-		Z => src_reg
-	);
-	
-	reg0 <= reg0_q;
-	reg1 <= reg1_q;
-	reg2 <= reg2_q;
-	reg3 <= reg3_q;
-	reg4 <= reg4_q;
-	reg5 <= reg5_q;
-	reg6 <= reg6_q;
-	reg7 <= reg7_q;
+	bus_a_adr_out <= a_data;
+	bus_b_data_out <= mb_out;
+	 
 end Behavioral;

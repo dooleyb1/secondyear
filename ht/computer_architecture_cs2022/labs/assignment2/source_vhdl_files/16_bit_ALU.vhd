@@ -5,8 +5,8 @@ entity 16_bit_ALU is
  port (
    A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit ALU
    B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit ALU
-   ALUctrl: in std_logic_vector(3 downto 0);  -- ALUctrl control input of the 16-bit ALU 
-   ALUOUT: out std_logic_vector(15 downto 0); -- 16-bit data output of the 16-bit ALU 
+   FS: in std_logic_vector(4 downto 0);  -- FS control input of the 16-bit ALU 
+   F: out std_logic_vector(15 downto 0); -- 16-bit data output of the 16-bit ALU 
    V : out std_logic;                         -- Overflow Flag out
    C : out std_logic;                         -- Carry Flag out
    N : out std_logic;                         -- Negative Flag out
@@ -97,34 +97,34 @@ begin
 	
 	 
 -- Other instructions of the 16-bit ALU in VHDL 
-process(ALUctrl,ABUS,BBUS,tmp_out1,tmp)
+process(FS,ABUS,BBUS,tmp_out1,tmp)
 begin 
-case(ALUctrl) is
- when "0000" =>  ALUOUT <= ABUS;	  		-- G = A
- when "0001" =>  ALUOUT <= tmp_out_1;		-- G = A+1 
- when "0010" =>  ALUOUT <= tmp_out_2;	 	-- G = A+B
- when "0011" =>  ALUOUT <= tmp_out_3;		-- G = A+B+1 
- when "0100" =>  ALUOUT <= tmp_out_4;	 	-- G = A+B'
- when "0101" =>  ALUOUT <= tmp_out_5; 		-- G = A+B'+1
- when "0110" =>  ALUOUT <= tmp_out_6; 		-- G = A-1
- when "0111" =>  ALUOUT <= ABUS;	 		-- G = A
- when "1000" =>  ALUOUT <= A and B; 		-- G = A and B
- when "1010" =>  ALUOUT <= A or B; 			-- G = A or B
- when "1100" =>  ALUOUT <= A xor B; 		-- G = A xor B
- when "1110" =>  ALUOUT <= not A;	 		-- G = A'
- when others => ALUOUT <= ABUS; 
+case(FS) is
+ when "00000" =>  F <= ABUS;	  		-- G = A
+ when "00001" =>  F <= tmp_out_1;		-- G = A+1 
+ when "00010" =>  F <= tmp_out_2;	 	-- G = A+B
+ when "00011" =>  F <= tmp_out_3;		-- G = A+B+1 
+ when "00100" =>  F <= tmp_out_4;	 	-- G = A+B'
+ when "00101" =>  F <= tmp_out_5; 		-- G = A+B'+1
+ when "00110" =>  F <= tmp_out_6; 		-- G = A-1
+ when "00111" =>  F <= ABUS;	 		-- G = A
+ when "01000" =>  F <= A and B; 		-- G = A and B
+ when "01010" =>  F <= A or B; 			-- G = A or B
+ when "01100" =>  F <= A xor B; 		-- G = A xor B
+ when "01110" =>  F <= not A;	 		-- G = A'
+ when others => F <= ABUS; 
  end case;
  
  --Handle Flags
  
  --V = Cout xor Cin
- V = C xor ALUctrl(0)
+ V = C xor FS(0)
  
- --If ALUOUT is 0000...0 then set zero flag
- if ALUOUT = x"0000" then
+ --If F is 0000...0 then set zero flag
+ if F = x"0000" then
  	Z <= 1;
  
- if ALUOUT(15) = 1 then
+ if F(15) = 1 then
  	N <= 1;
  	
 end process;
