@@ -38,16 +38,16 @@ public class ThreadCB extends IflThreadCB
     static public ThreadCB do_create(TaskCB task){
 		
 		if (task == null){
+		    
 		    dispatch();
 		    return null;
+
 		}
 		
 		// Can we add a new thread to this task?
 		if (task.getThreadCount() >= MaxThreadsPerTask) {		   
-		    MyOut.print("osp.Threads.ThreadCB",
-				"Failed to create new thread "
-				+ " -- maximum number of threads for "
-				+ task + " reached");
+		    
+		    MyOut.print("osp.Threads.ThreadCB","Failed to create new thread " + " -- maximum number of threads for " + task + " reached");
 		    dispatch();
 		    return null;
 		}
@@ -63,6 +63,7 @@ public class ThreadCB extends IflThreadCB
 		
 		// Add the new thread to the task.
 		if (task.addThread(newThread) != SUCCESS) {
+		    
 		    MyOut.print("osp.Threads.ThreadCB","Could not add thread "+ newThread+" to task "+task);
 		    dispatch();
 		    return null;
@@ -213,41 +214,34 @@ public class ThreadCB extends IflThreadCB
 
 		} catch(NullPointerException e) {}
 
-        // If necessary, remove current thread from processor and reschedule it.
-        if(runningThread != null) {
+		//If the running thread is null (i.e finished), get the next thread and execute it
+		if(runningThread == null){
 
-		    MyOut.print("osp.Threads.ThreadCB","Preempting currently running " + runningThread);
+			// Select next thread from top of ready queue.
+	        threadToDispatch = (ThreadCB)readyQueue.removeHead();
 
-		    runningTask.setCurrentThread(null);
+	        //If there is no threads left on the queue, exit
+	        if(threadToDispatch == null) {
 
-		    MMU.setPTBR(null);
+	        	//No threads left
+			    MyOut.print("osp.Threads.ThreadCB","Can't find suitable thread to dispatch");
+			    MMU.setPTBR(null);
+			    return FAILURE;
 
-		    runningThread.setStatus(ThreadReady);
-		    readyQueue.append(runningThread);
+			}
+
+			// Put the thread on the processor.
+			MMU.setPTBR(threadToDispatch.getTask().getPageTable());
+
+			// set thread to dispatch as the current thread of its task
+		    threadToDispatch.getTask().setCurrentThread(threadToDispatch);
+
+			// Set thread's status.
+			threadToDispatch.setStatus(ThreadRunning);
+		            
+		    MyOut.print("osp.Threads.ThreadCB","Dispatching " + threadToDispatch);
+
 		}
-
-        // Select thread from ready queue.
-        threadToDispatch = (ThreadCB)readyQueue.removeHead();
-
-        if(threadToDispatch == null) {
-
-		    MyOut.print("osp.Threads.ThreadCB","Can't find suitable thread to dispatch");
-		    MMU.setPTBR(null);
-		    return FAILURE;
-		}
-
-		// Put the thread on the processor.
-		MMU.setPTBR(threadToDispatch.getTask().getPageTable());
-
-		// set thread to dispatch as the current thread of its task
-	    threadToDispatch.getTask().setCurrentThread(threadToDispatch);
-
-		// Set thread's status.
-		threadToDispatch.setStatus(ThreadRunning);
-	            
-	    MyOut.print("osp.Threads.ThreadCB","Dispatching " + threadToDispatch);
-
-		HTimer.set(150);
 		return SUCCESS;
     }
 
