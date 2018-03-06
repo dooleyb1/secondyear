@@ -75,15 +75,15 @@ begin
             A <= x"AAAA";
             B <= x"FBAA";
             Cin <= '1';
-            
             wait for 80ns;
             
+            --Test Carry Flag
             A <= x"FFFF";
             B <= x"0000";
-            Cin <= '1';
-           
+            Cin <= '1';  
             wait for 80ns;
             
+            --Test Overflow
             A <= x"FFFF";
             B <= x"8000";
             Cin <= '0';

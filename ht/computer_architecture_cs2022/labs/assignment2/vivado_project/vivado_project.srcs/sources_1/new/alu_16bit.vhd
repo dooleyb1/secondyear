@@ -5,12 +5,10 @@ entity alu_16bit is
  port (
    A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit ALU
    B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit ALU
-   FS: in std_logic_vector(4 downto 0);       -- FS control input of the 16-bit ALU 
+   ALUctrl: in std_logic_vector(4 downto 0);  -- ALUctrl control input of the 16-bit ALU 
    F: out std_logic_vector(15 downto 0);      -- 16-bit data output of the 16-bit ALU 
    V : out std_logic;                         -- Overflow Flag out
-   C : out std_logic;                         -- Carry Flag out
-   N : out std_logic;                         -- Negative Flag out
-   Z : out std_logic                          -- Zero Flag out
+   C : out std_logic                          -- Carry Flag out
    );
 end alu_16bit;
 
@@ -18,105 +16,75 @@ architecture Behavioral of alu_16bit is
 
 --16 bit ripple adder component declaration
 component ripple_adder_16bit
-Port ( input1 : in STD_LOGIC_VECTOR (15 downto 0);
-input2 : in STD_LOGIC_VECTOR (15 downto 0);
-Cin : in STD_LOGIC;
-S : out STD_LOGIC_VECTOR (15 downto 0);
-Cout : out STD_LOGIC);
+Port (
+    A : in STD_LOGIC_VECTOR (15 downto 0);
+    B : in STD_LOGIC_VECTOR (15 downto 0);
+    Cin : in STD_LOGIC;
+    S : out STD_LOGIC_VECTOR (15 downto 0);
+    Cout : out STD_LOGIC;
+    V : out STD_LOGIC
+    );
 end component;
 
+--Logic unit for and or xor not
+component logic_unit_ab
+Port(
+	a_logic_in: in STD_LOGIC_VECTOR(15 downto 0);
+	b_logic_in : in STD_LOGIC_VECTOR(15 downto 0);
+	select_in : in STD_LOGIC_VECTOR(1 downto 0);
+	output_ab : out STD_LOGIC_VECTOR(15 downto 0)
+	);
+end component;
 
-signal BBUS_not: std_logic_vector(15 downto 0);
-signal tmp_out1: std_logic_vector(15 downto 0);
-signal tmp_out2: std_logic_vector(15 downto 0);
-signal tmp_out3: std_logic_vector(15 downto 0);
-signal tmp_out4: std_logic_vector(15 downto 0);
-signal tmp_out5: std_logic_vector(15 downto 0);
-signal tmp_out6: std_logic_vector(15 downto 0);
+--Logic unit b
+component logic_unit_b is
+Port(
+	B : in STD_LOGIC_VECTOR(15 downto 0);
+	S_in : in STD_LOGIC_VECTOR(1 downto 0);
+	Y_out : out STD_LOGIC_VECTOR(15 downto 0)
+	);
+end component;
+
+--Mux for end result
+component mux2_16bit is
+Port ( 
+    In0 : in std_logic_vector(15 downto 0);
+    In1 : in std_logic_vector(15 downto 0);
+    s : in std_logic;
+    Z : out std_logic_vector(15 downto 0));
+end component;
+
+--Initialise signals
+signal logic_out, logic_out_ab, ripple_adder_out : STD_LOGIC_VECTOR(15 downto 0);
 
 begin
--- instantiate Verilog N-bit Adder in VHDL code 
 
--- ripple adder 1 (A+1)
-	u1_16_bit_ripple_adder: ripple_adder_16bit PORT MAP(
-		input1 => A,
-		input2 => x"0000",
-		Cin => '1',
-		S => tmp_out1,
-		Cout => C
+	ripple_adder: ripple_adder_16bit PORT MAP(
+			A => A,
+			B => B,
+			Cin => ALUctrl(0),
+			Cout => C,
+			V => V,
+			S => ripple_adder_out
 	);
 
--- ripple adder 2 (ABUS + BBUS)
-	u2_16_bit_ripple_adder: ripple_adder_16bit PORT MAP(
-		input1 => A,
-		input2 => B,
-		Cin => '0',
-		S => tmp_out2,
-		Cout => C
+    logic_unit_ab00: logic_unit_ab PORT MAP(
+			a_logic_in => A,
+			b_logic_in => B,
+			select_in => ALUctrl(2 downto 1),
+			output_ab => logic_out_ab
 	);
 	
--- ripple adder 3 (ABUS + BBUS + 1)
-	u3_16_bit_ripple_adder: ripple_adder_16bit PORT MAP(
-		input1 => A,
-		input2 => B,
-		Cin => '1',
-		S => tmp_out3,
-		Cout => C
+	logic_unit_b00 : logic_unit_b PORT MAP(
+			B => B,
+			S_in => ALUctrl(2 downto 1),
+			Y_out => logic_out
 	);
 	
--- ripple adder 4 (ABUS + BBUS')
-	u4_16_bit_ripple_adder: ripple_adder_16bit PORT MAP(
-		input1 => A,
-		input2 => BBUS_not,
-		Cin => '0',
-		S => tmp_out4,
-		Cout => C
+	mux_2_16bit00: mux2_16bit PORT MAP(
+			In0 => ripple_adder_out,
+			In1 => logic_out_ab,
+			s => ALUctrl(3),
+			Z => F
 	);
-	
--- ripple adder 5 (ABUS + BBUS' + 1)
-	u5_16_bit_ripple_adder: ripple_adder_16bit PORT MAP(
-		input1 => A,
-		input2 => BBUS_not,
-		Cin => '1',
-		S => tmp_out5,
-		Cout => C
-	);
-	
--- ripple adder 6 (ABUS -1)
-	u6_16_bit_ripple_adder: ripple_adder_16bit PORT MAP(
-		input1 => A,
-		input2 => x"FFFF",
-		Cin => '0',
-		S => tmp_out6,
-		Cout => C
-		
-	);
-	
--- (~BBUS)
-	BBUS_not <= not B;
-	
-	 
--- Other instructions of the 16-bit ALU in VHDL 
-process(FS,A,B,tmp_out1,tmp_out2,tmp_out3,tmp_out4,tmp_out5,tmp_out6)
-begin 
-case(FS) is
- when "00000" =>  F <= A;	  		    -- G = A
- when "00001" =>  F <= tmp_out1;		-- G = A+1 
- when "00010" =>  F <= tmp_out2;	 	-- G = A+B
- when "00011" =>  F <= tmp_out3;		-- G = A+B+1 
- when "00100" =>  F <= tmp_out4;	 	-- G = A+B'
- when "00101" =>  F <= tmp_out5; 		-- G = A+B'+1
- when "00110" =>  F <= tmp_out6; 		-- G = A-1
- when "00111" =>  F <= A;	 		    -- G = A
- when "01000" =>  F <= A and B; 		-- G = A and B
- when "01010" =>  F <= A or B; 			-- G = A or B
- when "01100" =>  F <= A xor B; 		-- G = A xor B
- when "01110" =>  F <= not A;	 		-- G = A'
- when others => F <= A; 
- end case;
- 
- --Handle Flags
- 	
-end process;
-
 end Behavioral;

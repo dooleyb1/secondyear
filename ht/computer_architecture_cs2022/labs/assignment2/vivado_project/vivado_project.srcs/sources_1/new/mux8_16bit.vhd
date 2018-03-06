@@ -19,5 +19,5 @@ In4 after 5 ns when src="100" else
 In5 after 5 ns when src="101" else
 In6 after 5 ns when src="110" else
 In7 after 5 ns when src="111" else
-"0000000000000000" after 5 ns;
+x"0000" after 5 ns;
 end Behavioral;

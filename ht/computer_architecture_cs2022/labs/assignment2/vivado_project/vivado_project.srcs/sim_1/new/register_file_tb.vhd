@@ -173,6 +173,7 @@ begin
        b_sel <= "111";
        wait for 5ns;
         
+     wait;   
      end process;
     
 end Behavioral;

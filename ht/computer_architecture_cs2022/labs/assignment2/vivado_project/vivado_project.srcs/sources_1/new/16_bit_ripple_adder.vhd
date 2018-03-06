@@ -146,6 +146,6 @@ C_out <= c15;
 Cout <= C_out;
     
 --Overflow Flag
-V <= (C_out xor c14);
+V <= (c15 xor c14);
  
 end Behavioral;

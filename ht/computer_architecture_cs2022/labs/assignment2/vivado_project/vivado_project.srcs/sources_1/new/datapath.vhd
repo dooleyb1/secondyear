@@ -18,7 +18,16 @@ Port (data_in : in std_logic_vector(15 downto 0);
 	mb_select : in std_logic;
 	md_select : in std_logic;
 	bus_a_adr_out : out std_logic_vector(15 downto 0);
-	bus_b_data_out : out std_logic_vector(15 downto 0));
+	bus_b_data_out : out std_logic_vector(15 downto 0);
+	reg_0_data_out : out std_logic_vector(15 downto 0);
+	reg_1_data_out : out std_logic_vector(15 downto 0);
+	reg_2_data_out : out std_logic_vector(15 downto 0);
+	reg_3_data_out : out std_logic_vector(15 downto 0);
+	reg_4_data_out : out std_logic_vector(15 downto 0);
+	reg_5_data_out : out std_logic_vector(15 downto 0);
+	reg_6_data_out : out std_logic_vector(15 downto 0);
+    reg_7_data_out : out std_logic_vector(15 downto 0);
+    f_data_out : out std_logic_vector(15 downto 0));
 end datapath;
 
 architecture Behavioral of datapath is
@@ -33,7 +42,15 @@ architecture Behavioral of datapath is
 	load : in std_logic;
 	data : in std_logic_vector(15 downto 0);
 	a_out : out std_logic_vector(15 downto 0);
-	b_out : out std_logic_vector(15 downto 0));
+	b_out : out std_logic_vector(15 downto 0);
+	reg0out : out std_logic_vector(15 downto 0);
+    reg1out : out std_logic_vector(15 downto 0);
+    reg2out : out std_logic_vector(15 downto 0);
+    reg3out : out std_logic_vector(15 downto 0);
+    reg4out : out std_logic_vector(15 downto 0);
+    reg5out : out std_logic_vector(15 downto 0);
+    reg6out : out std_logic_vector(15 downto 0);
+    reg7out : out std_logic_vector(15 downto 0));
 	END COMPONENT;
 	
 	-- 2 to 1 line multiplexer
@@ -60,7 +77,8 @@ architecture Behavioral of datapath is
 	END COMPONENT;
 	
 	-- signals
-	signal a_data, b_data, mb_out, f_out, md_out: std_logic_vector(15 downto 0);
+	signal a_data, b_data, mb_out, f_out, md_out, reg0out, reg1out, reg2out, reg3out, reg4out, 
+	           reg5out, reg6out, reg7out: std_logic_vector(15 downto 0);
 		
 	begin
 	-- port maps ;-)
@@ -73,7 +91,15 @@ architecture Behavioral of datapath is
 		load => write,
 		data => md_out,
 		a_out => a_data,
-		b_out => b_data	
+		b_out => b_data,
+		reg0out => reg0out,
+        reg1out => reg1out,
+        reg2out => reg2out,
+        reg3out => reg3out,
+        reg4out => reg4out,
+        reg5out => reg5out,
+        reg6out => reg6out,
+        reg7out => reg7out 
 	);
 	
 	-- MUX B
@@ -103,5 +129,16 @@ architecture Behavioral of datapath is
 	
 	bus_a_adr_out <= a_data;
 	bus_b_data_out <= mb_out;
+	
+	reg_0_data_out <= reg0out;
+	reg_1_data_out <= reg1out;
+	reg_2_data_out <= reg2out;
+	reg_3_data_out <= reg3out;
+	reg_4_data_out <= reg4out;
+	reg_5_data_out <= reg5out;
+	reg_6_data_out <= reg6out;
+	reg_7_data_out <= reg7out;
+	
+	f_data_out <= f_out;
 	 
 end Behavioral;
