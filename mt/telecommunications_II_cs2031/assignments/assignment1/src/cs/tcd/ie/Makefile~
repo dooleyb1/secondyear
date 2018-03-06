@@ -1,0 +1,20 @@
+JFLAGS = -cp
+JC = javac
+JVM = java
+BUILD = junit-4.11.jar:. 
+
+.SUFFIXES: .java .class .jar
+
+default:
+	$(JC) $(JFLAGS) $(BUILD) *.java
+
+client:
+	$(JVM) $(JFLAGS) Client
+
+
+clean:
+	$(RM) *.class
+
+##Need To compile project with the juinity jar
+##To run need to run the Test file with the hamcrest and Junit
+
