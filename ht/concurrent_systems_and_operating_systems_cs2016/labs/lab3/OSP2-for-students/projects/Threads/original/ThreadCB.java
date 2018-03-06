@@ -30,7 +30,7 @@ public class ThreadCB extends IflThreadCB
     public static void init(){
 
 		readyQueue = new GenericList();
-   
+   		System.out.println("This is running a PREEMPTIVE NON-PRIORITY THREAD SCHEDULER (original...)!");
     }
 
      
