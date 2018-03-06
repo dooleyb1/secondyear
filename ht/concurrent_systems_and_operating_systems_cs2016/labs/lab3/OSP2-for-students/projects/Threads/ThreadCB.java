@@ -1,5 +1,6 @@
 package osp.Threads;
 import java.util.Vector;
+import java.util.Comparator;
 import java.util.Enumeration;
 import osp.Utilities.*;
 import osp.IFLModules.*;
@@ -9,6 +10,8 @@ import osp.Hardware.*;
 import osp.Devices.*;
 import osp.Memory.*;
 import osp.Resources.*;
+import java.util.AbstractQueue;
+import java.util.PriorityQueue;
 
 /*
    This class is responsible for actions related to threads, including
@@ -16,9 +19,26 @@ import osp.Resources.*;
 
    @OSPProject Threads
 */
-public class ThreadCB extends IflThreadCB 
-{
-    private static GenericList readyQueue;
+public class ThreadCB extends IflThreadCB {
+    //private static GenericList readyQueue;
+	 private static class PriorityComparator implements Comparator<ThreadCB> {
+
+    	@Override
+    	public int compare(ThreadCB x, ThreadCB y){
+
+    		if(x.getPriority() < y.getPriority())
+    			return 1;
+
+    		if(x.getPriority() > y.getPriority())
+    			return -1;
+    		
+    		return 0;
+
+    	}
+    }
+
+    private static Comparator<ThreadCB> comparator = new PriorityComparator();
+    private static PriorityQueue<ThreadCB> readyQueue;
 
     public ThreadCB(){
 	
@@ -29,7 +49,8 @@ public class ThreadCB extends IflThreadCB
     //Initialises queue and other variables
     public static void init(){
 
-		readyQueue = new GenericList();
+    	//readyQueue = new GenericList();
+		readyQueue = new PriorityQueue<>(100, comparator);
    
     }
 
@@ -70,7 +91,7 @@ public class ThreadCB extends IflThreadCB
 		}
 		
 		//Add this new thread to the queue
-		readyQueue.append(newThread);
+		readyQueue.add(newThread);
 	
 		MyOut.print("osp.Threads.ThreadCB","Successfully added "+newThread+" to "+task);
 		
@@ -194,7 +215,7 @@ public class ThreadCB extends IflThreadCB
 
         // Put the thread on the ready queue, if appropriate
 		if (getStatus() == ThreadReady)
-	    	readyQueue.append(this);
+	    	readyQueue.add(this);
 
 		dispatch();
     }
@@ -214,34 +235,45 @@ public class ThreadCB extends IflThreadCB
 
 		} catch(NullPointerException e) {}
 
-		//If the running thread is null (i.e finished), get the next thread and execute it
-		if(runningThread == null){
+        // If necessary, remove current thread from processor and reschedule it.
+        if(runningThread != null) {
 
-			// Select next thread from top of ready queue.
-	        threadToDispatch = (ThreadCB)readyQueue.removeHead();
+		    MyOut.print("osp.Threads.ThreadCB","Preempting currently running " + runningThread);
 
-	        //If there is no threads left on the queue, exit
-	        if(threadToDispatch == null) {
+		    //Take thread away from task
+		    runningTask.setCurrentThread(null);
 
-	        	//No threads left
-			    MyOut.print("osp.Threads.ThreadCB","Can't find suitable thread to dispatch");
-			    MMU.setPTBR(null);
-			    return FAILURE;
+		    //Take task off CPU
+		    MMU.setPTBR(null);
 
-			}
-
-			// Put the thread on the processor.
-			MMU.setPTBR(threadToDispatch.getTask().getPageTable());
-
-			// set thread to dispatch as the current thread of its task
-		    threadToDispatch.getTask().setCurrentThread(threadToDispatch);
-
-			// Set thread's status.
-			threadToDispatch.setStatus(ThreadRunning);
-		            
-		    MyOut.print("osp.Threads.ThreadCB","Dispatching " + threadToDispatch);
-
+		    //Set status to ready (but waiting)
+		    runningThread.setStatus(ThreadReady);
+		    readyQueue.add(runningThread);
 		}
+
+        // Select thread from ready queue.
+        threadToDispatch = (ThreadCB)readyQueue.poll();
+
+        if(threadToDispatch == null) {
+
+        	//No threads left
+		    MyOut.print("osp.Threads.ThreadCB","Can't find suitable thread to dispatch");
+		    MMU.setPTBR(null);
+		    return FAILURE;
+		}
+
+		// Put the thread on the processor.
+		MMU.setPTBR(threadToDispatch.getTask().getPageTable());
+
+		// set thread to dispatch as the current thread of its task
+	    threadToDispatch.getTask().setCurrentThread(threadToDispatch);
+
+		// Set thread's status.
+		threadToDispatch.setStatus(ThreadRunning);
+	            
+	    MyOut.print("osp.Threads.ThreadCB","Dispatching " + threadToDispatch);
+
+		HTimer.set(150);
 		return SUCCESS;
     }
 
@@ -252,5 +284,7 @@ public class ThreadCB extends IflThreadCB
     public static void atWarning(){
     }
 }
+
+
 
 
