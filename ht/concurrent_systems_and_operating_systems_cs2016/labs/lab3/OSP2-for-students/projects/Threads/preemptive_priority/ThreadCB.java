@@ -1,5 +1,6 @@
 package osp.Threads;
 import java.util.Vector;
+import java.util.Comparator;
 import java.util.Enumeration;
 import osp.Utilities.*;
 import osp.IFLModules.*;
@@ -10,6 +11,7 @@ import osp.Devices.*;
 import osp.Memory.*;
 import osp.Resources.*;
 import java.util.AbstractQueue;
+import java.util.PriorityQueue;
 
 /*
    This class is responsible for actions related to threads, including
@@ -19,7 +21,7 @@ import java.util.AbstractQueue;
 */
 public class ThreadCB extends IflThreadCB {
     //private static GenericList readyQueue;
-	 private class PriorityComparator implements Comparator<ThreadCB> {
+	 private static class PriorityComparator implements Comparator<ThreadCB> {
 
     	@Override
     	public int compare(ThreadCB x, ThreadCB y){
@@ -35,8 +37,8 @@ public class ThreadCB extends IflThreadCB {
     	}
     }
 
-    private Comparator<ThreadCB> comparator = new ThreadComparator();
-    private static PriorityQueue<Integer> readyQueue;
+    private static Comparator<ThreadCB> comparator = new PriorityComparator();
+    private static PriorityQueue<ThreadCB> readyQueue;
 
     public ThreadCB(){
 	
@@ -48,7 +50,7 @@ public class ThreadCB extends IflThreadCB {
     public static void init(){
 
     	//readyQueue = new GenericList();
-		readyQueue = new PriorityQueue<ThreadCB>(0, comparator);
+		readyQueue = new PriorityQueue<>(100, comparator);
    
     }
 
