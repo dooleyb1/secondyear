@@ -288,6 +288,7 @@ public class TST<Value> {
     StdOut.println();
 	*/
 
+    /*
     //Tests for google supplied .txt file
     TST<Long> googleTST = new TST<Long>();
     for (int i = 0; !StdIn.isEmpty(); i++) {
@@ -323,9 +324,10 @@ public class TST<Value> {
     	StdOut.println(busTST.get(s));
     }
     StdOut.println();
-	*/
+    */
   }
 
+  /*
   private static void parseBusObject(JSONObject route, TST<Integer> busTST)
     {
     	/*
@@ -340,7 +342,7 @@ public class TST<Value> {
         System.out.println("Longitude = " + employee.get("Longitude"));
         System.out.println("RecordedTime = " + employee.get("RecordedTime"));
         System.out.println("RouteMap = " + employee.get("RouteMap") + "\n\n");
-        */
+      
         String dest = "";
     	int val = 0;
         dest = (String) route.get("Destination");
@@ -359,6 +361,5 @@ public class TST<Value> {
     		//System.out.println("\n\nNo record found in TST for destination " + dest);
     		//System.out.println("Creating a record now...");
     		busTST.put(dest, 1);
-    	}
-    }
+    	}}*/
 }
