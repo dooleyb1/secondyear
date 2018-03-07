@@ -87,30 +87,28 @@ start
 	str	r1,[r0,#TCR]
 
 
-xloop	b	xloop  								; branch always
-												; main program execution will never drop below the statement above.
+xloop	b	xloop  								;branch always
+												;main program execution will never drop below the statement above.
 
 	AREA	InterruptStuff, CODE, READONLY
 irqhan	sub	lr,lr,#4
 	stmfd	sp!,{r0-r1,lr}						; the lr will be restored to the pc
 
 	cmp r4, #200								; if(count < oneSecond)
-	blt keepCounting							;	keepCounting()...
+	blt keepCounting
 		
-	cmp	r3,	r5									; if(curPin > lastPin)
-	blt nextLED									; {	
-	ldr	r3,=0x00010000							; 	Reset to P1.16
-	str r3, [r7]								;	Turn on P.16
-	LDR R4, =0									;	count = 0;
-	B keepCounting								; }
+	cmp	r3,	r5									; if(curPin > lastPin
+	blt nextLED							;
+	ldr	r3,=0x00010000							; Reset to P1.16
+	str r3, [r7]
+	B keepCounting
 
 nextLED
-	str	r3,[r6]									; set the bit -> turn off the current LED
-	mov	r3,r3,lsl #1							; shift up to next bit. P1.16 -> P1.17 etc.
-	str	r3,[r7]	   								; clear the bit -> turn on the LED
+	str	r3,[r6]									;set the bit -> turn off the current LED
+	mov	r3,r3,lsl #1							;shift up to next bit. P1.16 -> P1.17 etc.
+	str	r3,[r7]	   								;clear the bit -> turn on the LED
 	
 keepCounting
-	add r4, r4, #1								; count++
 	
 		
 	;this is where we stop the timer from making the interrupt request to the VIC
