@@ -53,7 +53,7 @@ architecture Behavioral of alu is
 
 begin
     LU: logic_unit 
-        port map(
+        Port map(
             S0 => S0, 
             S1 => S1, 
             A => A, 
@@ -62,7 +62,7 @@ begin
         );
         
     AU: arithmetic_unit 
-        port map(
+        Port map(
             A => A, 
             B => B,
             Cin => Cin,
@@ -73,7 +73,7 @@ begin
         );
         
     MUX: mux2_1bit 
-        port map(
+        Port map(
             In0 => adder_out, 
             In1 => logic_out, 
             Sel => S2, 

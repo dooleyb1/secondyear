@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-entity ALU is
+entity alu is
   Port ( 
     Cin : in std_logic;
     A: in std_logic;
@@ -14,9 +14,9 @@ entity ALU is
     G: out std_logic;
     Cout : out std_logic
   );
-end ALU;
+end alu;
 
-architecture Behavioral of ALU is
+architecture Behavioral of alu is
 
     component logic_unit
         Port ( 
@@ -28,7 +28,7 @@ architecture Behavioral of ALU is
         );
     end component;
 
-    component arithmetic_circuit
+    component arithmetic_unit
         Port ( 
            A: in std_logic;
            B: in std_logic;
@@ -40,12 +40,12 @@ architecture Behavioral of ALU is
         );
     end component;
     
-    component mux2_1
+    component mux2_1bit
         Port (
             In0 : in std_logic;
             In1 : in std_logic;
-            s : in std_logic;
-            Z : out std_logic
+            Sel : in std_logic;
+            mux_out : out std_logic
         );
     end component;
 
@@ -61,7 +61,7 @@ begin
             G => logic_out
         );
         
-    AD: arithmetic_circuit 
+    AU: arithmetic_unit 
         port map(
             A => A, 
             B => B,
@@ -72,12 +72,12 @@ begin
             Z => adder_out
         );
         
-    MUX: mux2_1 
+    MUX: mux2_1bit 
         port map(
             In0 => adder_out, 
             In1 => logic_out, 
-            s => S2, 
-            Z => G
+            Sel => S2, 
+            mux_out => G
         ); 
         
 end Behavioral;

@@ -34,11 +34,12 @@ begin
     newInput <= (B and S0) or ((not B) and S1);
     
     AC: full_adder 
-    	port map (
+    	Port map (
     		A => A,
     		B => newInput,
     		Cin => Cin,
     		Cout => Cout,
-    		S => Z);
+    		S => Z
+    	);
     
 end Behavioral;

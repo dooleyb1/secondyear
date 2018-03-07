@@ -78,7 +78,7 @@ architecture Behavioral of register_file is
 	-- port maps ;-)
 	
 	-- register 0
-	reg00: reg16 Port Map(
+	reg00: reg16 Port MAP(
 		D => data,
 		load => load,
 		d_sel => d_out0,
@@ -86,7 +86,7 @@ architecture Behavioral of register_file is
 	);
 	
 	-- register 1
-	reg01: reg16 Port Map(
+	reg01: reg16 Port MAP(
 		D => data,
 		load => load,
 		d_sel => d_out1,
@@ -94,7 +94,7 @@ architecture Behavioral of register_file is
 	);
 	
 	-- register 2
-	reg02: reg16 Port Map(
+	reg02: reg16 Port MAP(
 		D => data,
 		load => load,
 		d_sel => d_out2,
@@ -102,7 +102,7 @@ architecture Behavioral of register_file is
 	);
 	
 	-- register 3
-	reg03: reg16 Port Map(
+	reg03: reg16 Port MAP(
 		D => data,
 		load => load,
 		d_sel => d_out3,
@@ -110,7 +110,7 @@ architecture Behavioral of register_file is
 	);
 	
 	-- register 4
-	reg04: reg16 Port Map(
+	reg04: reg16 Port MAP(
 		D => data,
 		load => load,
 		d_sel => d_out4,
@@ -118,7 +118,7 @@ architecture Behavioral of register_file is
 	);
 	
 	-- register 5
-	reg05: reg16 Port Map(
+	reg05: reg16 Port MAP(
 		D => data,
 		load => load,
 		d_sel => d_out5,
@@ -126,7 +126,7 @@ architecture Behavioral of register_file is
 	);
 	
 	-- register 6
-	reg06: reg16 Port Map(
+	reg06: reg16 Port MAP(
 		D => data,
 		load => load,
 		d_sel => d_out6,
@@ -134,7 +134,7 @@ architecture Behavioral of register_file is
 	);
 	
 	-- register 7
-	reg07: reg16 Port Map(
+	reg07: reg16 Port MAP(
 		D => data,
 		load => load,
 		d_sel => d_out7,
@@ -142,7 +142,7 @@ architecture Behavioral of register_file is
 	);
 	
 	-- Destination register decoder (D decoder)
-	des_decoder_3to8: decoder_3to8 Port Map(
+	des_decoder_3to8: decoder_3to8 Port MAP(
 		des => d_sel,
 		Q0 => d_out0,
 		Q1 => d_out1,
@@ -155,7 +155,7 @@ architecture Behavioral of register_file is
 	);
 	
 	-- 8 to 1 source register multiplexer (ABUS mux)
-	A_mux8_16bit: mux8_16bit Port Map(
+	A_mux8_16bit: mux8_16bit Port MAP(
 		In0 => reg0_out,
 		In1 => reg1_out,
 		In2 => reg2_out,
@@ -169,7 +169,7 @@ architecture Behavioral of register_file is
 	);
 	
 	-- 8 to 1 source register multiplexer (BBUS mux)
-	B_mux8_16bit: mux8_16bit Port Map(
+	B_mux8_16bit: mux8_16bit Port MAP(
 		In0 => reg0_out,
 		In1 => reg1_out,
 		In2 => reg2_out,

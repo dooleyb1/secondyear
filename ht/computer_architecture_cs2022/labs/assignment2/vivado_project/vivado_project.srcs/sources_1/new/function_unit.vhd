@@ -1,67 +1,67 @@
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use IEEE.std_logic_1164.ALL;
+use IEEE.std_logic_ARITH.ALL;
+use IEEE.std_logic_UNSIGNED.ALL;
 
 entity function_unit is
-Port ( 
-	A : in std_logic_vector(15 downto 0);
-	B : in std_logic_vector(15 downto 0);
-	FS : in std_logic_vector(4 downto 0);
-	V : out std_logic;
-	C : out std_logic;
-	N : out std_logic;
-	Z : out std_logic;	
-	F : out std_logic_vector(15 downto 0));
+	Port ( 
+		A : in std_logic_vector(15 downto 0);
+		B : in std_logic_vector(15 downto 0);
+		FS : in std_logic_vector(4 downto 0);
+		V : out std_logic;
+		C : out std_logic;
+		N : out std_logic;
+		Z : out std_logic;	
+		F : out std_logic_vector(15 downto 0)
+	);
 end function_unit;
 
 architecture Behavioral of function_unit is
 -- components
 
 	-- 16bit Arithmetic Logic Unit (ALU)
-	COMPONENT alu_16bit
-	PORT(
-		A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit ALU
-   		B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit ALU
-   		Gsel: in std_logic_vector(3 downto 0);     -- FS control input of the 16-bit ALU 
-	   	F: out std_logic_vector(15 downto 0);      -- 16-bit data output of the 16-bit ALU 
-	   	V : out std_logic;                         -- Overflow Flag out
-	   	C : out std_logic;                         -- Carry Flag out
-	   	N : out std_logic;                         -- Negative Flag out
-	   	Z : out std_logic                          -- Zero Flag Out
+	component alu_16bit
+		Port(
+			A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit ALU
+	   		B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit ALU
+	   		Gsel: in std_logic_vector(3 downto 0);     -- FS control input of the 16-bit ALU 
+		   	F: out std_logic_vector(15 downto 0);      -- 16-bit data output of the 16-bit ALU 
+		   	V : out std_logic;                         -- Overflow Flag out
+		   	C : out std_logic;                         -- Carry Flag out
+		   	N : out std_logic;                         -- Negative Flag out
+		   	Z : out std_logic                          -- Zero Flag Out
 		);
-	END COMPONENT;
+	end component;
 	
 	
 	-- 16bit Shifter
-	COMPONENT shifter_16bit
-	PORT(
-		B : in STD_LOGIC_VECTOR (15 downto 0);
-		FS : in STD_LOGIC_VECTOR (4 downto 0);
-		Lr : in STD_LOGIC;
-		Ll : in STD_LOGIC;
-		H : out STD_LOGIC_VECTOR (15 downto 0)
+	component shifter_16bit
+		Port(
+			B : in std_logic_vector (15 downto 0);
+			FS : in std_logic_vector (4 downto 0);
+			Lr : in std_logic;
+			Ll : in std_logic;
+			H : out std_logic_vector (15 downto 0)
 		);
-	END COMPONENT;
+	end component;
 	
 	-- 2 to 1 line multiplexer
-	COMPONENT mux2_16bit
-	PORT(
-		In0 : IN std_logic_vector(15 downto 0);
-		In1 : IN std_logic_vector(15 downto 0);
-		s : IN std_logic;
-		Z : OUT std_logic_vector(15 downto 0)
+	component mux2_16bit
+		Port(
+			In0 : IN std_logic_vector(15 downto 0);
+			In1 : IN std_logic_vector(15 downto 0);
+			s : IN std_logic;
+			Z : OUT std_logic_vector(15 downto 0)
 		);
-	END COMPONENT;
+	end component;
 	
 	-- signals
-	signal ALU_out, shifter_out, mux_out : STD_LOGIC_VECTOR(15 downto 0);
+	signal ALU_out, shifter_out, mux_out : std_logic_vector(15 downto 0);
 	
-	begin
-	-- port maps ;-)
-	
+begin
 	-- Arithmetic Logic Unit (ALU)
-	alu: alu_16bit PORT MAP(
+	alu: alu_16bit 
+	Port Map(
 		A => A,
 		B => B,
 		Gsel(0) => FS(0),
@@ -72,10 +72,12 @@ architecture Behavioral of function_unit is
 		V => V,
 		C => C,
 		N => N, 
-		Z => Z);
+		Z => Z
+	);
 	
 	-- 16 Bit Shifter
-	shifter: shifter_16bit PORT MAP(
+	shifter: shifter_16bit 
+	Port Map(
 		B => B,
 		FS => FS,
 		Lr => '0',
@@ -84,7 +86,8 @@ architecture Behavioral of function_unit is
 	);
 	
 	-- 2 to 1 mux
-	MUXF: mux2_16bit PORT MAP(
+	MUXF: mux2_16bit 
+	Port Map(
 		In0 => ALU_out,
 		In1 => shifter_out,
 		s => FS(4),

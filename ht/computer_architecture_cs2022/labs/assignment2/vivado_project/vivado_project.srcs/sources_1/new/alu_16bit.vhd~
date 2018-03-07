@@ -1,22 +1,22 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
--- 16-bit ALU 
+-- 16-bit alu 
 entity alu_16bit is
  port (
-   A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit ALU
-   B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit ALU
-   Gsel: in std_logic_vector(3 downto 0);  	  -- GSel control input of the 16-bit ALU 
-   F: out std_logic_vector(15 downto 0);      -- 16-bit data result of the 16-bit ALU 
+   A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit alu
+   B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit alu
+   Gsel: in std_logic_vector(3 downto 0);  	  -- GSel control input of the 16-bit alu 
+   F: out std_logic_vector(15 downto 0);      -- 16-bit data result of the 16-bit alu 
    V : out std_logic;                         -- Overflow Flag out
    C : out std_logic;                         -- Carry Flag out
    N : out std_logic;						
-   Z : out std_logic;
+   Z : out std_logic
    );
 end alu_16bit;
 
 architecture Behavioral of alu_16bit is
 
-component ALU
+component alu
 Port ( 
     Cin : in std_logic;
     A: in std_logic;
@@ -43,8 +43,8 @@ signal result : std_logic_vector(15 downto 0);
 
 begin
 
-	--Instantiate 16 x 1-bit Slice ALU's
-    ALU00: ALU 
+	--Instantiate 16 x 1-bit Slice alu's
+    alu00: alu 
         port map(
             Cin => Gsel(0), 
             A => A(0), 
@@ -56,7 +56,7 @@ begin
             Cout => C1
          );
 
-    ALU01: ALU 
+    alu01: alu 
         port map(
             Cin => C1, 
             A => A(1), 
@@ -68,7 +68,7 @@ begin
             Cout => C2
          );
          
-    ALU02: ALU 
+    alu02: alu 
          port map(
              Cin => C2, 
              A => A(2), 
@@ -80,7 +80,7 @@ begin
              Cout => C3
          );
          
-    ALU03: ALU
+    alu03: alu
          port map(
              Cin => C3, 
              A => A(3), 
@@ -92,7 +92,7 @@ begin
              Cout => C4
          );
 
-    ALU04: ALU
+    alu04: alu
          port map(
              Cin => C4, 
              A => A(4), 
@@ -104,7 +104,7 @@ begin
              Cout => C5
          );
 
-    ALU05: ALU
+    alu05: alu
          port map(
              Cin => C5, 
              A => A(5), 
@@ -116,7 +116,7 @@ begin
              Cout => C6
          );
 
-    ALU06: ALU
+    alu06: alu
          port map(
              Cin => C6, 
              A => A(6), 
@@ -128,7 +128,7 @@ begin
              Cout => C7
          );
 
-    ALU07: ALU
+    alu07: alu
          port map(
              Cin => C7, 
              A => A(7), 
@@ -140,7 +140,7 @@ begin
              Cout => C8
          );
 
-    ALU08: ALU
+    alu08: alu
          port map(
              Cin => C8, 
              A => A(8), 
@@ -152,7 +152,7 @@ begin
              Cout => C9
          );
 
-    ALU09: ALU
+    alu09: alu
          port map(
              Cin => C9, 
              A => A(9), 
@@ -164,7 +164,7 @@ begin
              Cout => C10
          );
 
-    ALU10: ALU
+    alu10: alu
          port map(
              Cin => C10, 
              A => A(10), 
@@ -176,7 +176,7 @@ begin
              Cout => C11
          );
 
-    ALU11: ALU
+    alu11: alu
          port map(
              Cin => C11, 
              A => A(11), 
@@ -188,7 +188,7 @@ begin
              Cout => C12
          );
 
-    ALU12: ALU
+    alu12: alu
          port map(
              Cin => C12, 
              A => A(12), 
@@ -200,7 +200,7 @@ begin
              Cout => C13
          );
 
-    ALU13: ALU
+    alu13: alu
          port map(
              Cin => C13, 
              A => A(13), 
@@ -212,7 +212,7 @@ begin
              Cout => C14
          );
 
-    ALU14: ALU
+    alu14: alu
          port map(
              Cin => C14, 
              A => A(14), 
@@ -224,7 +224,7 @@ begin
              Cout => C15
          );
 
-    ALU15: ALU
+    alu15: alu
          port map(
              Cin => C15, 
              A => A(15), 

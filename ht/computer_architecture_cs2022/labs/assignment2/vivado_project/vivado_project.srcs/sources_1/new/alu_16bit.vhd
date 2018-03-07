@@ -2,50 +2,50 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 -- 16-bit alu 
 entity alu_16bit is
- port (
-   A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit alu
-   B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit alu
-   Gsel: in std_logic_vector(3 downto 0);  	  -- GSel control input of the 16-bit alu 
-   F: out std_logic_vector(15 downto 0);      -- 16-bit data result of the 16-bit alu 
-   V : out std_logic;                         -- Overflow Flag out
-   C : out std_logic;                         -- Carry Flag out
-   N : out std_logic;						
-   Z : out std_logic
+ Port (
+	   A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit alu
+	   B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit alu
+	   Gsel: in std_logic_vector(3 downto 0);  	  -- GSel control input of the 16-bit alu 
+	   F: out std_logic_vector(15 downto 0);      -- 16-bit data result of the 16-bit alu 
+	   V : out std_logic;                         -- Overflow Flag out
+	   C : out std_logic;                         -- Carry Flag out
+	   N : out std_logic;						  -- Negative Flag out
+	   Z : out std_logic						  -- Zero Flag out
    );
 end alu_16bit;
 
 architecture Behavioral of alu_16bit is
 
-component alu
-Port ( 
-    Cin : in std_logic;
-    A: in std_logic;
-    B: in std_logic;
-    S0: in std_logic;
-    S1: in std_logic;
-    S2: in std_logic;
-    G: out std_logic;
-    Cout : out std_logic
-    );
-end component;
+	component alu
+		Port ( 
+			Cin : in std_logic;
+			A: in std_logic;
+			B: in std_logic;
+			S0: in std_logic;
+			S1: in std_logic;
+			S2: in std_logic;
+			G: out std_logic;
+			Cout : out std_logic
+		);
+	end component;
 
-component zero_detect
-Port ( 
-    I: in std_logic_vector(15 downto 0);
-    O: out std_logic
-    ); 
-end component;
+	component zero_detect
+		Port ( 
+			I: in std_logic_vector(15 downto 0);
+			O: out std_logic
+		); 
+	end component;
 
 
---Initialise signals
-signal C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, Cout, Zout : std_logic;
-signal result : std_logic_vector(15 downto 0);
+	--Initialise signals
+	signal C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, Cout, Zout : std_logic;
+	signal result : std_logic_vector(15 downto 0);
 
 begin
 
 	--Instantiate 16 x 1-bit Slice alu's
     alu00: alu 
-        port map(
+        Port map(
             Cin => Gsel(0), 
             A => A(0), 
             B => B(0), 
@@ -57,7 +57,7 @@ begin
          );
 
     alu01: alu 
-        port map(
+        Port map(
             Cin => C1, 
             A => A(1), 
             B => B(1), 
@@ -69,7 +69,7 @@ begin
          );
          
     alu02: alu 
-         port map(
+         Port map(
              Cin => C2, 
              A => A(2), 
              B => B(2), 
@@ -81,7 +81,7 @@ begin
          );
          
     alu03: alu
-         port map(
+         Port map(
              Cin => C3, 
              A => A(3), 
              B => B(3), 
@@ -93,7 +93,7 @@ begin
          );
 
     alu04: alu
-         port map(
+         Port map(
              Cin => C4, 
              A => A(4), 
              B => B(4), 
@@ -105,7 +105,7 @@ begin
          );
 
     alu05: alu
-         port map(
+         Port map(
              Cin => C5, 
              A => A(5), 
              B => B(5), 
@@ -117,7 +117,7 @@ begin
          );
 
     alu06: alu
-         port map(
+         Port map(
              Cin => C6, 
              A => A(6), 
              B => B(6), 
@@ -129,7 +129,7 @@ begin
          );
 
     alu07: alu
-         port map(
+         Port map(
              Cin => C7, 
              A => A(7), 
              B => B(7), 
@@ -141,7 +141,7 @@ begin
          );
 
     alu08: alu
-         port map(
+         Port map(
              Cin => C8, 
              A => A(8), 
              B => B(8), 
@@ -153,7 +153,7 @@ begin
          );
 
     alu09: alu
-         port map(
+         Port map(
              Cin => C9, 
              A => A(9), 
              B => B(9), 
@@ -165,7 +165,7 @@ begin
          );
 
     alu10: alu
-         port map(
+         Port map(
              Cin => C10, 
              A => A(10), 
              B => B(10), 
@@ -177,7 +177,7 @@ begin
          );
 
     alu11: alu
-         port map(
+         Port map(
              Cin => C11, 
              A => A(11), 
              B => B(11), 
@@ -189,7 +189,7 @@ begin
          );
 
     alu12: alu
-         port map(
+         Port map(
              Cin => C12, 
              A => A(12), 
              B => B(12), 
@@ -201,7 +201,7 @@ begin
          );
 
     alu13: alu
-         port map(
+         Port map(
              Cin => C13, 
              A => A(13), 
              B => B(13), 
@@ -213,7 +213,7 @@ begin
          );
 
     alu14: alu
-         port map(
+         Port map(
              Cin => C14, 
              A => A(14), 
              B => B(14), 
@@ -225,7 +225,7 @@ begin
          );
 
     alu15: alu
-         port map(
+         Port map(
              Cin => C15, 
              A => A(15), 
              B => B(15), 
@@ -239,7 +239,7 @@ begin
     F <= result;
     
     z_detect: zero_detect
-        port map (
+        Port map (
             I => result,
             O => Zout
         );
