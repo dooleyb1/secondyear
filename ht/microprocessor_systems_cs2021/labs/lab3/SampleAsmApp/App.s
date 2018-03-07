@@ -40,6 +40,20 @@ IO1PIN	EQU	0xE0028010
 	EXPORT	start
 start
 ; initialisation code
+	
+	ldr	r1,=IO1DIR
+	ldr	r2,=0x000f0000	;select P1.19--P1.16
+	str	r2,[r1]		;make them outputs
+	ldr	r6,=IO1SET
+	str	r2,[r6]		;set them to turn the LEDs off
+	ldr	r7,=IO1CLR
+; r1 points to the SET register
+; r2 points to the CLEAR register
+
+	ldr	r5,=0x00100000	; end when the mask reaches this value
+	ldr	r3,=0x00010000	; start with P1.16.
+	str	r3,[r7]	   	; clear the bit -> turn on the LED
+
 
 ; Initialise the VIC
 	ldr	r0,=VIC									; looking at you, VIC!
@@ -74,47 +88,42 @@ start
 	mov	r1,#TimerCommandRun
 	str	r1,[r0,#TCR]
 
-												;from here, initialisation is finished, so it should be the main body of the main program
-	
-	ldr	r1,=IO1DIR
-	ldr	r2,=0x000f0000							; select P1.19--P1.16
-	str	r2,[r1]									; make them outputs
-	ldr	r1,=IO1SET
-	str	r2,[r1]									; set them to turn the LEDs off
-	ldr	r2,=IO1CLR
-												; r1 points to the SET register
-												; r2 points to the CLEAR register
-	ldr	r3,=0x00010000							; start with P1.16
-	ldr	r5,=0x00100000							; end when the mask reaches this value
-												; wait for interrupts.....
 
-wloop	b	wloop  								; branch always
+xloop	b	xloop  								; branch always
 												;main program execution will never drop below the statement above.
 
 	AREA	InterruptStuff, CODE, READONLY
 irqhan	sub	lr,lr,#4
 	stmfd	sp!,{r0-r1,lr}						; the lr will be restored to the pc
 
-;this is the body of the interrupt handler
+	;this is the body of the interrupt handler
 
-;here you'd put the unique part of your interrupt handler
-;all the other stuff is "housekeeping" to save registers and acknowledge interrupts
+	;here you'd put the unique part of your interrupt handler
+	;all the other stuff is "housekeeping" to save registers and acknowledge interrupts
 
 		cmp	r3,	r5								; if(curPin) > lastPin
-		bne skipReset							;
+		blt delay							;
 		ldr	r3,=0x00010000						; Reset to P1.16
-skipReset
-		str	r3,[r1]								;set the bit -> turn off the current LED
-		mov	r3,r3,lsl #1						;shift up to next bit. P1.16 -> P1.17 etc.
-		str	r3,[r2]	   							;clear the bit -> turn on the LED
+		str r3, [r7]
+delay
+	;delay for about a second
+	ldr	R8,=0x1200000
+dloop	subs	R8,R8,#1
+	bne	dloop
 
-;this is where we stop the timer from making the interrupt request to the VIC
-;i.e. we 'acknowledge' the interrupt
+skipReset
+		str	r3,[r6]								;set the bit -> turn off the current LED
+		mov	r3,r3,lsl #1						;shift up to next bit. P1.16 -> P1.17 etc.
+		str	r3,[r7]	   							;clear the bit -> turn on the LED
+		
+	;this is where we stop the timer from making the interrupt request to the VIC
+	;i.e. we 'acknowledge' the interrupt
+jump
 	ldr	r0,=T0
 	mov	r1,#TimerResetTimer0Interrupt
 	str	r1,[r0,#IR]	   	; remove MR0 interrupt request from timer
 
-;here we stop the VIC from making the interrupt request to the CPU:
+	;here we stop the VIC from making the interrupt request to the CPU:
 	ldr	r0,=VIC
 	mov	r1,#0
 	str	r1,[r0,#VectAddr]	; reset VIC
