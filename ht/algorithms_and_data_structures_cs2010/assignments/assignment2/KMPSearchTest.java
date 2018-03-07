@@ -18,7 +18,7 @@ public class KMPSearchTest {
     String txt = "haystackneedlesgahsasneedlenaaghdhasudasdneeeedlewqhdqhwneedle";
     assertEquals("Checking index result if pattern is contained in text", 8,KMPSearch.searchFirst(txt,pat));
     assertEquals("Checking occurances count if pattern is contained in text",3,KMPSearch.searchAll(txt,pat));
-    assertFalse("Checking boolean result if pattern is contained in text",!KMPSearch.contains(txt,pat));
+    assertFalse("Checking boolean result if pattern is contained in text",KMPSearch.contains(txt,"needwhsu"));
   }
 
   @Test
@@ -30,16 +30,5 @@ public class KMPSearchTest {
     assertEquals("Checking occurances count if pattern is not contained in text",0,KMPSearch.searchAll(txt,pat));
     assertFalse("Checking boolean result if pattern is not contained in text",KMPSearch.contains(txt,pat));
   }
-
-  // ----------------------------------------------------------
-  /**
-   *  Main Method.
-   *  Use this main method to create the experiments needed to answer the experimental performance questions of this assignment.
-   * @throws FileNotFoundException 
-   *
-   */
-   public static void main(String[] args)
-   {
-   }
 }
 

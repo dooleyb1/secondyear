@@ -50,8 +50,6 @@ public class KMPSearch {
    * Standard radix of 256 
    */
   public static void createDFA(String pat){
-        if(pat.length()==0)
-        	return;
 
         int R = 256;
 
@@ -123,55 +121,4 @@ public class KMPSearch {
     else 
     	return count;
   }
-
-  public static void main(String[] args) throws IOException
-  {
-  	/*
-	String vehiclePat = "VehicleNo";
-	String vehicleNum1 = "16555";
-	String location = "HAMPTON PARK";
-	String vehicleNum2 = "9043409";
-    String jsonFile = new String(Files.readAllBytes(Paths.get("BUSES_SERVICE_0.json")));
-    int result;
-
-    System.out.println("\nGetting total number of vehicles...");
-    System.out.println(searchAll(jsonFile, vehiclePat));
-
-    System.out.println("\nChecking if VehicleID " + vehicleNum1 + " is present...");
-    System.out.println(contains(jsonFile, vehicleNum1));
-
-    System.out.println("\nLocating first record about location '" + location + "'...");
-    result = searchFirst(jsonFile, location);
-
-    if(result != -1)
-    	System.out.println("Found at index " + result);
-
-    else
-    	System.out.println("Location not found");
-	
-	System.out.println("\nChecking if VehicleID " + vehicleNum2 + " is present...");
-    System.out.println(contains(jsonFile, vehicleNum2));
-	*/
-
-    String pat = args[0];
-    String txt = args[1];
-
-    System.out.println("\nPattern entered = " + pat);
-    System.out.println("Text entered = " + txt);
-
-    System.out.println("\nChecking if text '" + txt + "' contains the pattern '" + pat + "'...\n");
-    boolean result = contains(txt, pat);
-
-    if(result){
-    	System.out.println("Pattern found!\n");
-    	System.out.println("First index pattern occurs at is at index " + searchFirst(txt, pat));
-    	System.out.println("Total number of occurances is " + searchAll(txt, pat));
-    }
-
-    else
-    	System.out.println("Pattern not found!\n\n");
-    
-   }
-   
-
 }

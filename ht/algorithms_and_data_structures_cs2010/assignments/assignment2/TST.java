@@ -52,7 +52,7 @@ public class TST<Value> {
   }
 
   /* a pointer to the start of your trie */
-  private TrieNode root = new TrieNode();
+  private TrieNode<Value> root = new TrieNode<Value>();
   /* initialise size to 0 */
   private int n = 0;
 
@@ -72,20 +72,19 @@ public class TST<Value> {
    * returns true if the word is in the trie, false otherwise
    */
   public boolean contains(String key) {
-    if(key == null)
-    	return false;
+    	if(key == "")
+        return false;
 
-    else
-    	//If key is found, return true
-    	return (get(key) != null);
+      else
+        return (get(key) != null);
   }
 
   /*
    * return the value stored in a node with a given key, returns null if word is not in trie
    */
   public Value get(String key) {
-    if(key == null || key.length() == 0)
-    	return null;
+    if(key == "")
+      return null;
 
     TrieNode<Value> x = new TrieNode<Value>();
     x = get(root, key, 0);
@@ -101,11 +100,10 @@ public class TST<Value> {
    * return the subtrie corresponding to given key
    */
   public TrieNode<Value> get(TrieNode<Value> x, String key, int d){
-  	char c;
-  	if(x == null || key.length() == 0)
-  		return null;
+  	if(x == null)
+      return null;
 
-  	
+    char c;
   	c = key.charAt(d);
 
   	//If character is less than node x's character, go left
@@ -129,14 +127,11 @@ public class TST<Value> {
    * stores the Value val in the node with the given key
    */
   public void put(String key, Value val) {
-  	if(key == null || key.length() == 0)
-  		return;
 
-  	else
-  		if(!contains(key))
-  			n++;
+  	if(!contains(key))
+  		n++;
 
-  		root = put(root, key, val, 0);
+  	root = put(root, key, val, 0);
   }
 
   private TrieNode<Value> put(TrieNode<Value> x, String key, Value val, int d){
@@ -172,8 +167,6 @@ public class TST<Value> {
    * that start with the prefix passes as a parameter, sorted in alphabetical order
    */
   public LinkedList<String> keysWithPrefix(String prefix) {
-    if(prefix == null)
-    	return null;
 
     LinkedList<String> linkedList = new LinkedList<String>();
     TrieNode<Value> x = get(root, prefix, 0);
@@ -188,178 +181,44 @@ public class TST<Value> {
 
     //Get remaining keys with prefix from x.mid onwards
     getKeysWithPrefix(x.mid, new StringBuilder(prefix), linkedList);
+    linkedList.add(prefix);
     return linkedList;
   }
 
   private void getKeysWithPrefix(TrieNode<Value> x, StringBuilder prefix, LinkedList<String> list){
-	if(x == null)
-		return;
+  	if(x == null)
+  		return;
 
-	//Search left for keys with prefix
-	getKeysWithPrefix(x.left, prefix, list);
+  	//Search left for keys with prefix
+  	getKeysWithPrefix(x.left, prefix, list);
 
-	//If node has a value, push prefix+c onto list
-	if(x.val != null)
-		list.add(prefix.toString() + x.c);
+  	//If node has a value, push prefix+c onto list
+  	if(x.val != null)
+  		list.add(prefix.toString() + x.c);
 
-	//Search middle for keys containing prefix+c
-	getKeysWithPrefix(x.mid, prefix.append(x.c), list);
+  	//Search middle for keys containing prefix+c
+  	getKeysWithPrefix(x.mid, prefix.append(x.c), list);
 
-	//Remove c from end of prefix and search right
-	prefix.deleteCharAt(prefix.length()-1);
-	getKeysWithPrefix(x.right, prefix, list);
+  	//Remove c from end of prefix and search right
+  	prefix.deleteCharAt(prefix.length()-1);
+  	getKeysWithPrefix(x.right, prefix, list);
   }
 
-  /*
-   * Returns all the keys in TST in the form of a LinkedList
-   */
-  public LinkedList<String> getAllKeys(){
-  	LinkedList<String> list = new LinkedList<String>();
-    getKeysWithPrefix(root, new StringBuilder(), list);
-    return list;
-  }
+   public static void main(String[] args) throws IOException, FileNotFoundException, ParseException{
 
-  public static void main(String[] args) throws IOException, FileNotFoundException, ParseException{
+    TST<Integer> trie = new TST<>();
+    LinkedList<String> keysWithPrefix = new LinkedList<String>();
+    trie.put("One", 1);
+    trie.put("Onetwo", 5);
+    trie.put("Onethree", 23);
+    trie.put("Onefour", 9);
+    trie.put("Onefive", 63);
 
-  	/*
-  	//Test using .txt input file (sheShells.txt)
-    TST<Integer> st = new TST<Integer>();
-    for (int i = 0; !StdIn.isEmpty(); i++) {
-        String key = StdIn.readString();
-        st.put(key, i);
-    }
+    keysWithPrefix = trie.keysWithPrefix("One");
 
-    LinkedList<String> keysList = st.getAllKeys();
-    // print results
-    if (st.size() < 100) {
-        StdOut.println("keys(\"\"):");
-        for (String key : keysList) {
-            StdOut.println(key + " " + st.get(key));
-        }
-        StdOut.println();
-    }
+    for(String s : keysWithPrefix)
+      System.out.println(s);
 
-    StdOut.println("keysWithPrefix(\"a\"):");
-    for (String s : st.keysWithPrefix("a"))
-        StdOut.println(s);
-    StdOut.println();
-    */
+   }
 
-    /*
-    //Test for reading .json files
-    JSONParser parser = new JSONParser();
-    Object obj = parser.parse(new FileReader("BUSES_SERVICE_0.json"));
-    JSONArray busArray = (JSONArray) obj;
-
-    TST<Integer> busTST = new TST<Integer>();
-    JSONObject tmp = new JSONObject();
-    
-
-    //Iterate over employee array
-    busArray.forEach( bus -> parseBusObject( (JSONObject) bus, busTST ) );
-
-    //Printing results to txt file
-    BufferedWriter writer = null;
-    //create a temporary file
-    String title = "bus_json_TST_keys_log";
-    File resultsFile = new File(title);
-
-    // This will output the full path where the file will be written to...
-    System.out.println(resultsFile.getCanonicalPath());
-    writer = new BufferedWriter(new FileWriter(resultsFile)); 
-
-    LinkedList<String> keysList = busTST.getAllKeys();
-    // print results
-    if (busTST.size() < 1000) {
-        //StdOut.println("keys(\"\"):");
-        writer.write("keys(\"\"):\n"); 
-        for (String key : keysList) {
-            //StdOut.println(key + " " + busTST.get(key));
-            writer.write(key + " " + busTST.get(key) + "\n"); 
-        }
-        writer.close();
-    }
-
-    StdOut.println("keysWithPrefix(\"DOWN\"):");
-    for (String s : busTST.keysWithPrefix("DOWN")){
-        StdOut.println(s);
-    	StdOut.println(busTST.get(s));
-    }
-    StdOut.println();
-	*/
-
-    /*
-    //Tests for google supplied .txt file
-    TST<Long> googleTST = new TST<Long>();
-    for (int i = 0; !StdIn.isEmpty(); i++) {
-        String key = StdIn.readString();
-        Long val = StdIn.readLong();
-        googleTST.put(key, val);
-    }
-
-    LinkedList<String> keysList = googleTST.getAllKeys();
-    // print results
-    //StdOut.println("keys(\"\"):");
-    for (String key : keysList) {
-    	//StdOut.println(key + " " + googleTST.get(key));
-    }
-    StdOut.println();
-
-    StdOut.println("Total words in file = " + googleTST.size());
-    StdOut.println("\nFrequency of word 'ALGORITHM' is " + googleTST.get("ALGORITHM"));
-    StdOut.println("\nIs 'EMOJI' present in the text file? " + googleTST.contains("EMOJI"));
-    StdOut.println("Is 'BLAH' present in the text file? " + googleTST.contains("EMOJI"));
-
-    StdOut.println("\nCounting keys with prefix 'TEST'...");
-    int n = 0;
-
-    for (String s : googleTST.keysWithPrefix("TEST"))
-        n++;
-    StdOut.println("Found " + n + " keys with prefix 'TEST'");
-
-    /*   
-    StdOut.println("keysWithPrefix(\"DOWN\"):");
-    for (String s : googleTST.keysWithPrefix("DOWN")){
-        StdOut.println(s);
-    	StdOut.println(busTST.get(s));
-    }
-    StdOut.println();
-    */
-  }
-
-  /*
-  private static void parseBusObject(JSONObject route, TST<Integer> busTST)
-    {
-    	/*
-        //Get employee object within list
-        System.out.println("VehicleNo = " + employee.get("VehicleNo"));
-        System.out.println("TripId = " + employee.get("TripId"));
-        System.out.println("RouteNo = " + employee.get("RouteNo"));
-        System.out.println("Direction = " + employee.get("Direction"));
-        System.out.println("Destination = " + employee.get("Destination"));
-        System.out.println("Pattern = " + employee.get("Pattern"));
-        System.out.println("Latitude = " + employee.get("Latitude"));
-        System.out.println("Longitude = " + employee.get("Longitude"));
-        System.out.println("RecordedTime = " + employee.get("RecordedTime"));
-        System.out.println("RouteMap = " + employee.get("RouteMap") + "\n\n");
-      
-        String dest = "";
-    	int val = 0;
-        dest = (String) route.get("Destination");
-    	//System.out.println("\n\nExtracted object with destination = " + dest);
-
-    	//If TST already contains a record for destination increment value (count)
-    	if(busTST.contains(dest)){
-    		//System.out.println("TST contains record of destination " + dest);
-    		val = busTST.get(dest);
-    		//System.out.println("Record count = " + val);
-    		busTST.put(dest, val+1);
-    		//System.out.println("Updating TST for " + dest + " with new count " + (val+1));
-    	}
-
-    	else{
-    		//System.out.println("\n\nNo record found in TST for destination " + dest);
-    		//System.out.println("Creating a record now...");
-    		busTST.put(dest, 1);
-    	}}*/
 }
