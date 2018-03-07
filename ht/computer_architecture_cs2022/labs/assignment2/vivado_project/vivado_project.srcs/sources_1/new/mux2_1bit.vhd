@@ -20,8 +20,8 @@ end mux2_1bit;
 architecture Behavioral of mux2_1bit is
 
 begin
-	mux_out <= 	In0 after 1ns when Sel = '1' else
-				In1 after 1ns when Sel = '0' else
+	mux_out <= 	In0 after 1ns when Sel = '0' else
+				In1 after 1ns when Sel = '1' else
 				'0' after 1ns;
 
 end Behavioral;

@@ -4,7 +4,8 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity function_unit is
-Port ( A : in std_logic_vector(15 downto 0);
+Port ( 
+	A : in std_logic_vector(15 downto 0);
 	B : in std_logic_vector(15 downto 0);
 	FS : in std_logic_vector(4 downto 0);
 	V : out std_logic;
@@ -22,7 +23,7 @@ architecture Behavioral of function_unit is
 	PORT(
 		A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit ALU
    		B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit ALU
-   		ALUctrl: in std_logic_vector(4 downto 0);       -- FS control input of the 16-bit ALU 
+   		Gsel: in std_logic_vector(3 downto 0);     -- FS control input of the 16-bit ALU 
 	   	F: out std_logic_vector(15 downto 0);      -- 16-bit data output of the 16-bit ALU 
 	   	V : out std_logic;                         -- Overflow Flag out
 	   	C : out std_logic;                         -- Carry Flag out
@@ -54,7 +55,7 @@ architecture Behavioral of function_unit is
 	END COMPONENT;
 	
 	-- signals
-	signal H_out, ALU_out, mux_out : STD_LOGIC_VECTOR(15 downto 0);
+	signal ALU_out, shifter_out, mux_out : STD_LOGIC_VECTOR(15 downto 0);
 	
 	begin
 	-- port maps ;-)
@@ -63,7 +64,10 @@ architecture Behavioral of function_unit is
 	alu: alu_16bit PORT MAP(
 		A => A,
 		B => B,
-		ALUctrl => FS,
+		Gsel(0) => FS(0),
+		Gsel(1) => FS(1),
+		Gsel(2) => FS(2),
+		Gsel(3) => FS(3),
 		F => ALU_out,
 		V => V,
 		C => C,
@@ -76,21 +80,16 @@ architecture Behavioral of function_unit is
 		FS => FS,
 		Lr => '0',
 		Ll => '0',
-		H => H_out
+		H => shifter_out
 	);
 	
 	-- 2 to 1 mux
 	MUXF: mux2_16bit PORT MAP(
 		In0 => ALU_out,
-		In1 => H_out,
+		In1 => shifter_out,
 		s => FS(4),
-		Z => mux_out
+		Z => F
 	);
-	
-	F <= mux_out;
-	N <= mux_out(15);
-	Z <= (mux_out(0) or mux_out(1) or mux_out(2) or mux_out(3) or mux_out(4) or mux_out(5)
-	       or mux_out(6) or mux_out(7) or mux_out(8) or mux_out(9) or mux_out(10)
-	       or mux_out(11) or mux_out(12) or mux_out(13) or mux_out(14) or mux_out(15));  
+  
 
 end Behavioral;
