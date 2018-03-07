@@ -46,7 +46,7 @@ public class TST<Value> {
 
   /* A Node in your trie containing a Value val and a pointer to its children */
   private static class TrieNode<Value> {
-		private char c;                        // character
+		    private char c;                        // character
         private TrieNode<Value> left, mid, right;  // left, middle, and right subtries
         private Value val;                     // value associated with string
   }
@@ -175,13 +175,16 @@ public class TST<Value> {
     if(x == null)
     	return linkedList;
 
-    //If x has a value, add prefix to linked list
-    if(x.val != null);
-    	//linkedList.push(prefix);
+     //If x contains the prefix, add prefix to linked list
+    Value val = get(prefix);
+
+    if(val != null)
+      linkedList.add(prefix);
+
 
     //Get remaining keys with prefix from x.mid onwards
     getKeysWithPrefix(x.mid, new StringBuilder(prefix), linkedList);
-    linkedList.add(prefix);
+
     return linkedList;
   }
 
@@ -214,7 +217,7 @@ public class TST<Value> {
     trie.put("Onefour", 9);
     trie.put("Onefive", 63);
 
-    keysWithPrefix = trie.keysWithPrefix("One");
+    keysWithPrefix = trie.keysWithPrefix("Onet");
 
     for(String s : keysWithPrefix)
       System.out.println(s);
