@@ -23,20 +23,26 @@ public class TST<Value> {
    * Bus Service Questions:
    * 1. How many unique destinations is there in the file?
    *    51.
+
    * 2. Is there a bus going to the destination "SOUTHSIDE"?
    *    No.
+
    * 3. How many records is there about the buses going to the destination beginning with "DOWN"?
    *    Only destination is 'DOWNTOWN' which has 70 records.
    *
    * Google Books Common Words Questions:
    * 4. How many words is there in the file?
    *    96765
+
    * 5. What is the frequency of the word "ALGORITHM"?
    *    14433021
+
    * 6. Is the word "EMOJI" present?
    *    No.
+
    * 7. IS the word "BLAH" present?
    *    No.
+   
    * 8. How many words are there that start with "TEST"?
    *    38
    */
@@ -206,22 +212,4 @@ public class TST<Value> {
   	prefix.deleteCharAt(prefix.length()-1);
   	getKeysWithPrefix(x.right, prefix, list);
   }
-
-   public static void main(String[] args) throws IOException, FileNotFoundException, ParseException{
-
-    TST<Integer> trie = new TST<>();
-    LinkedList<String> keysWithPrefix = new LinkedList<String>();
-    trie.put("One", 1);
-    trie.put("Onetwo", 5);
-    trie.put("Onethree", 23);
-    trie.put("Onefour", 9);
-    trie.put("Onefive", 63);
-
-    keysWithPrefix = trie.keysWithPrefix("Onet");
-
-    for(String s : keysWithPrefix)
-      System.out.println(s);
-
-   }
-
 }

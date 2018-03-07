@@ -10,23 +10,21 @@ public class KMPSearch {
    * Bus Service Questions:
    *
    * 1. How many total vehicles is there information on?
-   *    //TODO
+   *    987
    *
    * 2. Does the file contain information about the vehicle number 16555?
-   *    //TODO
+   *    Yes
    *
    * 3. Locate the first record about a bus heading to HAMPTON PARK
-   *    //TODO
+   *    Index 19774
    *
    * 4. Does the file contain information about the vehicle number 9043409?
-   *    //TODO
+   *    No
    */
 
    /*
     * Code partially taken from https://algs4.cs.princeton.edu/53substring/KMP.java.html
-    * and https://www.geeksforgeeks.org/searching-for-patterns-set-2-kmp-algorithm/ 
-    * however, rewritten as to gain an undertsanding of what was going on.
-    *
+    * and https://www.geeksforgeeks.org/searching-for-patterns-set-2-kmp-algorithm/
   /
 
    /*
