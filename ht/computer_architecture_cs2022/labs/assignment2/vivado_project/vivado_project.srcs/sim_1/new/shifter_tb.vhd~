@@ -33,7 +33,7 @@ begin
 
     -- instantiate component for test, connect ports to internal signals
     UUT: shifter
-    Port map(
+    Port Map(
         In0 => In0,
         In1 => In1,
         In2 => In2,
@@ -41,8 +41,8 @@ begin
         Z => Z
     );
     
-    simulation_process :process
-    begin
+simulation_process :process
+begin
         --Check that select 0 selects line 0 (1)
        	In0 <= '1';
        	In1 <= '0';

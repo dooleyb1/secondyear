@@ -113,80 +113,80 @@ begin
         write <= '0';
         data_in <= x"00FA";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "000";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0';
         
         --reg1
         data_in <= x"00FB";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "001";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0';        
  
         --reg2
         data_in <= x"00FC";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "010";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0';
         
         --reg3
         data_in <= x"00FD";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "011";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0';
         
         --reg4
         data_in <= x"00FE";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "100";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0';
         
         --reg5
         data_in <= x"00FF";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "101";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0';
  
         --reg6
         data_in <= x"0FAA";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "110";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0'; 
         
         --reg7
         data_in <= x"0FBB";
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "111";
-        wait for 5ns;        
+        wait for 1ns;        
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0'; 
         
         ------------------------------------------------------------------ 
@@ -197,11 +197,11 @@ begin
         
         --Test ABUS, select reg5 (0x00FF);  **
         a_address <= "101";
-        wait for 5ns;
+        wait for 1ns;
         
         --Test BBUS, select reg3 (0x00FD); **
         b_address <= "011";
-        wait for 5ns;   
+        wait for 1ns;   
         
         --Select B as source
         mb_select <= '0';
@@ -213,66 +213,66 @@ begin
         ------------------------------------------------------------------
         
         --Test FS = 00000 (F = A) = reg5 = 0x00FF; **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "00000";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 00001 (F = A+1) = reg5+1 = 0x00FF + 0x0001 = 0x0100    **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "00001";
-        wait for 80ns;
+        wait for 16ns;
 
         --Test FS = 00010 (F = A+B) = reg5+reg3 = 0x00FF + 0x00FD = 0x01FC   **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "00010";
-        wait for 80ns;        
+        wait for 16ns;        
 
         --Test FS = 00011 (F = A+B+1) = reg5+reg3+1 = 0x00FF + 0x00FD + 0x0001= 0x01FD   **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "00011";
-        wait for 80ns;
+        wait for 16ns;
       
         --Test FS = 00100 (F = A+B') = reg5+reg3' = 0x00FF + 0x00FD' (0xFF02) = 0x0001    **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "00100";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 00101 (F = A+B'+1) = reg5+reg3' = 0x00FF + 0x00FD' (0xFF02) + 1 = 0x0002   **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "00101";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 00110 (F = A-1) = reg5-1 = 0x00FF - 0x0001 = 0x00FE   **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "00110";
-        wait for 80ns;
+        wait for 16ns;
 
         --Test FS = 00111 (F = A) = reg5 = 0x00FF   **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "00111";
-        wait for 80ns;        
+        wait for 16ns;        
 
         --**LOGIC UNIT TESTS**--
         
         --Test FS = 01000 (F = A and B) = reg5 AND reg3 = 0x00FF and 0x00FD = 0x00FD    **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "01000";
-        wait for 80ns;
+        wait for 16ns;
       
         --Test FS = 01010 (F = A or B) = reg5 OR reg3 = 0x00FF or 0x00FD = 0x00FF    **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "01010";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 01100 (F = A xor B) = reg5 XOR reg3 = 0x00FF xor 0x00FD = 0x0002    **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "01100";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 01110 (F = not A) = NOT reg5= not 0x00FF = 0xFF00    **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "01110";
-        wait for 80ns;
+        wait for 16ns;
         
         ------------------------------------------------------------------
         
@@ -281,19 +281,19 @@ begin
         ------------------------------------------------------------------
         
         --Test FS = 10000 (F = B) = reg3 = 0x00FD    **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "10000";
-        wait for 80ns;
+        wait for 16ns;
       
         --Test FS = 10100 (F = sr B) = >> reg3 = >> 0x00FD = 0x007E    **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "10100";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 11000 (F = sl B) = << reg3 = << 0x00FD = 0x01FA    **
-        wait for 5ns;
+        wait for 1ns;
         FS <= "11000";
-        wait for 80ns;   
+        wait for 16ns;   
         
         ------------------------------------------------------------------
         
@@ -308,35 +308,35 @@ begin
         -- Load reg1 with 0xFFFF
         data_in <= x"FFFF";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "001";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0'; 
         
         -- Load reg2 with 0xFFFF
         data_in <= x"8000";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "010";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0'; 
         
         --Pass values to ABUS and BBUS
         a_address <= "001";
         b_address <= "010";
-        wait for 5ns;
+        wait for 1ns;
         
         --Pass B onto function unit
         mb_select <= '0';
-        wait for 5ns;
+        wait for 1ns;
         
         --F = A+B -> 0xFFFF + 0x8000 = 0x7FFF -> V = 1 **    
         FS <= "00010"; 
-        wait for 80ns;
+        wait for 16ns;
  
          --Test C Flag
           
@@ -345,35 +345,35 @@ begin
         -- Load reg1 with 0xF000
         data_in <= x"F000";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "001";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0'; 
         
         -- Load reg2 with 0x8000
         data_in <= x"8000";
         md_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         d_address <= "010";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0'; 
         
         --Pass values to ABUS and BBUS
         a_address <= "001";
         b_address <= "010";
-        wait for 5ns;
+        wait for 1ns;
         
         --Pass B onto function unit
         mb_select <= '0';
-        wait for 5ns;
+        wait for 1ns;
         
         --F = A+B -> 0xF000 + 0x8000 = 0x7000 -> C = 1 **    
         FS <= "00010"; 
-        wait for 80ns;
+        wait for 16ns;
  
        --Test N Flag
          
@@ -382,35 +382,35 @@ begin
        -- Load reg1 with 0xF405
        data_in <= x"F405";
        md_select <= '1';
-       wait for 5ns;
+       wait for 1ns;
        d_address <= "001";
-       wait for 5ns;
+       wait for 1ns;
        write <= '1';
-       wait for 5ns;
+       wait for 1ns;
        write <= '0'; 
        
        -- Load reg2 with 0x00BC
        data_in <= x"00BC";
        md_select <= '1';
-       wait for 5ns;
+       wait for 1ns;
        d_address <= "010";
-       wait for 5ns;
+       wait for 1ns;
        write <= '1';
-       wait for 5ns;
+       wait for 1ns;
        write <= '0'; 
        
        --Pass values to ABUS and BBUS
        a_address <= "001";
        b_address <= "010";
-       wait for 5ns;
+       wait for 1ns;
        
        --Pass B onto function unit
        mb_select <= '0';
-       wait for 5ns;
+       wait for 1ns;
        
        --F = A+B -> 0xF405 + 0x00BC = 0xF4C1 -> N = 1 **  
        FS <= "00010"; 
-       wait for 80ns;
+       wait for 16ns;
 
        --Test Z Flag
          
@@ -419,54 +419,54 @@ begin
        -- Load reg1 with 0x0000
        data_in <= x"0000";
        md_select <= '1';
-       wait for 5ns;
+       wait for 1ns;
        d_address <= "001";
-       wait for 5ns;
+       wait for 1ns;
        write <= '1';
-       wait for 5ns;
+       wait for 1ns;
        write <= '0'; 
        
        -- Load reg2 with 0x0000
        data_in <= x"0000";
        md_select <= '1';
-       wait for 5ns;
+       wait for 1ns;
        d_address <= "010";
-       wait for 5ns;
+       wait for 1ns;
        write <= '1';
-       wait for 5ns;
+       wait for 1ns;
        write <= '0'; 
        
        --Pass values to ABUS and BBUS
        a_address <= "001";
        b_address <= "010";
-       wait for 5ns;
+       wait for 1ns;
        
        --Pass B onto function unit
        mb_select <= '0';
-       wait for 5ns;
+       wait for 1ns;
        
        --F = A+B -> 0x0000 + 0x0000 = 0x0000 -> Z = 1 **
        FS <= "00010"; 
-       wait for 80ns;
+       wait for 16ns;
         
         --** REGISTER TRANSFER TEST **-- 
         
         --Transfer contents of A to reg4
-        wait for 5ns;
+        wait for 1ns;
         --Select reg0 as A
         a_address <= "000";
-        wait for 5ns;
+        wait for 1ns;
         --F=A (0x00FA)
         FS <= "00000";
-        wait for 80ns;
+        wait for 16ns;
         --Select F=A as data source
         md_select <= '0';
-        wait for 5ns;
+        wait for 1ns;
         --Select reg4("100") as data destination
         d_address <= "100";
-        wait for 5ns;
+        wait for 1ns;
         write <= '1';
-        wait for 5ns;
+        wait for 1ns;
         write <= '0';
         
         ------------------------------------------------------------------
@@ -478,10 +478,10 @@ begin
         --Pass constant 0x0F72 through MUXB --> B= 0x07F2
         constant_in <= x"0F72";
         mb_select <= '1';
-        wait for 5ns;
+        wait for 1ns;
         --Change FS = A + B --> 0x00FA + 0x0F72 = 0x106C
         FS <= "00010";
-        wait for 80ns;
+        wait for 16ns;
         
      wait;           
      end process;

@@ -70,7 +70,7 @@ begin
 
     -- instantiate component for test, connect ports to internal signals
     UUT: datapath
-    Port map(
+    Port Map(
         data_in => data_in,
 		constant_in => constant_in,
 		a_address => a_address,

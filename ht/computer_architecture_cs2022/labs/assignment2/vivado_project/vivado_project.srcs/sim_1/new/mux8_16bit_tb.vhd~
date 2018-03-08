@@ -57,6 +57,7 @@ begin
     
 simulation_process :process
 begin
+		--Give inputs unique values
         In0 <= x"00AA";
         In1 <= x"00BB";
         In2 <= x"00CC";

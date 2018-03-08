@@ -1,18 +1,6 @@
-
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity alu_tb is
 --  Port ( );
@@ -22,35 +10,36 @@ architecture Behavioral of alu_tb is
     -- declare component to test
     component alu is
         Port ( 
-        Cin : in std_logic;
-        A: in std_logic;
-        B: in std_logic;
-        S0: in std_logic;
-        S1: in std_logic;
-        S2: in std_logic;
-        G: out std_logic;
-        Cout : out std_logic);
+		    Cin : in std_logic;
+		    A: in std_logic;
+		    B: in std_logic;
+		    S0: in std_logic;
+		    S1: in std_logic;
+		    S2: in std_logic;
+		    G: out std_logic;
+		    Cout : out std_logic
+        );
     end component;
     
     -- signals for tests (initialise to 0)
         
-        --inputs
-        signal A : std_logic := '0';
-        signal B : std_logic := '0';
-        signal Cin : std_logic := '0'; 
-        signal S0 : std_logic := '0'; 
-        signal S1 : std_logic := '0'; 
-        signal S2 : std_logic := '0';
+    --inputs
+    signal A : std_logic := '0';
+    signal B : std_logic := '0';
+    signal Cin : std_logic := '0'; 
+    signal S0 : std_logic := '0'; 
+    signal S1 : std_logic := '0'; 
+    signal S2 : std_logic := '0';
         
-        --outputs
-        signal Cout : std_logic := '0';
-        signal G : std_logic := '0';  
+    --outputs
+    signal Cout : std_logic := '0';
+    signal G : std_logic := '0';  
         
 begin
 
     -- instantiate component for test, connect ports to internal signals
     UUT: alu
-    Port map(
+    Port Map(
         A => A,
         B => B,
         Cin => Cin,
@@ -61,8 +50,8 @@ begin
         G => G
     );
     
-    simulation_process :process
-    begin
+simulation_process :process
+begin
         --Test all zeros
        	A <= '0';
        	B <= '0';

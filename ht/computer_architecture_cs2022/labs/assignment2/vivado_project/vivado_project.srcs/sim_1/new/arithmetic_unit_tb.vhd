@@ -55,7 +55,7 @@ begin
        	Cin <= '0';
        	S0 <= '0';
        	S1 <= '0';
-        wait for 10ns;
+        wait for 2ns;
         
         --Test F=A+1 -> Z = '0', Cout = '1' **
         A <= '1';
@@ -63,7 +63,7 @@ begin
         Cin <= '1';
         S0 <= '0';
         S1 <= '0';
-        wait for 10ns;
+        wait for 2ns;
         
         --Test F=A+B -> Z = '0', Cout = '1' **
         A <= '1';
@@ -71,7 +71,7 @@ begin
         Cin <= '0';
         S0 <= '1';
         S1 <= '0';
-        wait for 10ns;
+        wait for 2ns;
         
         --Test F=A+B+1 -> Z = '1', Cout = '1' **
         A <= '1';
@@ -79,7 +79,7 @@ begin
         Cin <= '1';
         S0 <= '1';
         S1 <= '0';
-        wait for 10ns;
+        wait for 2ns;
         
         --Test F=A+B' -> Z = '1', Cout = '0' **
         A <= '1';
@@ -87,7 +87,7 @@ begin
         Cin <= '0';
         S0 <= '0';
         S1 <= '1';
-        wait for 10ns;
+        wait for 2ns;
         
         --Test F=A+B'+1 -> Z = '0', Cout = '1'  **
         A <= '1';
@@ -95,7 +95,7 @@ begin
         Cin <= '1';
         S0 <= '0';
         S1 <= '1';
-        wait for 10ns;
+        wait for 2ns;
 
         --Test F=A-1 -> Z = '0', Cout = '1' **
         A <= '1';
@@ -103,7 +103,7 @@ begin
         Cin <= '0';
         S0 <= '1';
         S1 <= '1';
-        wait for 10ns;
+        wait for 2ns;
         
         --Test F=A -> Z = '1', Cout = '1' **
         A <= '1';
@@ -111,7 +111,7 @@ begin
         Cin <= '1';
         S0 <= '1';
         S1 <= '1';
-        wait for 10ns;
+        wait for 2ns;
         
         --Test all 0's -> Z = '0', Cout = '0' **
         A <= '0';
@@ -119,7 +119,7 @@ begin
         Cin <= '0';
         S0 <= '0';
         S1 <= '0';
-        wait for 10ns;
+        wait for 2ns;
         
      end process;
     

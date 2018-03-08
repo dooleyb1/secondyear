@@ -56,35 +56,35 @@ simulation_process :process
 begin
         --Select line 0 (Q0 should be high/1)
         des <= "000";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 1 (Q1 should be high/1)
         des <= "001";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 2 (Q2 should be high/1)
         des <= "010";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 3 (Q3 should be high/1)
         des <= "011";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 4 (Q4 should be high/1)
         des <= "100";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 5 (Q5 should be high/1)
         des <= "101";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 6 (Q6 should be high/1)
         des <= "110";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 7 (Q7 should be high/1)
         des <= "111";
-        wait for 5ns;
+        wait for 1ns;
         
      end process;
     

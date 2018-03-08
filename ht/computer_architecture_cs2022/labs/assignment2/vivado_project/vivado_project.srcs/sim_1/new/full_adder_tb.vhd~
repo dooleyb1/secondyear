@@ -32,7 +32,7 @@ begin
 
     -- instantiate component for test, connect ports to internal signals
     UUT: full_adder
-    Port map(
+    Port Map(
         A => A,
         B => B,
         Cin => Cin,
@@ -40,8 +40,8 @@ begin
         Cout => Cout
     );
     
-    simulation_process :process
-    begin
+simulation_process :process
+begin
         --Check that 0+0+ Cin(1)... S=1, Cout=0
         wait for 5ns;
        	A <= '0';

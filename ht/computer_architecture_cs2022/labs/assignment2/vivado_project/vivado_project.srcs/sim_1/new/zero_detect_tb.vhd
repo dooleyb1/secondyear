@@ -38,19 +38,19 @@ begin
         wait for 10ns;
         --Test non zero value
         I <= x"00FF";
-        wait for 5ns;
+        wait for 1ns;
         
         --Test zero value
         I <= x"0000";
-        wait for 5ns;
+        wait for 1ns;
         
         --Test non zero value
         I <= x"AFFF";
-        wait for 5ns;
+        wait for 1ns;
         
         --Test zero value
         I <= x"0000";
-        wait for 5ns;
+        wait for 1ns;
         
      wait;
      end process;

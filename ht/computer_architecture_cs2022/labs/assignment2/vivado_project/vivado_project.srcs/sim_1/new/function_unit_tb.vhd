@@ -59,74 +59,74 @@ begin
         FS <= "00000";
        	A <= x"0001";
        	B <= x"0041";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 00001 (F=A+1) = 0x0007 **
         FS <= "00001";
        	A <= x"0006";
        	B <= x"0027";
-        wait for 80ns;
+        wait for 16ns;
         
        --Test FS = 00010 (F=A+B) = 0x0005   **
       	FS <= "00010";
        	A <= x"0002";
        	B <= x"0003";
-        wait for 80ns;
+        wait for 16ns;
         
        --Test FS = 00011 (F=A+B+1) = 0x000A    **
        	FS <= "00011";
        	A <= x"0007";
        	B <= x"0002";
-        wait for 80ns;
+        wait for 16ns;
         
        --Test FS = 00100 (F=A+B') = 0x0003    **
        	FS <= "00100";
        	A <= x"0001";
        	B <= x"FFFD";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 00101 (F=A+B'+1) = 0x0004    **
        	FS <= "00101";
        	A <= x"0001";
        	B <= x"FFFD";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 00101 (F=A-1) = 0x0002    **
        	FS <= "00110";
        	A <= x"0003";
        	B <= x"0128";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 00111 (F=A) = 0x00F7    **
        	FS <= "00111";
        	A <= x"00F7";
        	B <= x"0128";
-        wait for 80ns;
+        wait for 16ns;
         
         --**LOGIC**--
         --Test FS = 01000 (F=A^B)= 0x0429    **
         FS <= "01000";
        	A <= x"0569";
        	B <= x"0EB9";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 01010 (F=AorB) = 0xFF7F    **
         FS <= "01010";
        	A <= x"FE63";
        	B <= x"013D";
-        wait for 80ns;
+        wait for 16ns;
         
        --Test FS = 01100 (F=AxorB) = 0xD736   **
       	FS <= "01100";
        	A <= x"B59D";
        	B <= x"62AB";
-        wait for 80ns;
+        wait for 16ns;
         
        --Test FS = 01110 (F=A') = 0xFFF4    **
        	FS <= "01110";
        	A <= x"000B";
        	B <= x"0002";
-        wait for 80ns;
+        wait for 16ns;
         
     	--**SHIFTER TESTS**--
         
@@ -134,19 +134,19 @@ begin
         FS <= "10000";
         A <= x"0001";
         B <= x"0041";
-        wait for 80ns;
+        wait for 16ns;
         
         --Test FS = 10100 (F= sr B) = 0x0013    **
         FS <= "10100";
         A <= x"0006";
         B <= x"0027";
-        wait for 80ns;
+        wait for 16ns;
         
        --Test FS = 11000 (F= sl B) = 0xC556    **
         FS <= "11000";
         A <= x"0002";
         B <= x"62AB";
-        wait for 80ns;        
+        wait for 16ns;        
      wait;
 end process;
     

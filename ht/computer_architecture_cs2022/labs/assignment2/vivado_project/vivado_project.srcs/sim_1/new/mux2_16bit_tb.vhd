@@ -45,11 +45,11 @@ begin
         
         --Select line 0 (data input) and send 0x00FF to output line Z
         s <= '0';
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 1 (register data) and send 0x00AA to output line Z
         s <= '1';
-        wait for 5ns;
+        wait for 1ns;
      
      end process;
     

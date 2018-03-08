@@ -1,5 +1,5 @@
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.std_logic_1164.ALL;
 
 entity mux2_1bit_tb is
 --  Port ( );
@@ -9,8 +9,8 @@ architecture Behavioral of mux2_1bit_tb is
     -- declare component to test
     component mux2_1bit is
         Port(
-                Sel, In0, In1 : in STD_LOGIC;
-                mux_out : out STD_LOGIC
+                Sel, In0, In1 : in std_logic;
+                mux_out : out std_logic
         );
     end component;
     
@@ -25,15 +25,15 @@ begin
 
     -- instantiate component for test, connect ports to internal signals
     UUT: mux2_1bit
-    Port map(
+    Port Map(
         Sel => Sel,
         In0 => In0,
         In1 => In1,
         mux_out => mux_out
     );
     
-    simulation_process :process
-    begin
+simulation_process :process
+begin
         
         In0 <= '0';
         In1 <= '1';

@@ -80,73 +80,73 @@ begin
         
         --reg0
         d_sel <= "000";
-        wait for 5ns;
+        wait for 1ns;
         data <= x"00FA";
-        wait for 5ns;
+        wait for 1ns;
         
         --reg1
         d_sel <= "001";
-        wait for 5ns;
+        wait for 1ns;
         data <= x"00FB";
-        wait for 5ns;
+        wait for 1ns;
         
         --reg2 = 0x00FC    
         d_sel <= "010";
-        wait for 5ns;
+        wait for 1ns;
         data <= x"00FC";
-        wait for 5ns;
+        wait for 1ns;
         
         --reg3
         d_sel <= "011";
-        wait for 5ns;
+        wait for 1ns;
         data <= x"00FD";
-        wait for 5ns;
+        wait for 1ns;
 
         --reg4
         d_sel <= "100";
-        wait for 5ns;
+        wait for 1ns;
         data <= x"00FE";
-        wait for 5ns;
+        wait for 1ns;
         
         --reg5
         d_sel <= "101";
-        wait for 5ns;
+        wait for 1ns;
         data <= x"00FF";
-        wait for 5ns;
+        wait for 1ns;
         
         --reg6
         d_sel <= "110";
-        wait for 5ns;
+        wait for 1ns;
         data <= x"0FAA";
-        wait for 5ns;
+        wait for 1ns;
         
         --reg7
         d_sel <= "111";
-        wait for 5ns;
+        wait for 1ns;
         data <= x"0FBB";
-        wait for 5ns;
+        wait for 1ns;
         d_sel <= "000";
         
         
         --Aout should be reg0 = 0x00FA and Bout should be reg1 = 0x00FB
         a_sel <= "000";
         b_sel <= "001";
-        wait for 5ns;
+        wait for 1ns;
         
        --Aout should be reg2 = 0x00FC and Bout should be reg3 = 0x00FD
        a_sel <= "010";
        b_sel <= "011";
-       wait for 5ns;
+       wait for 1ns;
     
        --Aout should be reg4 = 0x00FE and Bout should be reg5 = 0x00FF
        a_sel <= "100";
        b_sel <= "101";
-       wait for 5ns;
+       wait for 1ns;
 
        --Aout should be reg6 = 0x0FAA and Bout should be reg7 = 0x0FBB
        a_sel <= "110";
        b_sel <= "111";
-       wait for 5ns;
+       wait for 1ns;
         
      wait;   
      end process;

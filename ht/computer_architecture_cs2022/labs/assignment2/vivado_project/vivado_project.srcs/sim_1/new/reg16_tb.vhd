@@ -44,25 +44,25 @@ begin
         D <= x"000A";
         load <= '0';
         d_sel <= '0';
-        wait for 5ns;
+        wait for 1ns;
         
         --check that when load is 1 & d_sel is 0 output stays the same
         d_sel <= '1';
-        wait for 5ns;
+        wait for 1ns;
         
         --check that when load is 1 output changes to 0x000A
         load <= '1';
-        wait for 5ns;
+        wait for 1ns;
 
         --check that when load is 0 remains as 0x000A
         D <= x"00FF";
         load <= '0';
-        wait for 5ns;
+        wait for 1ns;
         
         --check that when load is 1 output changes to 0x00FF
         load <= '1';
         d_sel <= '1';
-        wait for 5ns;
+        wait for 1ns;
 
      end process;
     

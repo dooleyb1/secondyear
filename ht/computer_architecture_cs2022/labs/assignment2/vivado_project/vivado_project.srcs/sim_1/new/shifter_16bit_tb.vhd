@@ -46,19 +46,19 @@ begin
         --Check that incorrect FS code doesn't perform shift (H = 0x0000)
        	B <= x"0FF0";
        	FS <= "01100";
-        wait for 5ns;
+        wait for 1ns;
         
         --Check that FS = 10000 passes B (H = 0x0FF0)
         FS <= "10000";
-        wait for 5ns;
+        wait for 1ns;
         
         --Check that LSR works correctly... 0x0FF0 >> = 0x7F8
        	FS <= "10100";
-        wait for 5ns;
+        wait for 1ns;
         
         --Check that LSL works correctly... 0x0FF0 << = 0x1FE0
        	FS <= "11000";
-        wait for 5ns;
+        wait for 1ns;
         
      end process;
     
