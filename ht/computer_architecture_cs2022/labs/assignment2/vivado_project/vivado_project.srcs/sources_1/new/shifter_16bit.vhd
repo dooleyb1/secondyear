@@ -33,7 +33,7 @@ begin
 	Hsel<= "00" when FS = "10000" else
 		   "01" when FS = "10100" else 
 		   "10" when FS = "11000" else 
-		   "11" after 5 ns; 
+		   "11" after 1ns; 
 	 
 	-- Port Mapping Shifter 16 times
 	S0: shifter Port Map(

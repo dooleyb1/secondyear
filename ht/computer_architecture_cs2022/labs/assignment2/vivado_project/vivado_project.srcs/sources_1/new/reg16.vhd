@@ -16,7 +16,7 @@ architecture Behavioral of reg16 is
 
 begin
 
-	Q <= D after 5 ns when load='1' and d_sel='1';
+	Q <= D after 1ns when load='1' and d_sel='1';
 	
 end Behavioral;
 

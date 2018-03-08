@@ -16,8 +16,10 @@ end logic_unit;
 architecture Behavioral of logic_unit is
 
 begin
+
     G <= (A and B) after 1ns when S1='0' and S0='0' else
     (A or B) after 1ns when S1='0' and S0='1' else
     (A xor B) after 1ns when S1='1' and S0='0' else
     (not A) after 1ns when S1='1' and S0='1'; 
+    
 end Behavioral;

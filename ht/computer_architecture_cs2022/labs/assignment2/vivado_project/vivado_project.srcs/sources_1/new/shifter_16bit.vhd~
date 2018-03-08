@@ -41,7 +41,8 @@ begin
 			In1 => B(1),
 			In2 => Ll,
 			s => Hsel,
-			Z => H(0));
+			Z => H(0)
+		);
 		
 	S1: shifter Port Map(
 			In0 => B(1),
