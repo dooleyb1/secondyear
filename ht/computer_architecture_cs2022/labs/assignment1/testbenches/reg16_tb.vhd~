@@ -72,6 +72,6 @@ begin
         load <= '1';
         wait for 5ns;
 
-end process;
+     end process;
     
 end Behavioral;

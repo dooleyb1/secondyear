@@ -1,5 +1,35 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 02/14/2018 12:22:16 PM
+-- Design Name: 
+-- Module Name: register_file_tb - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
 
 entity register_file_tb is
 --  Port ( );
@@ -7,10 +37,8 @@ end register_file_tb;
 
 architecture Behavioral of register_file_tb is
     -- declare component to test
-    
     component register_file is
-        Port ( 
-        	src_s0 : in std_logic;
+        Port ( src_s0 : in std_logic;
             src_s1 : in std_logic;
             src_s2 : in std_logic;    
             des_A0 : in std_logic;
@@ -26,44 +54,40 @@ architecture Behavioral of register_file_tb is
             reg4 : out std_logic_vector(15 downto 0);
             reg5 : out std_logic_vector(15 downto 0);
             reg6 : out std_logic_vector(15 downto 0);
-            reg7 : out std_logic_vector(15 downto 0)
-        );
+            reg7 : out std_logic_vector(15 downto 0));
     end component;
     
     -- signals for tests (initialise to 0)
-    
-    --inputs    
-    signal src_s0 : std_logic := '0';
-    signal src_s1 : std_logic := '0';
-    signal src_s2 : std_logic := '0';
         
-    signal des_A0 : std_logic := '0';
-    signal des_A1 : std_logic := '0';
-    signal des_A2 : std_logic := '0'; 
+        signal src_s0 : std_logic := '0';
+        signal src_s1 : std_logic := '0';
+        signal src_s2 : std_logic := '0';
         
-    signal Clk : std_logic := '0';
-    signal data_src : std_logic := '0';
-    
-    --outputs
-    signal data : std_logic_vector(15 downto 0):= x"0000";
+        signal des_A0 : std_logic := '0';
+        signal des_A1 : std_logic := '0';
+        signal des_A2 : std_logic := '0'; 
         
-    signal reg0 : std_logic_vector(15 downto 0):= x"0000";
-    signal reg1 : std_logic_vector(15 downto 0):= x"0000";
-    signal reg2 : std_logic_vector(15 downto 0):= x"0000";
-    signal reg3 : std_logic_vector(15 downto 0):= x"0000";
-    signal reg4 : std_logic_vector(15 downto 0):= x"0000";
-    signal reg5 : std_logic_vector(15 downto 0):= x"0000";
-    signal reg6 : std_logic_vector(15 downto 0):= x"0000";
-    signal reg7 : std_logic_vector(15 downto 0):= x"0000";
+        signal Clk : std_logic := '0';
         
-    -- Clock period
-    constant clk_period : time := 10 ns;
-
+        signal data_src : std_logic := '0';
+        signal data : std_logic_vector(15 downto 0):= x"0000";
+        
+        signal reg0 : std_logic_vector(15 downto 0):= x"0000";
+        signal reg1 : std_logic_vector(15 downto 0):= x"0000";
+        signal reg2 : std_logic_vector(15 downto 0):= x"0000";
+        signal reg3 : std_logic_vector(15 downto 0):= x"0000";
+        signal reg4 : std_logic_vector(15 downto 0):= x"0000";
+        signal reg5 : std_logic_vector(15 downto 0):= x"0000";
+        signal reg6 : std_logic_vector(15 downto 0):= x"0000";
+        signal reg7 : std_logic_vector(15 downto 0):= x"0000";
+        
+         -- Clock period
+         constant clk_period : time := 10 ns;
 begin
 
     -- instantiate component for test, connect ports to internal signals
     UUT: register_file
-    Port Map(
+    Port map(
         src_s0 => src_s0,
         src_s1 => src_s1,
         src_s2 => src_s2,
@@ -83,19 +107,17 @@ begin
         reg7 => reg7
     );
     
--- Clock 
-clk_process :process
-begin
+    -- Clock 
+    clk_process :process
+    begin
          clk <= '0';
          wait for clk_period/2;
          clk <= '1';
          wait for clk_period/2;
-         
-end process;
+    end process;
     
-simulation_process :process
-begin
-        
+    simulation_process :process
+    begin
         --load 0x000A into reg0
         des_A0 <= '0';
         des_A1 <= '0';
@@ -171,6 +193,6 @@ begin
         data_src <= '1';
         wait for 10ns;
         
-end process;
+     end process;
     
 end Behavioral;
