@@ -39,7 +39,7 @@ architecture Behavioral of decoder_3to8_tb is
 begin
     -- instantiate component for test, connect ports to internal signals
     UUT: decoder_3to8
-    Port Map(
+    Port map(
        	des => des,
         Q0 => Q0,
         Q1 => Q1,

@@ -1,7 +1,18 @@
 
+----------------------------------------------------------------------------------
+
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
 
 entity alu_16bit_tb is
 --  Port ( );
@@ -11,49 +22,48 @@ architecture Behavioral of alu_16bit_tb is
     -- declare component to test
     component alu_16bit is
         Port ( 
-		    A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit alu
-		    B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit alu
-		    Gsel: in std_logic_vector(3 downto 0);     -- GSel control input of the 16-bit alu 
-		    F: out std_logic_vector(15 downto 0);      -- 16-bit data result of the 16-bit alu 
-		    V : out std_logic;                         -- Overflow Flag out
-		    C : out std_logic;                         -- Carry Flag out
-		    N : out std_logic;                         -- Negative Flag out
-		    Z : out std_logic
-		);
+        A: in std_logic_vector(15 downto 0);       -- A data input of the 16-bit alu
+        B: in std_logic_vector(15 downto 0);       -- B data input of the 16-bit alu
+        Gsel: in std_logic_vector(3 downto 0);        -- GSel control input of the 16-bit alu 
+        F: out std_logic_vector(15 downto 0);      -- 16-bit data result of the 16-bit alu 
+        V : out std_logic;                         -- Overflow Flag out
+        C : out std_logic;                         -- Carry Flag out
+        N : out std_logic;                        
+        Z : out std_logic);
     end component;
     
     -- signals for tests (initialise to 0)
         
-    --inputs
-    signal A : std_logic_vector(15 downto 0) := x"0000";
-    signal B : std_logic_vector(15 downto 0) := x"0000";
-    signal Gsel : std_logic_vector(3 downto 0) := "0000";
+        --inputs
+        signal A : std_logic_vector(15 downto 0) := x"0000";
+        signal B : std_logic_vector(15 downto 0) := x"0000";
+        signal Gsel : std_logic_vector(3 downto 0) := "0000";
         
-    --outputs
-    signal F : std_logic_vector(15 downto 0) := x"0000";
-    signal V : std_logic := '0';
-    signal C : std_logic := '0';
-    signal N : std_logic := '0';
-    signal Z : std_logic := '0';  
+        --outputs
+        signal F : std_logic_vector(15 downto 0) := x"0000";
+        signal V : std_logic := '0';
+        signal C : std_logic := '0';
+        signal N : std_logic := '0';
+        signal Z : std_logic := '0';  
         
 begin
 
     -- instantiate component for test, connect ports to internal signals
     UUT: alu_16bit
-		Port Map(
-		    A => A,
-		    B => B,
-		    Gsel => Gsel,
-		    F => F,
-		    V => V,
-		    C => C,
-		    N => N,
-		    Z => Z
-		);
-
-simulation_process :process
-begin
-    --Test all of the Opcodes for an ALU
+    Port map(
+        A => A,
+        B => B,
+        Gsel => Gsel,
+        F => F,
+        V => V,
+        C => C,
+        N => N,
+        Z => Z
+    );
+    
+    simulation_process :process
+    begin
+    	--Test all of the Opcodes for an ALU
     
     --**ARITHMETIC UNIT TESTS**--
     

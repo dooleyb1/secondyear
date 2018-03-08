@@ -1,35 +1,5 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 02/14/2018 12:22:16 PM
--- Design Name: 
--- Module Name: reg16_tb - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity datapath_tb is
 --  Port ( );
@@ -39,47 +9,51 @@ architecture Behavioral of datapath_tb is
     -- declare component to test
     component datapath is
         Port ( 
-        data_in : in std_logic_vector(15 downto 0);
-		constant_in : in std_logic_vector(15 downto 0);
-		a_address : in std_logic_vector(2 downto 0);
-		b_address : in std_logic_vector(2 downto 0);
-		d_address : in std_logic_vector(2 downto 0);
-		FS : in std_logic_vector(4 downto 0);
-		write : in std_logic;
-		v_out : out std_logic;
-		c_out : out std_logic;
-		n_out : out std_logic;
-		z_out : out std_logic;
-		mb_select : in std_logic;
-		md_select : in std_logic;
-		bus_a_adr_out : out std_logic_vector(15 downto 0);
-		bus_b_data_out : out std_logic_vector(15 downto 0);
-	    reg_0_data_out : out std_logic_vector(15 downto 0);
-        reg_1_data_out : out std_logic_vector(15 downto 0);
-        reg_2_data_out : out std_logic_vector(15 downto 0);
-        reg_3_data_out : out std_logic_vector(15 downto 0);
-        reg_4_data_out : out std_logic_vector(15 downto 0);
-        reg_5_data_out : out std_logic_vector(15 downto 0);
-        reg_6_data_out : out std_logic_vector(15 downto 0);
-        reg_7_data_out : out std_logic_vector(15 downto 0);
-        f_data_out : out std_logic_vector(15 downto 0));             
+		    data_in : in std_logic_vector(15 downto 0);
+			constant_in : in std_logic_vector(15 downto 0);
+			a_address : in std_logic_vector(2 downto 0);
+			b_address : in std_logic_vector(2 downto 0);
+			d_address : in std_logic_vector(2 downto 0);
+			FS : in std_logic_vector(4 downto 0);
+			mb_select : in std_logic;
+			md_select : in std_logic;
+			write : in std_logic;
+			v_out : out std_logic;
+			c_out : out std_logic;
+			n_out : out std_logic;
+			z_out : out std_logic;
+			bus_a_adr_out : out std_logic_vector(15 downto 0);
+			bus_b_data_out : out std_logic_vector(15 downto 0);
+			reg_0_data_out : out std_logic_vector(15 downto 0);
+		    reg_1_data_out : out std_logic_vector(15 downto 0);
+		    reg_2_data_out : out std_logic_vector(15 downto 0);
+		    reg_3_data_out : out std_logic_vector(15 downto 0);
+		    reg_4_data_out : out std_logic_vector(15 downto 0);
+		    reg_5_data_out : out std_logic_vector(15 downto 0);
+		    reg_6_data_out : out std_logic_vector(15 downto 0);
+		    reg_7_data_out : out std_logic_vector(15 downto 0);
+		    f_data_out : out std_logic_vector(15 downto 0)
+		);             
     end component;
     
     
-            -- signals for tests (initialise to 0) 
+    -- signals for tests (initialise to 0)
+    --inputs 
     signal data_in : std_logic_vector(15 downto 0) := x"0000";
     signal constant_in : std_logic_vector(15 downto 0) := x"0000";
     signal a_address : std_logic_vector(2 downto 0) := "000";
     signal b_address : std_logic_vector(2 downto 0) := "000";
     signal d_address : std_logic_vector(2 downto 0) := "000";
     signal FS : std_logic_vector(4 downto 0) := "00000";
-    signal write : std_logic := '0'; 
+    signal write : std_logic := '0';
+    signal mb_select : std_logic := '0'; 
+    signal md_select : std_logic := '0'; 
+    
+    --outputs
     signal v_out : std_logic := '0'; 
     signal c_out : std_logic := '0'; 
     signal n_out : std_logic := '0'; 
     signal z_out : std_logic := '0'; 
-    signal mb_select : std_logic := '0'; 
-    signal md_select : std_logic := '0'; 
     signal bus_a_adr_out : std_logic_vector(15 downto 0) := x"0000";
     signal bus_b_data_out : std_logic_vector(15 downto 0) := x"0000";
     signal reg_0_data_out : std_logic_vector(15 downto 0) := x"0000";
@@ -96,7 +70,7 @@ begin
 
     -- instantiate component for test, connect ports to internal signals
     UUT: datapath
-    Port map(
+    Port Map(
         data_in => data_in,
 		constant_in => constant_in,
 		a_address => a_address,
@@ -123,8 +97,8 @@ begin
 		f_data_out => f_data_out
     );
     
-    simulation_process :process
-    begin
+simulation_process :process
+begin
     	--Test for the entire datapath as a whole
         
         ------------------------------------------------------------------

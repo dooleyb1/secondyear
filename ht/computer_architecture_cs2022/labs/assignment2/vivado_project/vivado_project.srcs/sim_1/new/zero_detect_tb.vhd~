@@ -32,8 +32,8 @@ begin
         O => O
     );
     
-simulation_process :process
-begin
+    simulation_process :process
+    begin
         
         wait for 10ns;
         --Test non zero value

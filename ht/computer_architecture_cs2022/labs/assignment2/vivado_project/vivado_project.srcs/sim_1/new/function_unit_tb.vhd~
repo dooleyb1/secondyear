@@ -38,7 +38,7 @@ begin
 
     -- instantiate component for test, connect ports to internal signals
     UUT: function_unit
-    Port Map(
+    Port map(
         A => A,
         B => B,
         FS => FS,
@@ -49,8 +49,8 @@ begin
         Z => Z
     );
     
-simulation_process :process
-begin
+    simulation_process :process
+    begin
     	--Test all of the Opcodes for an ALU
     	
     	--**ARITHMETIC UNIT TESTS**--
@@ -148,6 +148,6 @@ begin
         B <= x"62AB";
         wait for 80ns;        
      wait;
-end process;
+     end process;
     
 end Behavioral;
