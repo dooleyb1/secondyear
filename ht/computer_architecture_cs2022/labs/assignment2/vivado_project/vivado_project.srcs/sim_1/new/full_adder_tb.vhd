@@ -42,44 +42,44 @@ begin
     
 simulation_process :process
 begin
-        --Check that 0+0+ Cin(1)... S=1, Cout=0
+        --Check that 0+0+ Cin(1)... S=1, Cout=0 **
         wait for 1ns;
        	A <= '0';
        	B <= '0';
        	Cin <= '1';
         wait for 1ns;
         
-        --Check that 0+1+ Cin(0)... S=1, Cout=0
+        --Check that 0+1+ Cin(0)... S=1, Cout=0 **
        	A <= '0';
        	B <= '1';
        	Cin <= '0';
         wait for 1ns;
         
-       --Check that 0+1+ Cin(1)... S=0, Cout=1
+       --Check that 0+1+ Cin(1)... S=0, Cout=1 **
        	A <= '0';
        	B <= '1';
        	Cin <= '1';
         wait for 1ns;
         
-        --Check that 1+0+ Cin(0)... S=1, Cout=0
+        --Check that 1+0+ Cin(0)... S=1, Cout=0 **
        	A <= '1';
        	B <= '0';
        	Cin <= '0';
         wait for 1ns;
         
-        --Check that 1+0+ Cin(1)... S=0, Cout=1
+        --Check that 1+0+ Cin(1)... S=0, Cout=1 **
        	A <= '1';
        	B <= '0';
        	Cin <= '1';
         wait for 1ns;
         
-        --Check that 1+1+ Cin(0)... S=0, Cout=1
+        --Check that 1+1+ Cin(0)... S=0, Cout=1 **
        	A <= '1';
        	B <= '1';
        	Cin <= '0';
         wait for 1ns;
         
-        --Check that 1+1+ Cin(1)... S=1, Cout=1
+        --Check that 1+1+ Cin(1)... S=1, Cout=1 **
        	A <= '1';
        	B <= '1';
        	Cin <= '1';

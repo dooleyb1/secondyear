@@ -27,7 +27,7 @@ architecture Behavioral of function_unit_tb is
     signal B : std_logic_vector(15 downto 0) := x"0000";
     signal FS : std_logic_vector(4 downto 0) := "00000";
     
-    -outputs
+    --outputs
     signal F : std_logic_vector(15 downto 0) := x"0000";  
     signal V : std_logic := '0';
     signal C : std_logic := '0';

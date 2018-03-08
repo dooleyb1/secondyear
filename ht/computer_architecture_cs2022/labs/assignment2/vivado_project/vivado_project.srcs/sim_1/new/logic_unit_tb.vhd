@@ -47,28 +47,28 @@ begin
        	B <= '1';
        	S0 <= '0';
        	S1 <= '0';
-        wait for 2ns;
+        wait for 1ns;
         
         --Test F= A or B -> G = '1'
         A <= '1';
         B <= '0';
         S0 <= '1';
         S1 <= '0';
-        wait for 2ns;
+        wait for 1ns;
         
         --Test F= A xor B -> G = '1'
         A <= '0';
         B <= '1';
         S0 <= '0';
         S1 <= '1';
-        wait for 2ns;
+        wait for 1ns;
         
         --Test F= not A -> G = '0'
         A <= '1';
         B <= '0';
         S0 <= '1';
         S1 <= '1';
-        wait for 2ns;
+        wait for 1ns;
         
      end process;
     

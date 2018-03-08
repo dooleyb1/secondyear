@@ -35,7 +35,6 @@ begin
 simulation_process :process
 begin
         
-        wait for 10ns;
         --Test non zero value
         I <= x"00FF";
         wait for 1ns;

@@ -80,7 +80,7 @@ begin
         S2 <= '0';
         wait for 2ns;
         
-        --Test G=A+B-> G = '0', Cout = '1' **
+        --Test G=A+B-> G = '0', Cout = '1' 
         A <= '1';
         B <= '1';
         Cin <= '0';
@@ -89,7 +89,7 @@ begin
         S2 <= '0';
         wait for 2ns;
 
-        --Test G=A+B+1-> G = '1', Cout = '1' **
+        --Test G=A+B+1-> G = '1', Cout = '1' 
         A <= '1';
         B <= '1';
         Cin <= '1';
@@ -98,7 +98,7 @@ begin
         S2 <= '0';
         wait for 2ns;
         
-        --Test G=A+B' -> G = '0', Cout = '1'  **
+        --Test G=A+B' -> G = '0', Cout = '1'  
         A <= '1';
         B <= '0';
         Cin <= '0';
@@ -107,7 +107,7 @@ begin
         S2 <= '0';
         wait for 2ns;        
  
-        --Test G=A+B'+1 -> G = '1', Cout = '1' **
+        --Test G=A+B'+1 -> G = '1', Cout = '1' 
         A <= '1';
         B <= '0';
         Cin <= '1';
@@ -116,7 +116,7 @@ begin
         S2 <= '0';
         wait for 2ns;
         
-        --Test G=A-1 -> G = '0', Cout = '1' **
+        --Test G=A-1 -> G = '0', Cout = '1' 
         A <= '1';
         B <= '0';
         Cin <= '0';
@@ -125,7 +125,7 @@ begin
         S2 <= '0';
         wait for 2ns;
         
-        --Test G=A-> G = '0', Cout = '1' ???
+        --Test G=A-> G = '0', Cout = '1' 
         A <= '0';
         B <= '0';
         Cin <= '1';
@@ -136,7 +136,7 @@ begin
         
         --**LOGIC TESTS**--
         
-        --Test G= A and B -> G = '1', Cout = '0' **
+        --Test G= A and B -> G = '1', Cout = '0' 
         A <= '1';
         B <= '1';
         Cin <= '0';
@@ -145,7 +145,7 @@ begin
         S2 <= '1';
         wait for 2ns;        
  
-        --Test G=A or B -> G = '1', Cout = '0' **
+        --Test G=A or B -> G = '1', Cout = '0' 
         A <= '1';
         B <= '0';
         Cin <= '0';
@@ -154,7 +154,7 @@ begin
         S2 <= '1';
         wait for 2ns;
         
-        --Test G=A xor B -> G = '1', Cout = '1' **
+        --Test G=A xor B -> G = '1', Cout = '1' 
         A <= '1';
         B <= '0';
         Cin <= '0';
@@ -163,7 +163,7 @@ begin
         S2 <= '1';
         wait for 2ns;
        
-        --Test G= not A -> G = '0', Cout = '1' ** 
+        --Test G= not A -> G = '0', Cout = '1' *
         A <= '1';
         B <= '0';
         Cin <= '0';

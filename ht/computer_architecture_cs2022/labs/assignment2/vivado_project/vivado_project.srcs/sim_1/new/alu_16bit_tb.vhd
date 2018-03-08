@@ -93,7 +93,7 @@ begin
    B <= x"FFFD";
    wait for 16ns;
     
-   --Test Gsel = 0101 (F=A-1) = 0x0002 **
+   --Test Gsel = 0101 (F=A-1) = 0x0002 ??
    Gsel <= "0110";
    A <= x"0003";
    B <= x"0128";

@@ -19,10 +19,7 @@ architecture Behavioral of full_adder is
     
 begin
 	 --Break up into sub-sections
-	 S0 <= (A xor B) after 1ns;
-	 S1 <= (Cin and S0) after 1ns;
-	 S2 <= (A and B) after 1ns;
-	 S <= (S0 xor Cin) after 1ns;
-	 Cout <= (S1 or S2) after 1ns;
+	 S <= (A xor B) xor Cin after 1ns;
+     Cout <= ((A xor B) and Cin) or (A and B) after 1ns;
 
 end Behavioral;

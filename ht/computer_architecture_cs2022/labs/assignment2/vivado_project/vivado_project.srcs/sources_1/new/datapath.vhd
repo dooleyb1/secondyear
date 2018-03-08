@@ -20,15 +20,15 @@ entity datapath is
 		md_select : in std_logic;
 		bus_a_adr_out : out std_logic_vector(15 downto 0);
 		bus_b_data_out : out std_logic_vector(15 downto 0);
-		f_data_out : out std_logic_vector(15 downto 0)
-		--reg_0_data_out : out std_logic_vector(15 downto 0);
-		--reg_1_data_out : out std_logic_vector(15 downto 0);
-		--reg_2_data_out : out std_logic_vector(15 downto 0);
-		--reg_3_data_out : out std_logic_vector(15 downto 0);
-		--reg_4_data_out : out std_logic_vector(15 downto 0);
-		--reg_5_data_out : out std_logic_vector(15 downto 0);
-		--reg_6_data_out : out std_logic_vector(15 downto 0);
-		--reg_7_data_out : out std_logic_vector(15 downto 0)
+		f_data_out : out std_logic_vector(15 downto 0);
+		reg_0_data_out : out std_logic_vector(15 downto 0);
+		reg_1_data_out : out std_logic_vector(15 downto 0);
+		reg_2_data_out : out std_logic_vector(15 downto 0);
+		reg_3_data_out : out std_logic_vector(15 downto 0);
+		reg_4_data_out : out std_logic_vector(15 downto 0);
+		reg_5_data_out : out std_logic_vector(15 downto 0);
+		reg_6_data_out : out std_logic_vector(15 downto 0);
+		reg_7_data_out : out std_logic_vector(15 downto 0)
 	);
 end datapath;
 

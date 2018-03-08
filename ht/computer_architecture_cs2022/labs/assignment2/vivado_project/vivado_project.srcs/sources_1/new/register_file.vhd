@@ -71,7 +71,7 @@ architecture Behavioral of register_file is
 	
 	-- signals
 	signal 	d_out0, d_out1, d_out2, d_out3, d_out4, d_out5, d_out6 ,d_out7   : std_logic;
-	signal reg0_out, reg1_out, reg2_out, reg3_out, reg4_out, reg5_out
+	signal reg0_out, reg1_out, reg2_out, reg3_out, reg4_out, reg5_out,
 			 reg6_out, reg7_out : std_logic_vector(15 downto 0);
 		
 	begin
