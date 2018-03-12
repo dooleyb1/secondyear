@@ -1,4 +1,4 @@
-library IEEE;
+klibrary IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 -- 16-bit ALU 
 entity 16_bit_ALU is
