@@ -1,6 +1,5 @@
 package osp.Threads;
 import java.util.Vector;
-import java.util.Comparator;
 import java.util.Enumeration;
 import osp.Utilities.*;
 import osp.IFLModules.*;
@@ -10,8 +9,7 @@ import osp.Hardware.*;
 import osp.Devices.*;
 import osp.Memory.*;
 import osp.Resources.*;
-import java.util.AbstractQueue;
-import java.util.PriorityQueue;
+import java.util.Random;
 
 /*
    This class is responsible for actions related to threads, including
@@ -19,26 +17,11 @@ import java.util.PriorityQueue;
 
    @OSPProject Threads
 */
-public class ThreadCB extends IflThreadCB {
-    //private static GenericList readyQueue;
-	 private static class PriorityComparator implements Comparator<ThreadCB> {
-
-    	@Override
-    	public int compare(ThreadCB x, ThreadCB y){
-
-    		if(x.getPriority() < y.getPriority())
-    			return 1;
-
-    		if(x.getPriority() > y.getPriority())
-    			return -1;
-    		
-    		return 0;
-
-    	}
-    }
-
-    private static Comparator<ThreadCB> comparator = new PriorityComparator();
-    private static PriorityQueue<ThreadCB> readyQueue;
+public class ThreadCB extends IflThreadCB 
+{
+    private static GenericList highPriorityQueue;
+    private static GenericList mediumPriorityQueue;
+    private static GenericList lowPriorityQueue;
 
     public ThreadCB(){
 	
@@ -49,9 +32,11 @@ public class ThreadCB extends IflThreadCB {
     //Initialises queue and other variables
     public static void init(){
 
-    	//readyQueue = new GenericList();
-		readyQueue = new PriorityQueue<>(100, comparator);
-   		System.out.println("This is running a PREEMPTIVE PRIORITY THREAD SCHEDULER!");
+		highPriorityQueue = new GenericList();
+		mediumPriorityQueue = new GenericList();
+		lowPriorityQueue = new GenericList();
+
+   		System.out.println("This is running a PREEMPTIVE PRIORITY THREAD SCHEDULER (low,med,high)");
     }
 
      
@@ -76,9 +61,13 @@ public class ThreadCB extends IflThreadCB {
 		//Otherwise create new thread
 		ThreadCB newThread = new ThreadCB();
 		MyOut.print("osp.Threads.ThreadCB", "Created "+newThread);
-			
+		
+		Random rn = new Random();
+		int priorityVal = rn.nextInt(2+1);
+		//System.out.println("Priority Generated = " + priorityVal);
+
 		// Setup the new thread.
-		newThread.setPriority(task.getPriority());
+		newThread.setPriority(priorityVal);
 		newThread.setStatus(ThreadReady);
 		newThread.setTask(task);
 		
@@ -91,7 +80,20 @@ public class ThreadCB extends IflThreadCB {
 		}
 		
 		//Add this new thread to the queue
-		readyQueue.add(newThread);
+		switch(priorityVal){
+			case 0:
+				highPriorityQueue.append(newThread);
+				break;
+			case 1: 
+				mediumPriorityQueue.append(newThread);
+				break;
+			case 2:
+				lowPriorityQueue.append(newThread);
+				break;
+			default:
+				lowPriorityQueue.append(newThread);
+				break;
+		}
 	
 		MyOut.print("osp.Threads.ThreadCB","Successfully added "+newThread+" to "+task);
 		
@@ -111,8 +113,19 @@ public class ThreadCB extends IflThreadCB {
         //Get status of thread and act accordingly
 		switch (getStatus()){
 	        case ThreadReady:
-			    // Delete thread from ready queue.
-			    readyQueue.remove(this);
+			    switch(this.getPriority()){
+	        		case 0:
+	        			highPriorityQueue.remove(this);
+	        			break;
+	        		case 1:
+	        			mediumPriorityQueue.remove(this);
+	        			break;
+	        		case 2:
+	        			lowPriorityQueue.remove(this);
+	        			break;
+	        		default:
+	        			System.out.println("Unable to find task in any of the queues");
+	        	}
 		    	break;
 
 			case ThreadRunning:
@@ -187,7 +200,20 @@ public class ThreadCB extends IflThreadCB {
 		else if (this.getStatus() >= ThreadWaiting)
 		    setStatus(this.getStatus()+1);
 		
-		readyQueue.remove(this);
+		switch(this.getPriority()){
+	        case 0:
+	        	highPriorityQueue.remove(this);
+	       		break;
+	   		case 1:
+	   			mediumPriorityQueue.remove(this);
+	       		break;
+	        case 2:
+	        	lowPriorityQueue.remove(this);
+	        	break;
+	        default:
+	        	System.out.println("Unable to find task in any of the queues");
+	     }
+
 		event.addThread(this);
 
 		// Dispatch a new thread.
@@ -214,8 +240,21 @@ public class ThreadCB extends IflThreadCB {
 	    	setStatus(getStatus()-1);
 
         // Put the thread on the ready queue, if appropriate
-		if (getStatus() == ThreadReady)
-	    	readyQueue.add(this);
+		if (getStatus() == ThreadReady){
+			switch(this.getPriority()){
+		        case 0:
+		        	highPriorityQueue.append(this);
+		       		break;
+		   		case 1:
+		   			mediumPriorityQueue.append(this);
+		       		break;
+		        case 2:
+		        	lowPriorityQueue.append(this);
+		        	break;
+		        default:
+		        	System.out.println("Unable to find task in any of the queues");
+	     	}
+		}
 
 		dispatch();
     }
@@ -248,11 +287,35 @@ public class ThreadCB extends IflThreadCB {
 
 		    //Set status to ready (but waiting)
 		    runningThread.setStatus(ThreadReady);
-		    readyQueue.add(runningThread);
+
+		    switch(runningThread.getPriority()){
+		        case 0:
+		        	highPriorityQueue.append(runningThread);
+		       		break;
+		   		case 1:
+		   			mediumPriorityQueue.append(runningThread);
+		       		break;
+		        case 2:
+		        	lowPriorityQueue.append(runningThread);
+		        	break;
+		        default:
+		        	System.out.println("Unable to find task in any of the queues");
+	     	}
 		}
 
         // Select thread from ready queue.
-        threadToDispatch = (ThreadCB)readyQueue.poll();
+        if(!highPriorityQueue.isEmpty())
+        	 threadToDispatch = (ThreadCB)highPriorityQueue.removeHead();
+        
+        else if(!mediumPriorityQueue.isEmpty())
+        	threadToDispatch = (ThreadCB)mediumPriorityQueue.removeHead();
+
+        else if(!lowPriorityQueue.isEmpty())
+        	threadToDispatch = (ThreadCB)lowPriorityQueue.removeHead();
+
+        else
+        	threadToDispatch = null;
+
 
         if(threadToDispatch == null) {
 
@@ -284,7 +347,5 @@ public class ThreadCB extends IflThreadCB {
     public static void atWarning(){
     }
 }
-
-
 
 
