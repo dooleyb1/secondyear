@@ -27,10 +27,18 @@ Timer0ChannelNumber	equ	4						; UM, Table 63
 Timer0Mask			equ	1<<Timer0ChannelNumber	; UM, Table 63
 IRQslot_en			equ	5						; UM, Table 58
 
+;LED Pin Rotation Labels
 IO1DIR	EQU	0xE0028018
 IO1SET	EQU	0xE0028014
 IO1CLR	EQU	0xE002801C
 IO1PIN	EQU	0xE0028010
+
+;7Seg Rotation Labels
+IODIR0	EQU	0xE0028008
+IOSET0	EQU	0xE0028004
+IOCLR0	EQU	0xE002800C
+IOPIN0  EQU 0xE0028000
+PINSEL0 EQU 0xE002C000
 
 	AREA	InitialisationAndMain, CODE, READONLY
 	IMPORT	main
@@ -40,21 +48,26 @@ IO1PIN	EQU	0xE0028010
 	EXPORT	start
 start
 
-; initialisation code
+; LED Pin Rotation Initialisation
 	ldr	r1,=IO1DIR			
 	ldr	r2,=0x000f0000							;select P1.19--P1.16
 	str	r2,[r1]									;make them outputs
-	ldr	r6,=IO1SET								;R6 = OFF
+	ldr	r6,=IO1SET								;R6 = Set
 	str	r2,[r6]									;set them to turn the LEDs off
-	ldr	r7,=IO1CLR								;R7 = ON
+	ldr	r7,=IO1CLR								;R7 = Clearr
 
 	ldr	r5,=0x00100000							; end when the mask reaches this value
 	ldr	r3,=0x00010000							; start with P1.16.
 	str	r3,[r7]	   								; clear the bit -> turn on the LED
 
-	ldr r1, =ticks
-	ldr r0, =0
-	str ro, [r1]
+; 7Seg Rotation Initialisation
+	ldr r0,=PINSEL0
+	ldr r1,=0x00000000
+	str r1,[R0]									;Select port 0 as GPIO mode
+	ldr r0,=IODIR0
+	ldr r1,=0X0000FF00							;Mask to select P.08 as start pin of output
+	str r1, [R0]			
+
 
 
 ; Initialise the VIC
@@ -91,13 +104,14 @@ start
 	str	r1,[r0,#TCR]
 
 
-xloop	
+;aloop = Pin LED Rotation 
+aloop	
 	
 	ldr r1, =ticks
 	ldr r0, [r1]								; r0 = ticks
 
 	cmp r0, #200								; if(ticks == 200)
-	blt xloop									; {
+	blt aloop									; {
 	str	r3,[r6]									;   set the bit -> turn off the LED
 	mov	r3,r3,lsl #1							;   shift up to next bit. P1.16 -> P1.17 etc.
 	
@@ -109,9 +123,46 @@ skip
 	str	r3,[r7]		   							;   clear the bit -> turn on the LED
 	ldr r0, =0									;   reset ticks
 	str r0, [r1]								;   store new ticks val
-	b	xloop  									; 	}
+	b	aloop  									; 	}
 												; }
 												; main program execution will never drop below the statement above.
+
+
+;bloop = 7 Seg Display Rotation
+bloop
+
+	ldr r8, =array								;array.address
+	ldr r9, =arrayN
+	ldr r9, [r9]								;arraySize
+
+while
+	ldr r1, =counter
+	ldr r0, [r1]								
+	cmp r0, r9									;while(counter<=arraySize)
+	bge reset
+	
+	ldr r2,=IOSET0								;Set address
+	ldr r4, [r8, r0, lsl #2]					;value = valAt(array.startAddress+offset)
+	str r4,[r2]									;Make pin = value
+
+delay
+	;delay for about a half second
+	ldr	r1,=0x2000000
+dloop	subs	r1,r1,#1
+	bne	dloop
+	
+	ldr r2,=IOCLR0								;Clear address
+	str r4, [r2]								;Clear pins
+	add r0, r0, #1								;counter++
+	str r0, [r1]								; store counter
+	b 	bloop
+
+reset	
+	ldr r1, =counter
+	ldr r0, =0									;counter = 0
+	str r0, [r1]
+	b 	bloop
+
 
 	AREA	InterruptStuff, CODE, READONLY
 irqhan	sub	lr,lr,#4
@@ -119,9 +170,9 @@ irqhan	sub	lr,lr,#4
 
 	ldr r1,=ticks
 	ldr r0, [r1]
+	cmp r0, #200
 	add r0, r0, #1
 	str r0, [r1]	
-	
 		
 	;this is where we stop the timer from making the interrupt request to the VIC
 	;i.e. we 'acknowledge' the interrupt
@@ -143,5 +194,7 @@ irqhan	sub	lr,lr,#4
 	AREA	Stuff, DATA, READWRITE
 
 ticks DCD 0
-
+counter DCD 0
+arrayN	DCD	16
+array	DCD	0x00003F00,0x00000600,0x00005B00,0x00004F00,0x00006600,0x00006D00,0x00007D00,0x00000700,0x00007F00,0x00006F00,0x00007700,0x00007C00,0x00003900,0x00005E00,0x00007900, 0x00007100
 	END

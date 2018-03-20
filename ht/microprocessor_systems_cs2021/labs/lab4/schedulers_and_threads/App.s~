@@ -44,17 +44,13 @@ start
 	ldr	r1,=IO1DIR			
 	ldr	r2,=0x000f0000							;select P1.19--P1.16
 	str	r2,[r1]									;make them outputs
-	ldr	r6,=IO1SET								;R6 = OFF
+	ldr	r6,=IO1SET								;R6 = Set
 	str	r2,[r6]									;set them to turn the LEDs off
-	ldr	r7,=IO1CLR								;R7 = ON
+	ldr	r7,=IO1CLR								;R7 = Clearr
 
 	ldr	r5,=0x00100000							; end when the mask reaches this value
 	ldr	r3,=0x00010000							; start with P1.16.
 	str	r3,[r7]	   								; clear the bit -> turn on the LED
-
-	ldr r1, =ticks
-	ldr r0, =0
-	str ro, [r1]
 
 
 ; Initialise the VIC
@@ -91,36 +87,28 @@ start
 	str	r1,[r0,#TCR]
 
 
-xloop	
-	
-	ldr r1, =ticks
-	ldr r0, [r1]								; r0 = ticks
-
-	cmp r0, #200								; if(ticks == 200)
-	blt xloop									; {
-	str	r3,[r6]									;   set the bit -> turn off the LED
-	mov	r3,r3,lsl #1							;   shift up to next bit. P1.16 -> P1.17 etc.
-	
-	cmp	r3,r5									;	if(currentPin == endMask)
-	bne skip									;	{
-	ldr	r3,=0x00010000							; 		reset to P1.16
-												;	}
-skip
-	str	r3,[r7]		   							;   clear the bit -> turn on the LED
-	ldr r0, =0									;   reset ticks
-	str r0, [r1]								;   store new ticks val
-	b	xloop  									; 	}
-												; }
-												; main program execution will never drop below the statement above.
+xloop	b	xloop  								;branch always
+												;main program execution will never drop below the statement above.
 
 	AREA	InterruptStuff, CODE, READONLY
 irqhan	sub	lr,lr,#4
 	stmfd	sp!,{r0-r1,lr}						; the lr will be restored to the pc
 
-	ldr r1,=ticks
-	ldr r0, [r1]
-	add r0, r0, #1
-	str r0, [r1]	
+	cmp r4, #200								; if(count < oneSecond)
+	blt keepCounting
+		
+	cmp	r3,	r5									; if(curPin > lastPin
+	blt nextLED							;
+	ldr	r3,=0x00010000							; Reset to P1.16
+	str r3, [r7]
+	B keepCounting
+
+nextLED
+	str	r3,[r6]									;set the bit -> turn off the current LED
+	mov	r3,r3,lsl #1							;shift up to next bit. P1.16 -> P1.17 etc.
+	str	r3,[r7]	   								;clear the bit -> turn on the LED
+	
+keepCounting
 	
 		
 	;this is where we stop the timer from making the interrupt request to the VIC
@@ -141,7 +129,5 @@ irqhan	sub	lr,lr,#4
 	AREA	Subroutines, CODE, READONLY
 
 	AREA	Stuff, DATA, READWRITE
-
-ticks DCD 0
 
 	END
