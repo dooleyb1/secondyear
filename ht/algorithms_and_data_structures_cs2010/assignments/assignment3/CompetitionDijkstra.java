@@ -15,6 +15,18 @@
  * This class implements the competition using Dijkstra's algorithm
  */
 
+/* How to read file...
+ *
+ * Line 1 = Total Number of Intersections (Vertices)  - integer
+ * Line 2 = Total Number of Streets (Edges) - integer
+ * 
+ * Line 3,4...k = Each line is a street (E) connecting two intersections (V)
+ *          
+ *      int v1 = line.nextInteger()            //Intersection (Vertice) One
+ *      int v1 = line.nextInteger()            //Intersection (Vertice) One
+ *      double dist = line.nextDouble()        //Street (Edge) Length
+ */
+
 public class CompetitionDijkstra {
 
     /**
@@ -23,7 +35,10 @@ public class CompetitionDijkstra {
     */
     CompetitionDijkstra (String filename, int sA, int sB, int sC){
 
-       //TODO
+       //All in m/minute
+       int speedA = sA; 
+       int speedB = sB;
+       int speedC = sC;
     }
 
 
