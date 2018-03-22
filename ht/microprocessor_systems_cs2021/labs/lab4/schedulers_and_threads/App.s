@@ -106,7 +106,7 @@ start
 
 ;aloop = Pin LED Rotation 
 aloop	
-	
+
 	ldr r1, =ticks
 	ldr r0, [r1]								; r0 = ticks
 
@@ -166,13 +166,23 @@ reset
 
 	AREA	InterruptStuff, CODE, READONLY
 irqhan	sub	lr,lr,#4
-	stmfd	sp!,{r0-r1,lr}						; the lr will be restored to the pc
 
-	ldr r1,=ticks
-	ldr r0, [r1]
-	cmp r0, #200
-	add r0, r0, #1
-	str r0, [r1]	
+	stmfd	sp!,{r0-r1}							; backup r0 and r1 before messing with them
+
+	ldr r0, = threads							;r0 = array of thread stack pointers
+	ldr r1, = threadIndex						
+	ldr r1, [r1]								;r1 = threadIndex
+	lsl r1, r1, #2								;offset
+	add r0, r0, r1								;r0 = space to push current registers
+
+	add r1, r0, #8					
+	stmfd r1!,{r2-12, lr}						;push r2-r13 and LR to stack
+	
+	ldmfd sp!,{r2-r3}							;load back r0 and r1 (into r2 and r3)
+	stmfd r0, {r2-r3}							;push r0 and r1 onto thread stack
+
+	;current thread registers are now saved onto the appropriate thread stack
+
 		
 	;this is where we stop the timer from making the interrupt request to the VIC
 	;i.e. we 'acknowledge' the interrupt
@@ -186,15 +196,59 @@ irqhan	sub	lr,lr,#4
 	mov	r1,#0
 	str	r1,[r0,#VectAddr]	; reset VIC
 
-	ldmfd	sp!,{r0-r1,pc}^	; return from interrupt, restoring pc from lr
-							; and also restoring the CPSR
+;change into system mode
+
+;go to next thread array and go to beginning
+	
+	ldr r0, =threads
+	ldr r1, =threadIndex
+	ldr r2, =threadNum
+
+	ldr r1,[r1]					;threadIndex
+	ldr r2,[r2]					;amountOfThreads
+	add r1, r1, #1				;threadIndex++
+
+	cmp r1, r2 					;if(threadIndex > amountOfThreads)
+	blt skipReset				;		threadIndex = 0
+	ldr r1, =0					;
+
+skipReset
+
+;changes to next stack pointer
+	
+	lsl r1, r1, #2				;offset
+	add r0, r0, r1 				;r0 is now the pointer to next thread stack
+	mov r1, r0
+
+	ldr r2, =13
+	ldr r4, [r0, r2, lsl #2]	;load the pc into r4
+
+	ldmfd r1!, {r2-r3}
+	stmfd sp!, {r2-r4}			;stores r0-r1 and the pc
+
+;adjust pointer to thread stack r2
+
+	add r0, r0, #8
+	ldmfd r0!, {r2-r12}			;load saved registers off the stack
+	ldmfd sp!, {r0-r1, pc}		;load the rest of the registers and change pc 		 
 
 	AREA	Subroutines, CODE, READONLY
 
 	AREA	Stuff, DATA, READWRITE
 
-ticks DCD 0
-counter DCD 0
+ticks 			DCD 0
+process 		DCD 0
+counter 		DCD 0
+
 arrayN	DCD	16
 array	DCD	0x00003F00,0x00000600,0x00005B00,0x00004F00,0x00006600,0x00006D00,0x00007D00,0x00000700,0x00007F00,0x00006F00,0x00007700,0x00007C00,0x00003900,0x00005E00,0x00007900, 0x00007100
-	END
+
+	
+thread0 DCD 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, thread0Start ;last element is the pc of the thread
+thread1 DCD 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, thread1Start 
+
+threadNum DCD 2
+	
+threadIndex DCD 0	
+	
+threads DCD thread0, thread1
