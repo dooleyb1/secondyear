@@ -47,26 +47,7 @@ PINSEL0 EQU 0xE002C000
 
 	EXPORT	start
 start
-
-; LED Pin Rotation Initialisation
-	ldr	r1,=IO1DIR			
-	ldr	r2,=0x000f0000							;select P1.19--P1.16
-	str	r2,[r1]									;make them outputs
-	ldr	r6,=IO1SET								;R6 = Set
-	str	r2,[r6]									;set them to turn the LEDs off
-	ldr	r7,=IO1CLR								;R7 = Clearr
-
-	ldr	r5,=0x00100000							; end when the mask reaches this value
-	ldr	r3,=0x00010000							; start with P1.16.
-	str	r3,[r7]	   								; clear the bit -> turn on the LED
-
-; 7Seg Rotation Initialisation
-	ldr r0,=PINSEL0
-	ldr r1,=0x00000000
-	str r1,[R0]									;Select port 0 as GPIO mode
-	ldr r0,=IODIR0
-	ldr r1,=0X0000FF00							;Mask to select P.08 as start pin of output
-	str r1, [R0]			
+			
 
 
 
@@ -103,6 +84,18 @@ start
 	mov	r1,#TimerCommandRun
 	str	r1,[r0,#TCR]
 
+thread0Start
+	; LED Pin Rotation Initialisation
+	ldr	r1,=IO1DIR			
+	ldr	r2,=0x000f0000							;select P1.19--P1.16
+	str	r2,[r1]									;make them outputs
+	ldr	r6,=IO1SET								;R6 = Set
+	str	r2,[r6]									;set them to turn the LEDs off
+	ldr	r7,=IO1CLR								;R7 = Clearr
+
+	ldr	r5,=0x00100000							; end when the mask reaches this value
+	ldr	r3,=0x00010000							; start with P1.16.
+	str	r3,[r7]	   								; clear the bit -> turn on the LED
 
 ;aloop = Pin LED Rotation 
 aloop	
@@ -127,6 +120,14 @@ skip
 												; }
 												; main program execution will never drop below the statement above.
 
+thread1Start
+	; 7Seg Rotation Initialisation
+	ldr r0,=PINSEL0
+	ldr r1,=0x00000000
+	str r1,[R0]									;Select port 0 as GPIO mode
+	ldr r0,=IODIR0
+	ldr r1,=0X0000FF00							;Mask to select P.08 as start pin of output
+	str r1, [R0]
 
 ;bloop = 7 Seg Display Rotation
 bloop
