@@ -1,12 +1,12 @@
 public class CompetitionTests {
 
-    @Test
+    //@Test
     public void testDijkstraConstructor() {
 
         //TODO
     }
 
-    @Test
+    //@Test
     public void testFWConstructor() {
         //TODO
     }
