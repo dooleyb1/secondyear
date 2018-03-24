@@ -253,7 +253,7 @@ public class Dijkstra2 {
             System.out.println("Node selected is Node " + currentNode.name);
 
             //Remove it from unsettled as we will now settle it
-            unsettledNodes.remove(currentNode);
+            removeNode(currentNode, unsettledNodes);
             System.out.println("Removing Node " + currentNode.name + " from unsettledNodes, will now attempt to settle...\n");
             currentNode.printAdjacentNodes();
 
@@ -267,7 +267,7 @@ public class Dijkstra2 {
 
 
                 //If the adjacent node hasn't already been settled
-                if (!settledNodes.contains(adjacentNode)) {
+                if (!alreadySettled(adjacentNode, settledNodes)) {
 
                     System.out.println("Node " + adjacentNode.name + " has not been settled, running tests...\n");
                     System.out.println("\n--------------------------------------------");
@@ -277,7 +277,6 @@ public class Dijkstra2 {
 
                     System.out.println("Adding Node " + adjacentNode.name + " to unsettledNodes queue...\n");
                     unsettledNodes.add(adjacentNode);
-
                 }
             }
             System.out.println("EXITING LARGE FOR LOOP!!!! All adjacent pairs to node " + currentNode.name + " settled\n");
@@ -285,6 +284,26 @@ public class Dijkstra2 {
         }
         System.out.println("All nodes successfully settled");
         return graph;
+    }
+
+    private static void removeNode(Node nodeToRemove, Set<Node> unsettledNodes){
+
+        for(Node node : unsettledNodes){
+            if(node.name.equals(nodeToRemove.name))
+                unsettledNodes.remove(node);
+        }
+    }
+
+    
+
+    private static boolean alreadySettled(Node testNode, Set<Node> settledNodes){
+
+        for(Node node : settledNodes){
+            if(node.name.equals(testNode.name))
+                return true;
+        }
+        return false;
+
     }
 
     private static Node getLowestDistanceNode(Set <Node> unsettledNodes) {
