@@ -111,7 +111,7 @@ public class CompetitionDijkstra {
         }
 
         //competitionGraph.printAdjacentNodes();
-        Node testNode = competitionGraph.getNode("1");
+        Node testNode = competitionGraph.getNode("4");
         competitionGraph = calculateShortestPathFromSource(competitionGraph, testNode);
         //competitionGraph.printNodes();
         //competitionGraph.printDistances();
@@ -275,7 +275,7 @@ public class CompetitionDijkstra {
     public static Graph calculateShortestPathFromSource(Graph graph, Node source) {
         
         source.setDistance(0.0);
-        graph.printAdjacentNodes();
+        //graph.printAdjacentNodes();
         Set<Node> settledNodes = new HashSet<>();
         Set<Node> unsettledNodes = new HashSet<>();
         
@@ -313,10 +313,11 @@ public class CompetitionDijkstra {
                     //Find min dist from current node to adjacent node
                     calculateMinimumDistance(adjacentNode, edgeWeight, currentNode);
                     System.out.println("Adding Node " + adjacentNode.name + " to unsettledNodes queue...\n");
-                    unsettledNodes.add(adjacentNode);
+                    Node x = graph.getNode(adjacentNode.name);
+                    unsettledNodes.add(x);
                 }
             }
-            System.out.println("EXITING LARGE FOR LOOP!!!! All adjacent pairs to node settled\n");
+            System.out.println("EXITING LARGE FOR LOOP!!!! All adjacent pairs to node " + currentNode.name + " settled\n");
             
             //This node has now been settled, do the rest now
 
