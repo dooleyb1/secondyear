@@ -84,41 +84,33 @@ start
 	mov	r1,#TimerCommandRun
 	str	r1,[r0,#TCR]
 
+;thread0 = Pin LED Rotation
 thread0Start
-	; LED Pin Rotation Initialisation
-	ldr	r1,=IO1DIR			
-	ldr	r2,=0x000f0000							;select P1.19--P1.16
-	str	r2,[r1]									;make them outputs
-	ldr	r6,=IO1SET								;R6 = Set
-	str	r2,[r6]									;set them to turn the LEDs off
-	ldr	r7,=IO1CLR								;R7 = Clearr
+		; LED Pin Rotation Initialisation
+		ldr	r1,=IO1DIR			
+		ldr	r2,=0x000f0000							;select P1.19--P1.16
+		str	r2,[r1]									;make them outputs
+		ldr	r6,=IO1SET								;R6 = Set
+		str	r2,[r1]									;set them to turn the LEDs off
+		ldr	r2,=IO1CLR								;R7 = Clearr
 
-	ldr	r5,=0x00100000							; end when the mask reaches this value
-	ldr	r3,=0x00010000							; start with P1.16.
-	str	r3,[r7]	   								; clear the bit -> turn on the LED
+		ldr	r5,=0x00100000							; end when the mask reaches this value
 
-;aloop = Pin LED Rotation 
-aloop	
+wloop	ldr	r3,=0x00010000							; start with P1.16.
+floop	str	r3,[r7]	   								; clear the bit -> turn on the LED	
 
-	ldr r1, =ticks
-	ldr r0, [r1]								; r0 = ticks
+		ldr	r8,=0x2000000							;delay for about half a second
 
-	cmp r0, #200								; if(ticks == 200)
-	blt aloop									; {
-	str	r3,[r6]									;   set the bit -> turn off the LED
-	mov	r3,r3,lsl #1							;   shift up to next bit. P1.16 -> P1.17 etc.
-	
-	cmp	r3,r5									;	if(currentPin == endMask)
-	bne skip									;	{
-	ldr	r3,=0x00010000							; 		reset to P1.16
-												;	}
-skip
-	str	r3,[r7]		   							;   clear the bit -> turn on the LED
-	ldr r0, =0									;   reset ticks
-	str r0, [r1]								;   store new ticks val
-	b	aloop  									; 	}
-												; }
-												; main program execution will never drop below the statement above.
+dloop0	subs	r8,r8,#1
+		bne	dloop0
+
+		str	r3,[r1]									;set the bit -> turn off the LED
+		mov	r3,r3,lsl #1							;shift up to next bit. P1.16 -> P1.17 etc.
+		
+		cmp	r3,r5									;if new pin > mask branch back to
+		bne	floop
+		b	wloop
+
 
 thread1Start
 	; 7Seg Rotation Initialisation
@@ -175,12 +167,13 @@ irqhan	sub	lr,lr,#4
 	ldr r1, [r1]								;r1 = threadIndex
 	lsl r1, r1, #2								;offset
 	add r0, r0, r1								;r0 = space to push current registers
-
-	add r1, r0, #8					
-	stmfd r1!,{r2-12, lr}						;push r2-r13 and LR to stack
+	
+	ldr r0, [r0]								;r0 = threadStack address
+	add r1, r0, #8								;shift up by two words
+	stmea r1,{r2-12, lr}						;push r2-r13 and LR to stack
 	
 	ldmfd sp!,{r2-r3}							;load back r0 and r1 (into r2 and r3)
-	stmfd r0, {r2-r3}							;push r0 and r1 onto thread stack
+	stmea r0, {r2-r3}							;push r0 and r1 onto thread stack
 
 	;current thread registers are now saved onto the appropriate thread stack
 
@@ -199,39 +192,42 @@ irqhan	sub	lr,lr,#4
 
 ;change into system mode
 
+	MRS R0, CPSR
+	LDR R1, =0x0000000F
+	ORR R0, R0, R1
+	MSR CPSR_cxsf, R0
+
 ;go to next thread array and go to beginning
 	
 	ldr r0, =threads
 	ldr r1, =threadIndex
 	ldr r2, =threadNum
+	
+	ldr r3, [r1]				;r3 = threadIndex
+	ldr r2, [r2]				;r2 = threadNum
+	
+	add r3, r3, #1				;threadIndex ++
 
-	ldr r1,[r1]					;threadIndex
-	ldr r2,[r2]					;amountOfThreads
-	add r1, r1, #1				;threadIndex++
 
-	cmp r1, r2 					;if(threadIndex > amountOfThreads)
+	cmp r3, r2 					;if(threadIndex > amountOfThreads)
 	blt skipReset				;		threadIndex = 0
-	ldr r1, =0					;
+	ldr r3, =0					;
 
 skipReset
 
 ;changes to next stack pointer
 	
-	lsl r1, r1, #2				;offset
-	add r0, r0, r1 				;r0 is now the pointer to next thread stack
-	mov r1, r0
+	lsl r3, r3, #2				;offset
+	add r0, r0, r3 				;r0 is now the pointer to next thread stack
 
 	ldr r2, =13
 	ldr r4, [r0, r2, lsl #2]	;load the pc into r4
 
-	ldmfd r1!, {r2-r3}
+	ldmea r0, {r2-r3}			;
 	stmfd sp!, {r2-r4}			;stores r0-r1 and the pc
 
-;adjust pointer to thread stack r2
-
-	add r0, r0, #8
-	ldmfd r0!, {r2-r12}			;load saved registers off the stack
-	ldmfd sp!, {r0-r1, pc}		;load the rest of the registers and change pc 		 
+	ldmea r0, {r2-r12}			;load the saved registers off of the thread stack 		 
+	ldmfd sp!, {r0-r1, pc}		;load r0 and r1 and change the PC
 
 	AREA	Subroutines, CODE, READONLY
 
