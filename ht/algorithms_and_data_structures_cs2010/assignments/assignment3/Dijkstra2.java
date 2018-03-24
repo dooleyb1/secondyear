@@ -30,7 +30,7 @@ import java.util.*;
  *      double dist = line.nextDouble()        //Street (Edge) Length
  */
 
-public class CompetitionDijkstra {
+public class Dijkstra2 {
 
     /**
      * @param filename: A filename containing the details of the city road network
@@ -39,9 +39,10 @@ public class CompetitionDijkstra {
 
     public static int N;
     public static int S;
+
     public static Graph competitionGraph;
 
-    CompetitionDijkstra (String filename, int sA, int sB, int sC){
+    Dijkstra2 (String filename, int sA, int sB, int sC){
 
         //All in m/minute
         int speedA = sA; 
@@ -55,7 +56,6 @@ public class CompetitionDijkstra {
         S = 0;
 
         competitionGraph = new Graph();
-
     }
 
 
@@ -82,26 +82,24 @@ public class CompetitionDijkstra {
         while(scanner.hasNext()){
 
             //Read in node info from text file
-            int v1 = scanner.nextInt();
-            //System.out.println("\nv1 = " + v1);
-            int v2 = scanner.nextInt();
-            //System.out.println("v2 = " + v2);
+            int nodeA_ID = scanner.nextInt();
+            //System.out.println("\nv1 = " + nodeA_ID);
+            int nodeB_ID = scanner.nextInt();
+            //System.out.println("v2 = " + nodeB_ID);
             double distance = scanner.nextDouble();
             //System.out.println("Dist(v1 -> v2) = " + distance + "\n");
 
-            //Create node objects to house v1 and v2
-            Node a = new Node(Integer.toString(v1));
-            Node b = new Node(Integer.toString(v2));
+            //House node1 and node2 in a Node object
+            Node a = new Node(Integer.toString(nodeA_ID));
+            Node b = new Node(Integer.toString(nodeB_ID));
 
-            //Link v1 to v2 with respective distance
-            a.addDestination(b, distance);
-
-            //If graph already contains v1, update it with new distances
+            //If graph already contains nodeA, update it with new distances
             if(competitionGraph.contains(a))
                 competitionGraph.updateNode(a, b, distance);
-            
+
             //Otherwise just add it to graph
             else{
+                a.addDestination(b, distance);
                 competitionGraph.addNode(a);
             }
 
@@ -110,35 +108,34 @@ public class CompetitionDijkstra {
                 competitionGraph.addNode(b);
         }
 
+        competitionGraph = Dijkstra2.calculateShortestPathFromSource(competitionGraph, "1");
         //competitionGraph.printAdjacentNodes();
-        Node testNode = competitionGraph.getNode("1");
-        competitionGraph = calculateShortestPathFromSource(competitionGraph, testNode);
-        //competitionGraph.printNodes();
-        //competitionGraph.printDistances();
-        //competitionGraph.printShortestDistanceFrom("0");
     }
 
-    /* Private class to represent a graph as a set of nodes (Vertices i.e Intersections)*/
-    private class Graph {
+    public class Graph {
  
-        private Set<Node> nodes = new HashSet<>();
-         
+        private Set<Node> nodes;
+        
+        //Graph constructor
+        public Graph(){
+            this.nodes = new HashSet<>();
+        }
+
         public void addNode(Node nodeA) {
             nodes.add(nodeA);
         }
-
-        /* Adds a new destination and distance to existing node v1*/
+ 
+         //Adds a new destination and distance to existing node v1
         public void updateNode(Node a, Node b, double dist){
 
             //Find Node object for v1 and add new destination
-            for(Node node : nodes){
+            for(Node node : this.nodes){
                 if(node.name.equals(a.name)){
                     //Update existing node with a new destination 
                     node.addDestination(b, dist);
                     return;
                 }
             }
-
         }
 
         public void printAdjacentNodes(){
@@ -148,27 +145,8 @@ public class CompetitionDijkstra {
 
         }
 
-        public void printShortestDistanceFrom(String nodeID){
-
-            for(Node node : this.nodes){
-                if(node.name.equals(nodeID)){
-                    System.out.println("Calculating shortest distances from Node " + nodeID + "to all nodes...");
-                    competitionGraph = calculateShortestPathFromSource(competitionGraph, node);
-                }
-
-                for(Node memberNode : competitionGraph.nodes){
-                    System.out.println("\nDistance from ( " + nodeID + " -> " + memberNode.name +") == " + memberNode.distance);
-                }
-                return;
-            }
-        }
-
-        public void printDistances(){
-            for(Node node : this.nodes)
-                System.out.println("Node " + node.name + " Distance = " + node.distance);
-        }
-
         public Node getNode(String nodeID){
+            
             for(Node node : this.nodes){
                 if(node.name.equals(nodeID))
                     return node;
@@ -185,29 +163,46 @@ public class CompetitionDijkstra {
             }
             return false;
 
-        }  
-
-        public void printNodes(){
-            for(Node node : nodes){
-                System.out.println(node.name);
-            }
         } 
     }
 
-    /* Private class to represent each individual node (Vertice i.e Intersection)*/
-    private class Node {
+    public class Node {
      
-        public String name;
-         
-        private List<Node> shortestPath = new LinkedList<>();
-         
-        public double distance = Double.POSITIVE_INFINITY;
-        
-        //Connected intersections and their respective distances 
-        public Map<Node, Double> adjacentNodes = new HashMap<>();
-     
+        private String name;
+        private List<Node> shortestPath;
+        private double distance;    
+        private Map<Node, Double> adjacentNodes;
+      
+        //Node Constructor
+        public Node(String name) {
+            this.name = name;
+            this.shortestPath = new LinkedList<>();
+            this.distance = Double.MAX_VALUE;
+            this.adjacentNodes = new HashMap<>();
+        }
+
         public void addDestination(Node destination, double distance) {
-            adjacentNodes.put(destination, distance);
+            this.adjacentNodes.put(destination, distance);
+        }
+     
+        public Map<Node,Double> getAdjacentNodes(){
+            return this.adjacentNodes;
+        }
+
+        public double getDistance(){
+            return this.distance;
+        } 
+
+        public void setDistance(double newDist){
+            this.distance = newDist;
+        }
+
+        public List<Node> getShortestPath(){
+            return this.shortestPath;
+        }
+
+        public void setShortestPath(List<Node> newPath){
+            this.shortestPath = newPath;
         }
 
         public String getShortestPathString(){
@@ -233,157 +228,127 @@ public class CompetitionDijkstra {
             }
             System.out.println("---------------------------------------------------");
         }
-
-        public void printShortestDistances(){
-
-            System.out.println("\n---------------------------------------------------");
-            System.out.println("Shortest Distances from Node " + this.name + " to Adjacent Nodes");
-            System.out.println("---------------------------------------------------");
-
-            for(Map.Entry<Node, Double> entry : adjacentNodes.entrySet()){
-                System.out.println("\n(" + this.name + " -> " + entry.getKey().name + ") == " + entry.getValue());
-            }
-
-        }
-      
-        public Node(String name) {
-            this.name = name;
-        }
-
-        public double getDistance(){
-            return this.distance;
-        }
-
-        public Map<Node, Double> getAdjacentNodes(){
-            return this.adjacentNodes;
-        }
-
-        public void setDistance(double dist){
-            this.distance = dist;
-        }
-
-        public List<Node> getShortestPath(){
-            return this.shortestPath;
-        }
-
-        public void setShortestPath(List<Node> newPath){
-            this.shortestPath = newPath;
-        }
     }
 
-    /* Calculates shortest paths around the graph from Node source to all other vertices*/
-    public static Graph calculateShortestPathFromSource(Graph graph, Node source) {
+    public static Graph calculateShortestPathFromSource(Graph graph, String sourceID) {
         
-        source.setDistance(0.0);
-        //graph.printAdjacentNodes();
+        Node source = graph.getNode(sourceID);
+        //Set source nodes distance from source to 0
+        source.setDistance(0);
+     
         Set<Node> settledNodes = new HashSet<>();
         Set<Node> unsettledNodes = new HashSet<>();
-        
+     
         System.out.println("Source Node = " + source.name);
 
-        //First examine source node
+        //Add source to unsettled nodes i.e examine first
         unsettledNodes.add(source);
         System.out.println("Added node " + source.name + " to unsettledNodes...\n");
-     
-        //While there are still nodes to examine
+
         while (unsettledNodes.size() != 0) {
             
-            //Get node with shortest distance in unsettledNodes
+            //Get node with lowest distance from source and examine that first
             System.out.println("Selecting node with lowest distance from unsettledNodes...\n");
             Node currentNode = getLowestDistanceNode(unsettledNodes);
             System.out.println("Node selected is Node " + currentNode.name);
 
-            //Remove this node from unsettledNodes as it will now be settled
+            //Remove it from unsettled as we will now settle it
             unsettledNodes.remove(currentNode);
             System.out.println("Removing Node " + currentNode.name + " from unsettledNodes, will now attempt to settle...\n");
             currentNode.printAdjacentNodes();
 
-            //Check this nodes adjacent nodes
-            Map<Node, Double> adjacentNodesMap = currentNode.getAdjacentNodes();
-            for (Map.Entry<Node, Double> adjacencyPair : adjacentNodesMap.entrySet()) {
-                System.out.println("Getting adjacent node to Node " + currentNode.name);
+            //Iterate over all of currentNodes adjacent nodes
+            for (Map.Entry<Node, Double> adjacencyPair: currentNode.getAdjacentNodes().entrySet()) {
+                
+                System.out.println("Getting adjacent node to Node " + currentNode.name + "...");
                 Node adjacentNode = adjacencyPair.getKey();
                 double edgeWeight = adjacencyPair.getValue();
-                System.out.println("Adjacent node selected is Node " + adjacentNode.name);
+                System.out.println("Adjacent node selected is Node " + adjacentNode.name + "(edgeWight of " + edgeWeight + ")");
 
-                //If this adjacent node hasn't already been settled
+
+                //If the adjacent node hasn't already been settled
                 if (!settledNodes.contains(adjacentNode)) {
+
                     System.out.println("Node " + adjacentNode.name + " has not been settled, running tests...\n");
                     System.out.println("\n--------------------------------------------");
+                    
                     //Find min dist from current node to adjacent node
                     calculateMinimumDistance(adjacentNode, edgeWeight, currentNode);
+
                     System.out.println("Adding Node " + adjacentNode.name + " to unsettledNodes queue...\n");
-                    Node x = graph.getNode(adjacentNode.name);
-                    unsettledNodes.add(x);
+                    unsettledNodes.add(adjacentNode);
+
                 }
             }
             System.out.println("EXITING LARGE FOR LOOP!!!! All adjacent pairs to node " + currentNode.name + " settled\n");
-            
-            //This node has now been settled, do the rest now
-
             settledNodes.add(currentNode);
         }
         System.out.println("All nodes successfully settled");
         return graph;
     }
 
-    /* Returns the node with the lowest distance from the unsettledNodes set */
     private static Node getLowestDistanceNode(Set <Node> unsettledNodes) {
         
-        //Null initialised lowest distance node
+        //Start with empty node and Double.MaxVal
         Node lowestDistanceNode = null;
-        double lowestDistance = Double.POSITIVE_INFINITY;
+        double lowestDistance = Double.MAX_VALUE;
         
-        //Iterate over unsettled nodes finding one with lowest distance
+        /* Iterate over all current unsettled nodes and return the one with lowest 
+         * distance from the source node
+         */
         for (Node node: unsettledNodes) {
             
-            double nodeDistance = node.getDistance();
-            System.out.println("Node distance for Node " + node.name + " is : " + nodeDistance);
-            //If nodeDistance is less than current lowest, make this node the new lowest
+            Node properNodeElement = competitionGraph.getNode(node.name);
+            double nodeDistance = properNodeElement.getDistance();
+            System.out.println("Node distance for Node " + properNodeElement.name + " is : " + nodeDistance);
+
             if (nodeDistance < lowestDistance) {
                 System.out.println("This is less than current lowestDistance : " + lowestDistance);
                 lowestDistance = nodeDistance;
-                lowestDistanceNode = node;
+                //SEE HERE IF STILL BROKEN (MAYBE COPY OVER ADJACENCY PAIRS)
+                lowestDistanceNode = competitionGraph.getNode(node.name);
+
                 System.out.println("New lowest distance is now " + lowestDistance + " (Node " + lowestDistanceNode.name +")\n\n");
             }
         }
-        
+
         return lowestDistanceNode;
     }
 
-    /* Compares the actual distance with the newly calculated distance for the new path*/
+    /* Calculates the min dist from x (sourceNode) to y (evaluationNode) */
     private static void calculateMinimumDistance(Node evaluationNode, double edgeWeigh, Node sourceNode) {
         
-        //Get source node's distance
-        double sourceDistance = sourceNode.getDistance();
-        System.out.println("sourceDistance (Node " + sourceNode.name + ".distance) = " + sourceDistance);
-        System.out.println("edgeWeight (Node " + evaluationNode.name + ".distance) = " + edgeWeigh);
+        Node actualSourceNode = competitionGraph.getNode(sourceNode.name);
+        double sourceDistance = actualSourceNode.getDistance();
+        Node actualEvaluationNode = competitionGraph.getNode(evaluationNode.name);
+
+        System.out.println("sourceDistance (Node " + actualSourceNode.name + ".distance) = " + sourceDistance);
+        System.out.println("edgeWeight (Node " + actualEvaluationNode.name + ".distance) = " + edgeWeigh);
         System.out.println("\nsourceDistance + edgeWeigh = " + (sourceDistance + edgeWeigh));
-        System.out.println("evaluationNode (Node " + evaluationNode.name + ".getDistance) = " + evaluationNode.getDistance());
-        
-        //If the distance from source + edge is less than evalNodes current distance from source 
-        if (sourceDistance + edgeWeigh < evaluationNode.getDistance()) {
+        System.out.println("evaluationNode (Node " + actualEvaluationNode.name + ".getDistance) = " + evaluationNode.getDistance());
 
+        //If newly explored path is quicker than current known path, overwrite
+        if (sourceDistance + edgeWeigh < actualEvaluationNode.getDistance()) {
+            
             System.out.println("\nsourceDistance + edgeWeigh < evaluationNode.getDistance = true");
-            //Set evalNodes new distance to that of src + edge weight
-            evaluationNode.setDistance(sourceDistance + edgeWeigh);
 
-            //Get current shortest path and append the new node to it
-            LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
-            System.out.println("sourceNode (Node " + sourceNode.name + ").getShortestPath() =" + shortestPath);
-            shortestPath.add(sourceNode);
+            actualEvaluationNode.setDistance(sourceDistance + edgeWeigh);
 
-            //Set the evaluationNodes shortest path to that of source to x
-            System.out.println("\nSetting the new shortest path for Node " + evaluationNode.name + "...");
-            evaluationNode.setShortestPath(shortestPath);
-            System.out.println("evaluationNode (Node " + evaluationNode.name + ").getShortestPath() =" + evaluationNode.getShortestPathString());
+            LinkedList<Node> shortestPath = new LinkedList<>(actualSourceNode.getShortestPath());
+            System.out.println("sourceNode (Node " + actualSourceNode.name + ").getShortestPath() =" + shortestPath);
+            shortestPath.add(actualSourceNode);
+            
+            System.out.println("\nSetting the new shortest path for Node " + actualEvaluationNode.name + "...");
+            actualEvaluationNode.setShortestPath(shortestPath);
+            System.out.println("evaluationNode (Node " + evaluationNode.name + ").getShortestPath() =" + actualEvaluationNode.getShortestPathString());
         }
         System.out.println("--------------------------------------------\n\n");
     }
 
+
     public static void main(String[] args) throws FileNotFoundException {
 
-        CompetitionDijkstra test = new CompetitionDijkstra("tinyEWD.txt", 0, 0, 0);
+        Dijkstra2 test = new Dijkstra2("tinyEWD.txt", 0, 0, 0);
         test.readFile("tinyEWD.txt");
 
     }

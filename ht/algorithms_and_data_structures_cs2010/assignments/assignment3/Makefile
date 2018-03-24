@@ -14,6 +14,9 @@ default:
 dijkstra:
 	$(JVM) $(JFLAGS) $(RUN) CompetitionDijkstra tinyEWD.txt
 
+dijkstra2:
+	$(JVM) $(JFLAGS) $(RUN) Dijkstra2 tinyEWD.txt
+
 floyd:
 	$(JVM) $(JFLAGS) $(RUN) CompetitionFloydWarshall
 
