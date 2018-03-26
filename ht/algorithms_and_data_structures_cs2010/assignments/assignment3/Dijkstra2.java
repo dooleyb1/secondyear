@@ -40,14 +40,18 @@ public class Dijkstra2 {
     public static int N;
     public static int S;
 
+    public int speedA;
+    public int speedB;
+    public int speedC;
+
     public static Graph competitionGraph;
 
     Dijkstra2 (String filename, int sA, int sB, int sC){
 
         //All in m/minute
-        int speedA = sA; 
-        int speedB = sB;
-        int speedC = sC;
+        speedA = sA; 
+        speedB = sB;
+        speedC = sC;
 
         //Total number of intersections (vertices)
         N = 0;
@@ -64,10 +68,51 @@ public class Dijkstra2 {
      */
     public int timeRequiredforCompetition(){
 
-        //TO DO
+        int slowestSpeed = this.speedA;
+        System.out.println("Slowest speed is Speed A = " + slowestSpeed);
+
+        if(slowestSpeed > this.speedB){
+            slowestSpeed = speedB;
+            System.out.println("Slowest speed is now Speed B = " + slowestSpeed);
+        }
+
+        if(slowestSpeed > speedC){
+            slowestSpeed = speedC;
+            System.out.println("Slowest speed is now Speed C = " + slowestSpeed);
+        }
+
+        double longestTime = 0.0;
+        double longestDistance;
+        double time;
+        Graph tempGraph;
+
+        //Iterate over every node within the graph
+        Iterator<Node> iter = competitionGraph.nodes.iterator();
+
+        while (iter.hasNext()) {
+            Node node = iter.next();
+
+            //Set the node as the source witih the graph, re-adjust distances using Dijkstras
+            tempGraph = Dijkstra2.calculateShortestPathFromSource(competitionGraph, node.name);
+            longestDistance = tempGraph.getLongestDistance();
+            System.out.println("\n\nLongest distance from source (Node " + node.name + ") = " + longestDistance);
+
+            //Time (minutes) = Distance/Speed
+            time = (longestDistance * 1000)/slowestSpeed;
+            System.out.println("Time for when source node is Node " + node.name + " => " + time);
+
+            if(time > longestTime)
+                longestTime = time;
+        }
+
+        System.out.println("\n\nOverall longest time is : " + longestTime + " m/minute");
+
+
+
         return -1;
     }
 
+    /* Reads a .txt file and populates a graph with nodes accordingly*/
     private void readFile(String filename) throws FileNotFoundException {
 
         Scanner scanner = new Scanner(new File(filename));
@@ -108,9 +153,10 @@ public class Dijkstra2 {
                 competitionGraph.addNode(b);
         }
 
-        competitionGraph = Dijkstra2.calculateShortestPathFromSource(competitionGraph, "0");
+        //competitionGraph = Dijkstra2.calculateShortestPathFromSource(competitionGraph, "0");
         //competitionGraph.printAdjacentNodes();
-        competitionGraph.printDistances();
+        //competitionGraph.printDistances();
+        System.out.println("\nGraph successfully populated");
     }
 
     public class Graph {
@@ -137,6 +183,23 @@ public class Dijkstra2 {
                     return;
                 }
             }
+        }
+
+        public double getLongestDistance(){
+
+            Iterator<Node> iter = this.nodes.iterator();
+            double longestDistance = 0.0;
+
+            while (iter.hasNext()) {
+
+                Node node = iter.next();
+
+                if(node.distance > longestDistance)
+                    longestDistance = node.distance;
+            }
+
+            return longestDistance;
+
         }
 
         public void printAdjacentNodes(){
@@ -428,8 +491,9 @@ public class Dijkstra2 {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        Dijkstra2 test = new Dijkstra2("tinyEWD.txt", 0, 0, 0);
+        Dijkstra2 test = new Dijkstra2("tinyEWD.txt", 75, 75, 100);
         test.readFile("tinyEWD.txt");
 
+        int x = test.timeRequiredforCompetition();
     }
 }
