@@ -288,10 +288,21 @@ public class Dijkstra2 {
 
     private static void removeNode(Node nodeToRemove, Set<Node> unsettledNodes){
 
+        Iterator<Node> iter = unsettledNodes.iterator();
+
+        while (iter.hasNext()) {
+            Node node = iter.next();
+
+            if (node.name.equals(nodeToRemove.name))
+                iter.remove();
+        }
+
+        /* 
         for(Node node : unsettledNodes){
             if(node.name.equals(nodeToRemove.name))
                 unsettledNodes.remove(node);
         }
+        */
     }
 
     
