@@ -2,243 +2,206 @@
 
 ; Timer Stuff -- UM, Table 173
 
-T0	equ	0xE0004000								; Timer 0 Base Address
-T1	equ	0xE0008000								; Timer 1 Base Address
+T0	equ	0xE0004000		; Timer 0 Base Address
+T1	equ	0xE0008000
 
-IR	equ	0										; Add this to a timer's base address to get actual register address
-TCR	equ	4 										; Timer Command Reset Register offset 
-MCR	equ	0x14 									; Timer Mode Reset and Interrupt Offset
-MR0	equ	0x18 									; Match Register (counter) offset
+IR	equ	0			; Add this to a timer's base address to get actual register address
+TCR	equ	4
+MCR	equ	0x14
+MR0	equ	0x18
 
-TimerCommandReset			equ	2				; Reset timer 
-TimerCommandRun				equ	1		    	; Run timer
-TimerModeResetAndInterrupt	equ	3				; Reset timer mode and interrupt
-TimerResetTimer0Interrupt	equ	1 				; Reset timer 0 and interrupt
-TimerResetAllInterrupts		equ	0xFF 			; Reset all timer interrupts
+TimerCommandReset	equ	2
+TimerCommandRun	equ	1
+TimerModeResetAndInterrupt	equ	3
+TimerResetTimer0Interrupt	equ	1
+TimerResetAllInterrupts	equ	0xFF
 
 ; VIC Stuff -- UM, Table 41
-VIC	equ	0xFFFFF000								; VIC Base Address
-IntEnable	equ	0x10 							; Interrupt Enable
-VectAddr	equ	0x30 							;
-VectAddr0	equ	0x100 							; Vectored Interrupt 0
-VectCtrl0	equ	0x200 							; Vectored Interrupt Control 0
+VIC	equ	0xFFFFF000		; VIC Base Address
+IntEnable	equ	0x10
+VectAddr	equ	0x30
+VectAddr0	equ	0x100
+VectCtrl0	equ	0x200
 
-Timer0ChannelNumber	equ	4						; UM, Table 63
-Timer0Mask			equ	1<<Timer0ChannelNumber	; UM, Table 63
-IRQslot_en			equ	5						; UM, Table 58
+Timer0ChannelNumber	equ	4	; UM, Table 63
+Timer0Mask	equ	1<<Timer0ChannelNumber	; UM, Table 63
+IRQslot_en	equ	5		; UM, Table 58
 
-;LED Pin Rotation Labels
 IO1DIR	EQU	0xE0028018
 IO1SET	EQU	0xE0028014
 IO1CLR	EQU	0xE002801C
 IO1PIN	EQU	0xE0028010
+IO0DIR	EQU	0xE0028008
+IO0SET	EQU	0xE0028004
+IO0CLR	EQU	0xE002800C
 
-;7Seg Rotation Labels
-IODIR0	EQU	0xE0028008
-IOSET0	EQU	0xE0028004
-IOCLR0	EQU	0xE002800C
-IOPIN0  EQU 0xE0028000
-PINSEL0 EQU 0xE002C000
 
 	AREA	InitialisationAndMain, CODE, READONLY
 	IMPORT	main
 
-; (c) Mike Brady, 2014â€“2016.
-
 	EXPORT	start
 start
-			
-
-
 
 ; Initialise the VIC
-	ldr	r0,=VIC									; looking at you, VIC!
+		LDR	R0,=VIC									; looking at you, VIC!
 
-	ldr	r1,=irqhan								; IRQ Handler
-	str	r1,[r0,#VectAddr0] 						; associate our interrupt handler with Vectored Interrupt 0
+		LDR	R1,=irqhan
+		STR	R1,[R0,#VectAddr0] 						; associate our interrupt handler with Vectored Interrupt 0
 
-	mov	r1,#Timer0ChannelNumber+(1<<IRQslot_en)
-	str	r1,[r0,#VectCtrl0] 						; make Timer 0 interrupts the source of Vectored Interrupt 0
+		MOV	R1,#Timer0ChannelNumber+(1<<IRQslot_en)
+		STR	R1,[R0,#VectCtrl0] 						; make Timer 0 interrupts the source of Vectored Interrupt 0
 
-	mov	r1,#Timer0Mask
-	str	r1,[r0,#IntEnable]						; enable Timer 0 interrupts to be recognised by the VIC
+		MOV	R1,#Timer0Mask
+		STR	R1,[R0,#IntEnable]						; enable Timer 0 interrupts to be recognised by the VIC
 
-	mov	r1,#0
-	str	r1,[r0,#VectAddr]   					; remove any pending interrupt (may not be needed)
+		MOV	R1,#0
+		STR	R1,[R0,#VectAddr]   					; remove any pending interrupt (may not be needed)
 
-	; Initialise Timer 0
-	ldr	r0,=T0									; looking at you, Timer 0!
+; Initialise Timer 0
+		LDR	R0,=T0									; looking at you, Timer 0!
 
-	mov	r1,#TimerCommandReset			
-	str	r1,[r0,#TCR]
+		MOV	R1,#TimerCommandReset
+		STR	R1,[R0,#TCR]
 
-	mov	r1,#TimerResetAllInterrupts
-	str	r1,[r0,#IR]
+		MOV	R1,#TimerResetAllInterrupts
+		STR R1,[R0,#IR]
 
-	ldr	r1,=(14745600/200)-1	 				; 5 ms = 1/200 second
-	str	r1,[r0,#MR0]
+		LDR	R1,=(14745600/200)-1	 				; 5 ms = 1/200 second
+		STR	R1,[R0,#MR0]
 
-	mov	r1,#TimerModeResetAndInterrupt
-	str	r1,[r0,#MCR]
+		MOV	R1,#TimerModeResetAndInterrupt
+		STR	R1,[R0,#MCR]
 
-	mov	r1,#TimerCommandRun
-	str	r1,[r0,#TCR]
+		MOV	R1,#TimerCommandRun
+		STR	R1,[R0,#TCR]
 
-;thread0 = Pin LED Rotation
+
+;thread0 initialisation
 thread0Start
-		; LED Pin Rotation Initialisation
-		ldr	r1,=IO1DIR			
-		ldr	r2,=0x000f0000							;select P1.19--P1.16
-		str	r2,[r1]									;make them outputs
-		ldr	r6,=IO1SET								;R6 = Set
-		str	r2,[r1]									;set them to turn the LEDs off
-		ldr	r2,=IO1CLR								;R7 = Clearr
+		LDR	R1,=IO1DIR
+		LDR	r2,=0x000f0000							; select P1.19--P1.16
+		STR	r2,[R1]									; make them outputs
+		LDR	R1,=IO1SET
+		STR	r2,[R1]									; set them to turn the LEDs off
+		LDR	r2,=IO1CLR
 
-		ldr	r5,=0x00100000							; end when the mask reaches this value
-
-wloop	ldr	r3,=0x00010000							; start with P1.16.
-floop	str	r3,[r7]	   								; clear the bit -> turn on the LED	
-
-		ldr	r8,=0x2000000							;delay for about half a second
-
-dloop0	subs	r8,r8,#1
-		bne	dloop0
-
-		str	r3,[r1]									;set the bit -> turn off the LED
-		mov	r3,r3,lsl #1							;shift up to next bit. P1.16 -> P1.17 etc.
-		
-		cmp	r3,r5									;if new pin > mask branch back to
-		bne	floop
-		b	wloop
+		LDR	R5,=0x00100000							; end when the mask reaches this value
+	
+wloop	LDR	R3,=0x00010000							; start with P1.16.
+floop	STR	R3,[r2]	   								; clear the bit -> turn on the LED
 
 
+;delay for about a half second
+delay0											
+		LDR	R8,=0x2000000
+dloop0	subs	R8,R8,#1
+		BNE	dloop0
+
+		STR	R3,[R1]									; set the bit -> turn off the LED
+		MOV	R3,R3,LSL #1							; shift up to next bit. P1.16 -> P1.17 etc.
+		CMP	R3,R5									; if(newBit>endMask)
+		BNE	floop									; resetToFirstBit()
+		B	wloop
+
+
+;thread1 initialisation
 thread1Start
-	; 7Seg Rotation Initialisation
-	ldr r0,=PINSEL0
-	ldr r1,=0x00000000
-	str r1,[R0]									;Select port 0 as GPIO mode
-	ldr r0,=IODIR0
-	ldr r1,=0X0000FF00							;Mask to select P.08 as start pin of output
-	str r1, [R0]
+		LDR	R1,=IO0DIR
+		LDR	R2,=0x0001B780
+		STR	R2,[R1]		
+		LDR	R1,=IO0SET
+		STR	R2,[R1]		
+		LDR	R2,=IO0CLR
 
-;bloop = 7 Seg Display Rotation
-bloop
-
-	ldr r8, =array								;array.address
-	ldr r9, =arrayN
-	ldr r9, [r9]								;arraySize
+		LDR R3, =4
+		LDR R4, =table								; lookup table for values
+		LDR R5, =0x000FFFF0 						; all leds select
+restart
+		LDR	R6, =15    								; end index of table
+		MUL R7, R6, R3								; offset
 
 while
-	ldr r1, =counter
-	ldr r0, [r1]								
-	cmp r0, r9									;while(counter<=arraySize)
-	bge reset
-	
-	ldr r2,=IOSET0								;Set address
-	ldr r4, [r8, r0, lsl #2]					;value = valAt(array.startAddress+offset)
-	str r4,[r2]									;Make pin = value
+		CMP R6, #0									; while(count<15)
+		BLT restart
+		ADD R8, R4, R7								; table + offsey
+		LDR R8, [R4, R7]							; loadVal()
+		STR R5, [R2]								; turn off all led current LED's
+		STR R8, [R1]								; turn on bits using table value
 
-delay
-	;delay for about a half second
-	ldr	r1,=0x2000000
-dloop	subs	r1,r1,#1
-	bne	dloop
-	
-	ldr r2,=IOCLR0								;Clear address
-	str r4, [r2]								;Clear pins
-	add r0, r0, #1								;counter++
-	str r0, [r1]								; store counter
-	b 	bloop
+;delay for about a half second
+		LDR	R9, =2000000
+dloop	SUBS	R9, R9, #1
+		BNE	dloop
+		
+		SUB R6, R6, #1								; index --
+		SUB R7, R7, #4								; offset --
+		B while
 
-reset	
-	ldr r1, =counter
-	ldr r0, =0									;counter = 0
-	str r0, [r1]
-	b 	bloop
+stop	B	stop  	
+
 
 
 	AREA	InterruptStuff, CODE, READONLY
-irqhan	sub	lr,lr,#4
-
-	stmfd	sp!,{r0-r1}							; backup r0 and r1 before messing with them
-
-	ldr r0, = threads							;r0 = array of thread stack pointers
-	ldr r1, = threadIndex						
-	ldr r1, [r1]								;r1 = threadIndex
-	lsl r1, r1, #2								;offset
-	add r0, r0, r1								;r0 = space to push current registers
-	
-	ldr r0, [r0]								;r0 = threadStack address
-	add r1, r0, #8								;shift up by two words
-	stmea r1,{r2-12, lr}						;push r2-r13 and LR to stack
-	
-	ldmfd sp!,{r2-r3}							;load back r0 and r1 (into r2 and r3)
-	stmea r0, {r2-r3}							;push r0 and r1 onto thread stack
-
-	;current thread registers are now saved onto the appropriate thread stack
-
 		
-	;this is where we stop the timer from making the interrupt request to the VIC
-	;i.e. we 'acknowledge' the interrupt
+irqhan	SUB	LR,LR,#4								; LR adjustment
+		STMFD SP!, {R0 - R1}						; preserve R0 and R1 onto syst stack					
+		
+		LDR R0, =threads								
+		LDR R1, =threadIndex
+		LDR R1, [R1]								; threadIndex
+		LSL R1, R1, #2								; offset = threadIndex * 4
+		ADD R0, R0, R1								; threadAddress + offset
+		
+		LDR R0, [R0]								; R0 now points to memory space of thread stack
+		ADD R1, R0, #8								; offset (skips R0 and R1)
+		STMEA R1, {R2 - R12, LR}					; store everything from R2-R12 and LR onto thread stack
+		LDMFD SP!, {R2 - R3} 						; load the saved registers back (except into R2 and R3 this time)
+		STMEA R0, {R2 - R3}							; store these onto the thread stack
+													;current threads registers are now preserved
 
-	ldr	r0,=T0
-	mov	r1,#TimerResetTimer0Interrupt
-	str	r1,[r0,#IR]	   	; remove MR0 interrupt request from timer
+;get previous registers from next thread
+		LDR R0, =threads								
+		LDR R1, =threadIndex
+		LDR R2, =threadNum
+		LDR R3, [R1]								; threadIndex
+		LDR R2, [R2]								; threadNum
+		ADD R3, R3, #1								; threadIndex ++
+		CMP R3, R2									; if(threadIndex > threadNum)
+		BLT endIterate								;	
+		LDR R3, =0									;    threadIndex = 0
+endIterate
+		STR R3, [R1]								; threadIndex.pushToMemory()
 
-	;here we stop the VIC from making the interrupt request to the CPU:
-	ldr	r0,=VIC
-	mov	r1,#0
-	str	r1,[r0,#VectAddr]	; reset VIC
-
-;change into system mode
-
-	MRS R0, CPSR
-	LDR R1, =0x0000000F
-	ORR R0, R0, R1
-	MSR CPSR_cxsf, R0
-
-;go to next thread array and go to beginning
+;changes to the next stack pointer 
+		LSL R3, R3, #2								; offset = threadIndex * 4
+		ADD R0, R0, R3								; getNewThreadStackAddress()
+		LDR R0, [R0]								; newThreadStackAddress
+		
+		LDR R2, =13									; registerCount
+		LDR R4, [R0, R2, LSL #2] 					; load the pc from this thread to R4
+		
+		LDMFD R0!, {R2 - R3}						; load R2 and R3 off of thread stack
+		STMFD SP!, {R2 - R4} 						; preserve R0, R1 and PC on the syst stack
+		LDMFD R0!, {R2 - R12} 						; load the saved registers off of the thread stack
 	
-	ldr r0, =threads
-	ldr r1, =threadIndex
-	ldr r2, =threadNum
-	
-	ldr r3, [r1]				;r3 = threadIndex
-	ldr r2, [r2]				;r2 = threadNum
-	
-	add r3, r3, #1				;threadIndex ++
+;this is where we stop the timer from making the interrupt request to the VIC
+		LDR	R0,=T0
+		MOV	R1,#TimerResetTimer0Interrupt
+		STR	R1,[R0,#IR]	   							; remove MR0 interrupt request from timer
 
-
-	cmp r3, r2 					;if(threadIndex > amountOfThreads)
-	blt skipReset				;		threadIndex = 0
-	ldr r3, =0					;
-
-skipReset
-
-;changes to next stack pointer
-	
-	lsl r3, r3, #2				;offset
-	add r0, r0, r3 				;r0 is now the pointer to next thread stack
-
-	ldr r2, =13
-	ldr r4, [r0, r2, lsl #2]	;load the pc into r4
-
-	ldmea r0, {r2-r3}			;
-	stmfd sp!, {r2-r4}			;stores r0-r1 and the pc
-
-	ldmea r0, {r2-r12}			;load the saved registers off of the thread stack 		 
-	ldmfd sp!, {r0-r1, pc}		;load r0 and r1 and change the PC
+;here we stop the VIC from making the interrupt request to the CPU:
+		LDR	R0,=VIC
+		MOV	R1,#0
+		STR	R1,[R0,#VectAddr]						; reset VIC
+		
+		LDMFD SP!, {R0 - R1, PC}^ 					; load the rest of the registers and change the program counter
 
 	AREA	Subroutines, CODE, READONLY
 
 	AREA	Stuff, DATA, READWRITE
-
-ticks 			DCD 0
-process 		DCD 0
-counter 		DCD 0
-
-arrayN	DCD	16
-array	DCD	0x00003F00,0x00000600,0x00005B00,0x00004F00,0x00006600,0x00006D00,0x00007D00,0x00000700,0x00007F00,0x00006F00,0x00007700,0x00007C00,0x00003900,0x00005E00,0x00007900, 0x00007100
+	
+	
+table DCD 0x00003780,0x00000300,0x00009580,0x00008780,0x0000A300,0x0000A680,0x0000B680,0x00000380,0x0000B780,0x0000A380,0x0000B380,0x0000B600,0x00003480,0x0009700,0x0000B480,0x0000B080	
 
 	
 thread0 DCD 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, thread0Start ;last element is the pc of the thread
@@ -249,3 +212,6 @@ threadNum DCD 2
 threadIndex DCD 0	
 	
 threads DCD thread0, thread1
+
+	
+	END
