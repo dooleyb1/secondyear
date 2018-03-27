@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Webtalk v2017.4 (64-bit)
+# SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
+# IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+# Start of session at: Thu Mar  8 10:54:27 2018
+# Process ID: 7236
+# Current directory: U:/Computer Architecture/assignment2/vivado_project/vivado_project.sim/sim_1/behav/xsim
+# Command line: wbtcv.exe -mode batch -source U:/Computer Architecture/assignment2/vivado_project/vivado_project.sim/sim_1/behav/xsim/xsim.dir/mux2_1bit_tb_behav/webtalk/xsim_webtalk.tcl -notrace
+# Log file: U:/Computer Architecture/assignment2/vivado_project/vivado_project.sim/sim_1/behav/xsim/webtalk.log
+# Journal file: U:/Computer Architecture/assignment2/vivado_project/vivado_project.sim/sim_1/behav/xsim\webtalk.jou
+#-----------------------------------------------------------
+source U:/Computer -notrace
