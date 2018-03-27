@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/tms/m/styles/favicon.ico">
+
+    <title>Assignment 3 - CS2010 </title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/theme/Bootstrap3/css/bootstrap_Flatly.min.css" rel="stylesheet" class="SelectedTheme">
+
+    <!-- Custom styles for this template -->
+    <link href="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/theme/Bootstrap3/css/Bootstrap3.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/theme/Bootstrap3/js/html5shiv.js"></script>
+      <script src="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/theme/Bootstrap3/js/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="canonical" href="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/assignment-3/" />
+</head>
+  <body id="assignment-3">
+    <div class="navbar navbar-default navbar-static-top" id="NavBar">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/">CS2010 </a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="lectures"><a href="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/lectures/" title="Reading Material &amp; Lectures">Reading Material & Lectures</a></li>
+<li class="assignments-labs"><a href="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/assignments-labs/" title="Assignments &amp; Labs">Assignments & Labs</a></li>
+<li class="marking"><a href="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/marking/" title="Marking">Marking</a></li>
+<li class="contact"><a href="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/contact/" title="Contact">Contact</a></li>
+          </ul>
+                  </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-8">
+          <p><strong>Total points:</strong> 200</p>
+
+<span style="background-color:yellow;"><strong>Keep track of the time you spend for&nbsp;this assignment (in and out of labs). You will be asked for this at the end of this text.</strong></span>
+
+<div class="alert alert-info">
+	<h4>News, etc.</h4>
+
+	<ul>
+		<li>The print methods should print only the keys in the BST.<br />
+			&nbsp;</li>
+		<li>Any news, bugs, FAQ, etc. involving the assignment will be posted here. Check this page regularly!</li>
+	</ul>
+</div>
+
+<h4>General Instructions:</h4>
+
+<ul>
+	<li>Use the template files for writing your code and add necessary comments to critical sections of the code.</li>
+	<li>Write your name next to&nbsp;@author at the beginning of each file</li>
+	<li>Write the names of people you discussed this assignment with under the @author line.&nbsp;<strong>Do not share code and do not write code for others!</strong></li>
+	<li>You need to adequately&nbsp;test each method in your source code by adding sufficient jUnit tests to the ones provided.</li>
+	<li>In certain parts of the assignment where you are asked to answer a question or explain something in particular, add this as a block comment at the beginning of the assignment's main java file.</li>
+	<li>Do not import data structures from the java libraries.</li>
+	<li>The submission server for this assignment will open shortly.</li>
+</ul>
+
+<h4>Binary Search Trees</h4>
+
+<p>You will implement some operations on binary trees in the template file <a href="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/data/uploads/BST.java">BST.java</a>. The file already contains methods to insert key-value pairs and search for a key in binary search trees. You need to Implement the following public methods recursively, adding one private recursive method for each public method:</p>
+
+<ul>
+	<li><code>public int height()</code>: returns the height of the tree.&nbsp;<strong>For this method you also&nbsp;need to write in comments the worst-case asymptotic running time of this method as a function of the number of keys N in the tree, and briefly explain it.</strong></li>
+	<li><code>public Key median()</code>: returns the median key in the tree.<br />
+		if the tree is empty the method should return <code>null</code>.<br />
+		<b>I</b>f the tree has N keys K<small>0</small> &lt; K<small>1</small> &lt; K<small>2</small> &lt; ... &lt; K<small>(N-1)</small>, then&nbsp;their median is key K(<small>(N-1)/2)</small> (here "/" is integer division).&nbsp;Note that the median is&nbsp;<strong>always</strong> a key,&nbsp;<strong>not</strong> the average of keys. If there is an even number of keys. For example if the keys in the tree are the A, C, U, W then the median is the key at position (4-1)/2=1, which is key C -- position numbers start at&nbsp;zero.<br />
+		<strong>This operation needs to run in worst-case Θ(h) time, where h is the height of the tree.</strong><br />
+		<strong>Hint:</strong> To implement a Θ(h) median method you need to study and understand the <u>rank</u> and <u>select</u> methods from the lectures&nbsp; and the book.</li>
+	<li><code>public void delete(Key key)</code>: deletes from the tree the node containing <code>key</code>.<strong> &nbsp;<br />
+		Your implementation needs to be different than&nbsp;the Hibbard deletion from the lectures:&nbsp;if the node to be deleted has two child nodes, then it needs to be replaced with its predecessor&nbsp;(not its successor).&nbsp;</strong>The <strong>predecessor</strong> of a key in a BST is the immediately smaller key. In the book &amp; lectures we saw the Hibbard deletion algorithm which makes use of the <strong>successor</strong> of a key (the immediately larger key). In the example BST at the bottom of the page, the predecessor of key E is C, and the successor of E is H.</li>
+	<li><code>public String printKeysInOrder()</code>: returns a String containing <u>all keys </u>(but not the associated values) in the tree, <strong>in the order they are stored in the tree</strong>.&nbsp;<strong>The keys in each subtree should be contained in a parenthesis.</strong>&nbsp;For example when you call this method with an empty tree it should return the empty string <tt>"()".</tt> When you call it with the tree containing only a single key "A", it should return <tt>"(()A())"</tt>. When you call this method on the tree in the picture below it should return the string <tt>"<tt>(((()A(()C()))E((()H(()M()))R()))S(()X()))</tt>"</tt>. There are more examples in the comments before the method in BST.java.</li>
+	<li><code>public String prettyPrintKeys():</code>&nbsp;This method returns a multi-line string representation of a tree, <u>showing only the keys in the tree</u>. This representation should
+		<ul>
+			<li>print <u>the key</u><strong> </strong>of each node in a separate line</li>
+			<li>print null nodes</li>
+			<li>print the left subtree before the right subtree</li>
+			<li>use correct indentation to print the example below.</li>
+		</ul>
+
+		<p>When the method is called with an empty tree, it should return the string&nbsp;<samp><tt>"-null\n"</tt>.</samp><br />
+			When the method is called with the example tree shown in the picture below, it should return the string:</p>
+
+		<pre>-S
+ |-E
+ | |-A
+ | | |-null
+ | |  -C
+ | |   |-null
+ | |    -null
+ |  -R
+ |   |-H
+ |   | |-null
+ |   |  -M
+ |   |   |-null
+ |   |    -null
+ |    -null
+  -X
+   |-null
+    -null
+</pre>
+
+		<p>Note that line breaks in a string are represented with the special sequence "\n". You should have a "\n" even after the last key in the tree.</p>
+
+		<p><strong>Hint: </strong>To implement this method you should use an inner recursive method:</p>
+
+		<p><code>private String prettyPrint(Node&lt;Key,Value&gt; node, String prefix)</code></p>
+
+		<p>where the argument prefix is the string before horizontal dash "-". In the above example, the prefix when this method is called for the node containing H is: " " + "|" + " " + " " + " " + "|".</p>
+	</li>
+</ul>
+
+<p>You should add tests in the file <a href="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/data/uploads/BSTTest.java">BSTTest.java</a> to sufficiently test all the functionality of your code. Your tests should execute each line of code at least once and they should exercise the decision-branches of every if-then-else statement and loop statement. The submission server will automatically test for this.</p>
+
+<h4>Time spent on the assignment</h4>
+
+<p><a href="https://goo.gl/forms/yg32VGwZtu4TbyHY2">Input the hours you spent on this assignment.</a> The input is anonymous and will only be used for statistics. Please try to be as accurate as possible.</p>
+
+<h4>Example Tree, <u>showing only&nbsp;keys</u>:</h4>
+
+<p><img alt="" src="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2012/data/uploads/assignments/a4/bst.jpg" style="width: 250px; height: 256px;" /></p>
+
+<p>&nbsp;</p>
+        </div>
+        
+        <div class="col-md-4">
+          <h2>News</h2>
+
+<div>
+<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/TCD_CS2010/favorites" data-widget-id="646843697884098560">News by @TCD_CS2010</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+<!--div>
+<a class="twitter-timeline" data-chrome="nofooter transparent" data-dnt="true" href="https://twitter.com/TCD_CS2010" data-widget-id="513953885497466880">News by @TCD_CS2010</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div-->
+
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>Last Update: Tuesday, October 31st, 2017 - 10:36 AM </p>
+      </footer>
+
+    </div> <!-- /container -->
+    
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/theme/Bootstrap3/js/jquery-1.10.2.min.js"></script>
+    <script src="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/theme/Bootstrap3/js/jquery.cookie.js"></script>
+    <script src="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/theme/Bootstrap3/js/jquery.tablesorter.min.js"></script>
+    <script src="https://www.scss.tcd.ie/Vasileios.Koutavas/teaching/cs2010/mt1718/theme/Bootstrap3/js/bootstrap.min.js"></script>
+    <script>
+      if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+        var msViewportStyle = document.createElement("style")
+        msViewportStyle.appendChild(
+          document.createTextNode(
+            "@-ms-viewport{width:auto!important}"
+          )
+        )
+        document.getElementsByTagName("head")[0].appendChild(msViewportStyle)
+      }
+    </script>
+
+    
+      </body>
+</html>

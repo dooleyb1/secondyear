@@ -1,7 +1,0 @@
-Running: xsim.dir/CAR_tb_behav/xsimk.exe -simmode gui -wdb CAR_tb_behav.wdb -simrunnum 0 -socket 59821
-Design successfully loaded
-Design Loading Memory Usage: 6904 KB (Peak: 6904 KB)
-Design Loading CPU Usage: 31 ms
-Simulation completed
-Simulation Memory Usage: 7680 KB (Peak: 7680 KB)
-Simulation CPU Usage: 61 ms

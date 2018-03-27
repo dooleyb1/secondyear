@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="client-nojs">
+<head>
+<meta charset="UTF-8" />
+<title>Introduction to BSD Sockets - TreckWiki</title>
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+<meta name="generator" content="MediaWiki 1.23.13" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="TreckWiki (en)" />
+<link rel="EditURI" type="application/rsd+xml" href="http://wiki.treck.com/api.php?action=rsd" />
+<link rel="alternate" type="application/atom+xml" title="TreckWiki Atom feed" href="/index.php?title=Special:RecentChanges&amp;feed=atom" />
+<link rel="stylesheet" href="http://wiki.treck.com/load.php?debug=false&amp;lang=en&amp;modules=mediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.skinning.interface%7Cmediawiki.ui.button%7Cskins.monobook.styles&amp;only=styles&amp;skin=monobook&amp;*" />
+<!--[if IE 6]><link rel="stylesheet" href="/skins/monobook/IE60Fixes.css?303" media="screen" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" href="/skins/monobook/IE70Fixes.css?303" media="screen" /><![endif]--><meta name="ResourceLoaderDynamicStyles" content="" />
+<style>a:lang(ar),a:lang(kk-arab),a:lang(mzn),a:lang(ps),a:lang(ur){text-decoration:none}
+/* cache key: TreckWiki_db:resourceloader:filter:minify-css:7:665f54db0aaf38088519e3b24be7dedd */</style>
+<script src="http://wiki.treck.com/load.php?debug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=monobook&amp;*"></script>
+<script>if(window.mw){
+mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"Introduction_to_BSD_Sockets","wgTitle":"Introduction to BSD Sockets","wgCurRevisionId":2996,"wgRevisionId":2996,"wgArticleId":10,"wgIsArticle":true,"wgIsRedirect":false,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgBreakFrames":false,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Introduction_to_BSD_Sockets","wgIsProbablyEditable":false,"wgRestrictionEdit":[],"wgRestrictionMove":[]});
+}</script><script>if(window.mw){
+mw.loader.implement("user.options",function($,jQuery){mw.user.options.set({"ccmeonemails":0,"cols":80,"date":"default","diffonly":0,"disablemail":0,"editfont":"default","editondblclick":0,"editsectiononrightclick":0,"enotifminoredits":0,"enotifrevealaddr":0,"enotifusertalkpages":1,"enotifwatchlistpages":1,"extendwatchlist":0,"fancysig":0,"forceeditsummary":0,"gender":"unknown","hideminor":0,"hidepatrolled":0,"imagesize":2,"math":1,"minordefault":0,"newpageshidepatrolled":0,"nickname":"","norollbackdiff":0,"numberheadings":0,"previewonfirst":0,"previewontop":1,"rcdays":7,"rclimit":50,"rows":25,"showhiddencats":0,"shownumberswatching":1,"showtoolbar":1,"skin":"monobook","stubthreshold":0,"thumbsize":2,"underline":2,"uselivepreview":0,"usenewrc":0,"watchcreations":1,"watchdefault":1,"watchdeletion":0,"watchlistdays":3,"watchlisthideanons":0,"watchlisthidebots":0,"watchlisthideliu":0,"watchlisthideminor":0,"watchlisthideown":0,"watchlisthidepatrolled":0,"watchmoves":0,"wllimit":250,
+"useeditwarning":1,"prefershttps":1,"language":"en","variant-gan":"gan","variant-iu":"iu","variant-kk":"kk","variant-ku":"ku","variant-shi":"shi","variant-sr":"sr","variant-tg":"tg","variant-uz":"uz","variant-zh":"zh","searchNs0":true,"searchNs1":false,"searchNs2":false,"searchNs3":false,"searchNs4":false,"searchNs5":false,"searchNs6":false,"searchNs7":false,"searchNs8":false,"searchNs9":false,"searchNs10":false,"searchNs11":false,"searchNs12":false,"searchNs13":false,"searchNs14":false,"searchNs15":false,"variant":"en"});},{},{});mw.loader.implement("user.tokens",function($,jQuery){mw.user.tokens.set({"editToken":"+\\","patrolToken":false,"watchToken":false});},{},{});
+/* cache key: TreckWiki_db:resourceloader:filter:minify-js:7:9f426b327d5b26fdba4b6c7f571e2def */
+}</script>
+<script>if(window.mw){
+mw.loader.load(["mediawiki.page.startup","mediawiki.legacy.wikibits","mediawiki.legacy.ajax"]);
+}</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1937993-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body class="mediawiki ltr sitedir-ltr ns-0 ns-subject page-Introduction_to_BSD_Sockets skin-monobook action-view">
+<div id="globalWrapper">
+<div id="column-content"><div id="content" class="mw-body-primary" role="main">
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading" lang="en"><span dir="auto">Introduction to BSD Sockets</span></h1>
+	<div id="bodyContent" class="mw-body">
+		<!--pdmc<div id="siteSub">From TreckWiki</div>-->
+		<div id="contentSub"></div>
+		<div id="jump-to-nav" class="mw-jump">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>
+
+		<!-- start content -->
+<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><p><a href="/Table_of_Contents" title="Table of Contents">Table of Contents</a>
+</p><p><br />
+The Berkeley Sockets 4.4 API (Applications Programmer Interface) is a set of standard function calls made available at the application level. These functions allow programmers to include Internet communications capabilities in their products.
+</p><p>The Berkeley Sockets API (also frequently referred to as simply `sockets') was originally released with 4.2BSD in 1983. Enhancements have continued through the 4.4BSD systems. Berkeley-based code can be found in many different operating systems, both commercial and public domain, such as BSD/OS, FreeBSD, NetBSD, OpenBSD, and UnixWare 2.x. Other popular operating systems such as Solaris and Linux employ the standard sockets interface, though the code was written from scratch.
+</p><p>Other sockets APIs exist, though Berkeley Sockets is generally regarded as the standard. Two of the most common APIs are Winsock and TLI. Winsock (Windows Sockets) was developed for the Microsoft Windows platform in 1993, and is based significantly on the BSD interface. A large subset of the BSD API is provided, with most of the exceptions being platform-specific to BSD systems. TLI (Transport Layer Interface) was developed by AT&amp;T, and has the capability to access TCP/IP and IPX/SPX transport layers. XTI (X/Open Transport Interface, developed by X/Open Company Ltd.) is an extension of TLI that allows access to both TCP/IP and NetBios.
+</p><p><br />
+</p>
+<div id="toc" class="toc"><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Overview_of_Sockets"><span class="tocnumber">1</span> <span class="toctext">Overview of Sockets</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Byte-Ordering_Functions"><span class="tocnumber">2</span> <span class="toctext">Byte-Ordering Functions</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Data_Structures"><span class="tocnumber">3</span> <span class="toctext">Data Structures</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Common_Socket_Calls"><span class="tocnumber">4</span> <span class="toctext">Common Socket Calls</span></a>
+<ul>
+<li class="toclevel-2 tocsection-5"><a href="#socket.28.29"><span class="tocnumber">4.1</span> <span class="toctext">socket()</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="#bind.28.29"><span class="tocnumber">4.2</span> <span class="toctext">bind()</span></a></li>
+<li class="toclevel-2 tocsection-7"><a href="#listen.28.29"><span class="tocnumber">4.3</span> <span class="toctext">listen()</span></a></li>
+<li class="toclevel-2 tocsection-8"><a href="#accept.28.29"><span class="tocnumber">4.4</span> <span class="toctext">accept()</span></a></li>
+<li class="toclevel-2 tocsection-9"><a href="#connect.28.29"><span class="tocnumber">4.5</span> <span class="toctext">connect()</span></a></li>
+<li class="toclevel-2 tocsection-10"><a href="#send.28.29"><span class="tocnumber">4.6</span> <span class="toctext">send()</span></a></li>
+<li class="toclevel-2 tocsection-11"><a href="#sendto.28.29"><span class="tocnumber">4.7</span> <span class="toctext">sendto()</span></a></li>
+<li class="toclevel-2 tocsection-12"><a href="#recv.28.29"><span class="tocnumber">4.8</span> <span class="toctext">recv()</span></a></li>
+<li class="toclevel-2 tocsection-13"><a href="#recvfrom.28.29"><span class="tocnumber">4.9</span> <span class="toctext">recvfrom()</span></a></li>
+<li class="toclevel-2 tocsection-14"><a href="#close.28.29"><span class="tocnumber">4.10</span> <span class="toctext">close()</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-15"><a href="#Example_Code"><span class="tocnumber">5</span> <span class="toctext">Example Code</span></a>
+<ul>
+<li class="toclevel-2 tocsection-16"><a href="#UDP_Client"><span class="tocnumber">5.1</span> <span class="toctext">UDP Client</span></a></li>
+<li class="toclevel-2 tocsection-17"><a href="#UDP_Server"><span class="tocnumber">5.2</span> <span class="toctext">UDP Server</span></a></li>
+<li class="toclevel-2 tocsection-18"><a href="#TCP_Client"><span class="tocnumber">5.3</span> <span class="toctext">TCP Client</span></a></li>
+<li class="toclevel-2 tocsection-19"><a href="#TCP_Server"><span class="tocnumber">5.4</span> <span class="toctext">TCP Server</span></a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Overview_of_Sockets">Overview of Sockets</span></h2>
+<p>BSD Sockets generally relies upon client/server architecture. For TCP communications, one host listens for incoming connection requests. When a request arrives, the server host will accept it, at which point data can be transferred between the hosts. UDP is also allowed to establish a connection, though it is not required. Data can simply be sent to or received from a host.
+</p><p>The Sockets API makes use of two mechanisms to deliver data to the application level: ports and sockets. Ports and sockets are one of the most misunderstood concepts in sockets programming.
+</p><p>All TCP/IP stacks have 65,536 ports for both TCP and UDP. There is a full compliment of ports for UDP (numbered 0-65535) and another full compliment, with the same numbering scheme, for TCP. The two sets do not overlap. Thus, communication over both TCP and UDP can take place on port 15 (for example) at the same time.
+</p><p>A port is not a physical interface - it is a concept that simplifies the concept of Internet communications for humans. Upon receiving a packet, the protocol stack directs it to the specific port. If there is no application listening on that port, the packet is discarded and an error may be returned to the sender. However, applications can create sockets, which allow them to attach to a port. Once an application has created a socket and bound it to a port, data destined to that port will be delivered to the application. This is why the term socket is used - it is the connection mechanism between the outside world (the ports) and the application.
+A common misunderstanding is that sockets-based systems can only communicate with other sockets-based systems. This is not true. TCP/IP or UDP/IP communications are handled at the port level - the underlying protocols do not care what mechanisms exist above the port. Any Internet host can communicate with any other, be it Berkeley Sockets, WinSock, or anything else. "Sockets" is just an API that allows the programmer to access Internet functionality - it does not modify the manner in which communications occur.
+Let us use the example of an office building to illustrate how sockets and ports relate to each other. The building itself is analogous to an Internet host. Each office represents a port, the receptionist is a socket, and the business itself is an application.
+Suppose you are a visitor to this building, looking for a particular business. You wander in, and get directed to the appropriate office. You enter the office, and speak with the receptionist, who then relays your message to the business itself. If there is nobody in the office, you leave.
+To rephrase the above in sockets terminology: A packet is transmitted to a host. It eventually gets to the correct port, at which point the socket conveys the packet's data to the application. If there is no socket at the destination port, the packet is discarded.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Byte-Ordering_Functions">Byte-Ordering Functions</span></h2>
+<p>Because TCP/IP has to be a universal standard, allowing communications between any platforms, it is necessary to have a method of arranging information so that big-endian and little-endian machines can understand each other. Thus, there are functions that take the data you give them and return them in network byte-order. On platforms where data is already correctly ordered, the functions do nothing and are frequently macro'd into empty statements. Byte-ordering functions should always be used as they do not impact performance on systems that are already correctly ordered and they promote code portability.
+The four byte-ordering functions are <tt><a href="/htons" title="htons">htons</a></tt>, <tt><a href="/htonl" title="htonl">htonl</a></tt>, <tt><a href="/ntohs" title="ntohs">ntohs</a></tt>, and <tt><a href="/ntohl" title="ntohl">ntohl</a></tt>. These stand for host to network short, host to network long, network to host short, and network to host long, respectively.
+<tt><a href="/htons" title="htons">htons</a></tt> translates a short integer from host byte-order to network byte-order. <tt><a href="/htonl" title="htonl">htonl</a></tt> is similar, translating a long integer. The other two functions do the reverse, translating from network byte-order to host byte-order.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Data_Structures">Data Structures</span></h2>
+<p>Before venturing into the realm of actual API functions, one must understand a few
+structures. The most important of these is <tt><a href="/Struct:sockaddr_in" title="Struct:sockaddr in">sockaddr_in</a></tt>. It is defined as follows:
+</p>
+<pre class="c" style="font-family:monospace;"><span style="color: #0000FF;">#define</span> trsocket.<span style="color: #202020;">h</span>
+&#160;
+<span style="color: #0000FF;">struct</span> <span style="color: #0000FF;">sockaddr_in</span>
+<span style="color: #000000;">&#123;</span>
+    <span style="color: #0000FF;">short</span>          sin_family<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">u_short</span>        sin_port<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">struct</span> in_addr sin_addr<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">char</span>           sin_zero<span style="color: #000000;">&#91;</span><span style="color: #0000dd;">8</span><span style="color: #000000;">&#93;</span><span style="color: #000000;">;</span>
+<span style="color: #000000;">&#125;</span><span style="color: #000000;">;</span></pre>
+<p><br />
+The structure <tt><a href="/Struct:in_addr" title="Struct:in addr">in_addr</a></tt> that is used in <tt><a href="/Struct:sockaddr_in" title="Struct:sockaddr in">sockaddr_in</a></tt> is defined as:
+</p>
+<pre class="c" style="font-family:monospace;"><span style="color: #0000FF;">#define</span> trsocket.<span style="color: #202020;">h</span>
+&#160;
+<span style="color: #0000FF;">struct</span> in_addr
+<span style="color: #000000;">&#123;</span>
+    <span style="color: #0000FF;">u_long</span> s_addr<span style="color: #000000;">;</span>
+<span style="color: #000000;">&#125;</span><span style="color: #000000;">;</span></pre>
+<p><br />
+These are the most important data structures used in sockets. The second consists of an unsigned long integer that contains the IP address that will be associated with the socket. The first has two other important fields: <tt>'sin_family'</tt> and <tt>'sin_port'</tt>. <tt>'sin_family'</tt> tells sockets which protocol family to use. For IPv4, the constant <tt>AF_INET</tt> should always be passed in. <tt>'sin_port'</tt> tells what port number will be associated with the socket.
+</p><p><tt><a href="/Struct:sockaddr_in" title="Struct:sockaddr in">sockaddr_in</a></tt> is a modification of the standard <tt><a href="/Struct:sockaddr" title="Struct:sockaddr">sockaddr</a></tt> structure:
+</p>
+<pre class="c" style="font-family:monospace;"><span style="color: #0000FF;">struct</span> <span style="color: #0000FF;">sockaddr</span>
+<span style="color: #000000;">&#123;</span>
+    <span style="color: #0000FF;">u_char</span> sa_len<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">u_char</span> sa_family<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">char</span>   sa_data<span style="color: #000000;">&#91;</span><span style="color: #0000dd;">14</span><span style="color: #000000;">&#93;</span><span style="color: #000000;">;</span>
+<span style="color: #000000;">&#125;</span><span style="color: #000000;">;</span></pre>
+<p><br />
+Socket calls expect the standard <tt><a href="/Struct:sockaddr" title="Struct:sockaddr">sockaddr</a></tt> structure. However, for IPv4 communications, it is proper to pass in a <tt><a href="/Struct:sockaddr_in" title="Struct:sockaddr in">sockaddr_in</a></tt> structure that has been cast to a <tt><a href="/Struct:sockaddr" title="Struct:sockaddr">sockaddr</a></tt>.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Common_Socket_Calls">Common Socket Calls</span></h2>
+<p>This section lists the most commonly used socket calls and describes their uses.
+This is purely introductory material. For a more complete description of how the calls work, please see the <a href="/Programmer%27s_Reference" title="Programmer's Reference">Programmer's Reference</a>.
+</p>
+<h3><span class="mw-headline" id="socket.28.29"><tt><a href="/socket" title="socket">socket</a>()</tt></span></h3>
+<p>A socket, in the simplest sense, is a data structure used by the Sockets API. When the user calls this function, it creates a socket and returns reference a number for that socket. That reference number, in turn, must be used in future calls.
+</p>
+<h3><span class="mw-headline" id="bind.28.29"><tt><a href="/bind" title="bind">bind</a>()</tt></span></h3>
+<p>This call allows a user to associate a socket with a particular local port and IP address. In the case of a server (see <tt><a href="#listen">listen</a></tt> and <tt><a href="#accept">accept</a></tt> below), it allows the user to specify which port and IP address incoming connections must be addressed to. For outgoing connection requests (see <tt><a href="#connect">connect</a></tt> below), it allows the user to specify which port the connection will come from when viewed by the other host.
+</p>
+<table cellspacing="0" cellpadding="5" style="background:#DDFFDD; border:1px dashed #00FF00;">
+
+<tr valign="top">
+<td width="60pt"><a href="/File:Note.png" class="image" title="Note"><img alt="Note" src="/images/c/cc/Note.png" width="16" height="16" /></a> Note:
+</td>
+<td> <b><tt>bind</tt></b> is unnecessary for sockets that are not going to be set up to accept incoming connections. In this case, the stack will pick an appropriate IP address and a random port (known as an ephemeral port).
+</td></tr></table>
+<p><span id="listen"></span>
+</p>
+<h3><span class="mw-headline" id="listen.28.29"><tt><a href="/listen" title="listen">listen</a>()</tt></span></h3>
+<p>This function prepares the given socket to accept incoming TCP requests. It must be called before <tt><a href="/accept" title="accept">accept</a>()</tt>.
+</p><p><span id="accept"></span>
+</p>
+<h3><span class="mw-headline" id="accept.28.29"><tt><a href="/accept" title="accept">accept</a>()</tt></span></h3>
+<p>This function detects incoming connection requests on the listening socket.
+In blocking mode, this call will cause a task to sleep until a connection request is received. In non-blocking mode, this call will return <tt><a href="/Compile_Time_Macros#TM_EWOULDBLOCK" title="Compile Time Macros">TM_EWOULDBLOCK</a></tt> indicating that no connection request is present and that accept must be called again. If the user calls <b><tt>accept</tt></b> and a connection request is pending, <b><tt>accept</tt></b> creates another socket based on the properties of the listening socket. If the call is successful, the socket descriptor of the newly created and connected socket is returned. The new socket is created to allow communications with multiple clients from a single port on the server (think of web servers, which listen on port 80 by default and are capable of communicating with thousands of hosts at the same time). Each time the user calls <b><tt>accept</tt></b> and there is a connection requests pending, it creates a new socket.
+</p><p><span id="connect"></span>
+</p>
+<h3><span class="mw-headline" id="connect.28.29"><tt><a href="/connect" title="connect">connect</a>()</tt></span></h3>
+<p>When a user issues a <b><tt>connect</tt></b> command, the stack creates a connection with another host. Before <b><tt>connect</tt></b> can instruct the stack to establish a connection, the user must pass a socket and a <a href="/Struct:sockaddr_in" title="Struct:sockaddr in">sockaddr_in</a> structure containing the destination IP address and port. In TCP, an actual connection is negotiated. In UDP, however, no packets are exchanged.
+</p>
+<h3><span class="mw-headline" id="send.28.29"><tt><a href="/send" title="send">send</a>()</tt></span></h3>
+<p>This call allows a user to send data over a connected socket. Unlike <tt><a href="/sendto" title="sendto">sendto</a>()</tt>, this socket  must be connected. Because the socket is already connected, it is not necessary to specify the destination address (the destination address was set in <tt><a href="#accept">accept</a></tt> or <tt><a href="#connect">connect</a></tt>). <b><tt>send</tt></b> can be used for either UDP or TCP data.
+</p>
+<h3><span class="mw-headline" id="sendto.28.29"><tt><a href="/sendto" title="sendto">sendto</a>()</tt></span></h3>
+<p>Unlike <tt><a href="/send" title="send">send</a>()</tt>, <b><tt>sendto</tt></b> requires users to specify the destination port and address. This is useful for UDP communications only, as TCP requires a pre-existing connection. sendto may be used on either connected or unconnected UDP sockets. In the case that a UDP socket is already connected, the destination address provided to <b><tt>sendto</tt></b> will override the default established on the socket with connect.
+</p>
+<h3><span class="mw-headline" id="recv.28.29"><tt><a href="/recv" title="recv">recv</a>()</tt></span></h3>
+<p>This function allows the user to receive data on the connected socket. <b><tt>recv</tt></b> can be used for either TCP or UDP.
+</p>
+<h3><span class="mw-headline" id="recvfrom.28.29"><tt><a href="/recvfrom" title="recvfrom">recvfrom</a>()</tt></span></h3>
+<p>This function allows the user to receive data from a specified UDP socket (whether or not it is connected). It may not be used for TCP sockets, as they require a connection.
+</p>
+<h3><span class="mw-headline" id="close.28.29"><tt>close()</tt></span></h3>
+<p>This function closes (read: deletes) a socket that has been allocated with the socket call. If the socket is connected, it closes the connection before deleting it. Because the <b><tt>close</tt></b> call is frequently used for more than one purpose (closing open files, for example), it is renamed <tt><a href="/tfClose" title="tfClose">tfClose</a>()</tt> in the Treck stack to avoid conflicts with the preexisting function.
+</p>
+<h2><span class="mw-headline" id="Example_Code">Example Code</span></h2>
+<p>The following are simplified examples of using the Sockets API to create Internet connectivity in an application. They are all available on the Treck protocols CD, in the examples\ directory. Four examples are given: UDP Client, UDP Server, TCP Client, and TCP Server. All of the examples are coded in blocking-mode.
+</p><p><br />
+</p>
+<h3><span class="mw-headline" id="UDP_Client">UDP Client</span></h3>
+<p>This first example shows how to code a UDP client. A socket is created, and <tt><a href="/sendto" title="sendto">sendto</a>()</tt> is called the specified number of times. Note that <tt><a href="/bind" title="bind">bind</a>()</tt> is never called. For outgoing connections, <tt><a href="/bind" title="bind">bind</a>()</tt> is not necessary, as the stack will pick a random port and an appropriate IP address.
+</p>
+<pre class="c" style="font-family:monospace;"><span style="color: #0000FF;">#include</span> <span style="color: #000000;">&lt;</span>trsocket.<span style="color: #202020;">h</span><span style="color: #000000;">&gt;</span>
+&#160;
+<span style="color: #0000FF;">#define</span> TM_BUF_SIZE <span style="color: #0000dd;">1400</span>
+<span style="color: #0000FF;">#define</span> TM_PACKETS_TO_SEND <span style="color: #0000dd;">10</span>
+<span style="color: #0000FF;">#define</span> TM_DEST_ADDR “10.0.0.1”
+<span style="color: #0000FF;">#define</span> TM_DEST_PORT <span style="color: #0000dd;">9999</span>
+&#160;
+<span style="color: #0000FF;">char</span> testBuffer<span style="color: #000000;">&#91;</span>TM_BUF_SIZE<span style="color: #000000;">&#93;</span><span style="color: #000000;">;</span>
+<span style="color: #0000FF;">char</span> <span style="color: #000000;">*</span> errorStr<span style="color: #000000;">;</span>
+&#160;
+<span style="color: #0000FF;">int</span> udpClient<span style="color: #000000;">&#40;</span><span style="color: #0000FF;">void</span><span style="color: #000000;">&#41;</span>
+<span style="color: #000000;">&#123;</span>
+    <span style="color: #0000FF;">int</span> testSocket<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">unsigned</span> <span style="color: #0000FF;">int</span> counter<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">struct</span> <span style="color: #0000FF;">sockaddr_in</span> destAddr<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> errorCode<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> returnVal<span style="color: #000000;">;</span>
+&#160;
+    counter <span style="color: #000000;">=</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">;</span>
+    returnVal <span style="color: #000000;">=</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Specify the address family */</span>
+    destAddr.<span style="color: #202020;">sin_family</span> <span style="color: #000000;">=</span> AF_INET<span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Specify the destination port */</span>
+    destAddr.<span style="color: #202020;">sin_port</span> <span style="color: #000000;">=</span> htons<span style="color: #000000;">&#40;</span>TM_DEST_PORT<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Specify the destination IP address */</span>
+    destAddr.<span style="color: #202020;">sin_addr</span>.<span style="color: #202020;">s_addr</span> <span style="color: #000000;">=</span> inet_addr<span style="color: #000000;">&#40;</span>TM_DEST_ADDR<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Create a socket */</span>
+    testSocket <span style="color: #000000;">=</span> socket<span style="color: #000000;">&#40;</span>AF_INET<span style="color: #000000;">,</span> SOCK_DGRAM<span style="color: #000000;">,</span> IPPROTO_UDP<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/*
+ * Verify the socket was created correctly. If not, return
+ * immediately
+ */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>testSocket <span style="color: #000000;">==</span> TM_SOCKET_ERROR<span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+        returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        <span style="color: #0000FF;">goto</span> udpClientEnd<span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* While we haven’t yet sent enough packets... */</span>
+    <span style="color: #0000FF;">while</span> <span style="color: #000000;">&#40;</span>counter <span style="color: #000000;">&lt;</span> TM_PACKETS_TO_SEND<span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+<span style="color: #008000; font-style: italic;">/* Send another packet to the destination specified above */</span>
+        errorCode <span style="color: #000000;">=</span> sendto<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">,</span>
+                           testBuffer<span style="color: #000000;">,</span>
+                           TM_BUF_SIZE<span style="color: #000000;">,</span>
+                           <span style="color: #0000dd;">0</span><span style="color: #000000;">,</span>
+                           <span style="color: #000000;">&amp;</span>destAddr<span style="color: #000000;">,</span>
+                           <span style="color: #0000FF;">sizeof</span><span style="color: #000000;">&#40;</span>destAddr<span style="color: #000000;">&#41;</span><span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/*
+ * Check if there was an error while sending. If so, break from the
+ * loop
+ */</span>
+        <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>errorCode <span style="color: #000000;">&lt;</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span>
+        <span style="color: #000000;">&#123;</span>
+            returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+            errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+            <span style="color: #0000FF; font-weight: bold;">break</span><span style="color: #000000;">;</span>
+        <span style="color: #000000;">&#125;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Increment the number of packets sent by 1 */</span>
+        counter<span style="color: #000000;">++;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+udpClientEnd<span style="color: #000000;">:</span>
+<span style="color: #008000; font-style: italic;">/* Make sure the socket exists before we close it */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>testSocket <span style="color: #000000;">!=</span> <span style="color: #000000;">-</span><span style="color: #0000dd;">1</span><span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+<span style="color: #008000; font-style: italic;">/* Close the socket */</span>
+        tfClose<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+    <span style="color: #0000FF;">return</span><span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #000000;">&#125;</span></pre>
+<h3><span class="mw-headline" id="UDP_Server">UDP Server</span></h3>
+<p>This code is a very simple UDP server. It creates a socket, binds it to the desired port (it is not necessary to supply an IP address as the stack will pick one; this is very useful for making code portable), and then receives data. Upon receipt of the data, the <tt>'sourceAddr'</tt> structure is filled out with the originating IP Address and port of the incoming packet.
+</p>
+<pre class="c" style="font-family:monospace;"><span style="color: #0000FF;">#include</span> <span style="color: #000000;">&lt;</span>trsocket.<span style="color: #202020;">h</span><span style="color: #000000;">&gt;</span>
+&#160;
+<span style="color: #0000FF;">#define</span> TM_BUF_SIZE <span style="color: #0000dd;">1500</span>
+<span style="color: #0000FF;">#define</span> TM_DEST_PORT <span style="color: #0000dd;">9999</span>
+&#160;
+<span style="color: #0000FF;">char</span> testBuffer<span style="color: #000000;">&#91;</span>TM_BUF_SIZE<span style="color: #000000;">&#93;</span><span style="color: #000000;">;</span>
+<span style="color: #0000FF;">char</span> <span style="color: #000000;">*</span> errorStr<span style="color: #000000;">;</span>
+&#160;
+<span style="color: #0000FF;">int</span> udpServer<span style="color: #000000;">&#40;</span><span style="color: #0000FF;">void</span><span style="color: #000000;">&#41;</span>
+<span style="color: #000000;">&#123;</span>
+    <span style="color: #0000FF;">int</span> testSocket<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">struct</span> <span style="color: #0000FF;">sockaddr_in</span> sourceAddr<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">struct</span> <span style="color: #0000FF;">sockaddr_in</span> destAddr<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> errorCode<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> addrLen<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> returnVal<span style="color: #000000;">;</span>
+&#160;
+    returnVal <span style="color: #000000;">=</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Specify the address family */</span>
+    destAddr.<span style="color: #202020;">sin_family</span> <span style="color: #000000;">=</span> AF_INET<span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/*
+* Specify the dest port (this being the server, the destination
+* port is the one we’ll bind to)
+*/</span>
+    destAddr.<span style="color: #202020;">sin_port</span> <span style="color: #000000;">=</span> htons<span style="color: #000000;">&#40;</span>TM_DEST_PORT<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/*
+* Specify the destination IP address (our IP address). Setting
+* this value to 0 tells the stack that we don’t care what IP
+* address we use - it should pick one. For systems with one IP
+* address, this is the easiest approach.
+*/</span>
+    destAddr.<span style="color: #202020;">sin_addr</span>.<span style="color: #202020;">s_addr</span> <span style="color: #000000;">=</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/*
+* The third value is the specific protocol we wish to use. We pass
+* in a 0 because the stack is capable of figuring out which
+* protocol to used based on the second parameter (SOCK_DGRAM =
+* UDP, SOCK_STREAM = TCP)
+*/</span>
+    testSocket <span style="color: #000000;">=</span> socket<span style="color: #000000;">&#40;</span>AF_INET<span style="color: #000000;">,</span> SOCK_DGRAM<span style="color: #000000;">,</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Make sure the socket was created successfully */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>testSocket <span style="color: #000000;">==</span> TM_SOCKET_ERROR<span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+        returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        <span style="color: #0000FF;">goto</span> udpServerEnd<span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/*
+* Bind the socket to the port and address at which we wish to
+* receive data
+*/</span>
+    errorCode <span style="color: #000000;">=</span> bind<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">,</span> <span style="color: #000000;">&amp;</span>destAddr<span style="color: #000000;">,</span> <span style="color: #0000FF;">sizeof</span><span style="color: #000000;">&#40;</span>destAddr<span style="color: #000000;">&#41;</span><span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Check for an error in bind */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>errorCode <span style="color: #000000;">&lt;</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+        returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        <span style="color: #0000FF;">goto</span> udpServerEnd<span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Do this forever... */</span>
+    <span style="color: #0000FF;">while</span> <span style="color: #000000;">&#40;</span><span style="color: #0000dd;">1</span><span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+<span style="color: #008000; font-style: italic;">/* Get the size of the sockaddr_in structure */</span>
+        addrLen <span style="color: #000000;">=</span> <span style="color: #0000FF;">sizeof</span><span style="color: #000000;">&#40;</span>sourceAddr<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/*
+* Receive data. The values passed in are:
+* We receive said data on testSocket.
+* The data is stored in testBuffer.
+* We can receive up to TM_BUF_SIZE bytes.
+* There are no flags we care to set.
+* Store the IP address/port the data came from in sourceAddr
+* Store the length of the data stored in sourceAddr in addrLen.
+*The length that addrLen is set to when it’s passed in is
+*used to make sure the stack doesn’t write more bytes to
+*sourceAddr than it should.
+*/</span>
+        errorCode <span style="color: #000000;">=</span> recvfrom<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">,</span>
+                             testBuffer<span style="color: #000000;">,</span>
+                             TM_BUF_SIZE<span style="color: #000000;">,</span>
+                             <span style="color: #0000dd;">0</span><span style="color: #000000;">,</span>
+                             <span style="color: #000000;">&amp;</span>sourceAddr<span style="color: #000000;">,</span>
+                             <span style="color: #000000;">&amp;</span>addrLen<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Make sure there wasn’t an error in recvfrom */</span>
+        <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>errorCode <span style="color: #000000;">&lt;</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span>
+        <span style="color: #000000;">&#123;</span>
+            returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+            errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+            <span style="color: #0000FF; font-weight: bold;">break</span><span style="color: #000000;">;</span>
+        <span style="color: #000000;">&#125;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+udpServerEnd<span style="color: #000000;">:</span>
+<span style="color: #008000; font-style: italic;">/* Make sure we have an actual socket before we try to close it */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>testSocket <span style="color: #000000;">!=</span> <span style="color: #000000;">-</span><span style="color: #0000dd;">1</span><span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+<span style="color: #008000; font-style: italic;">/* Close the socket */</span>
+        tfClose<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+    <span style="color: #0000FF;">return</span><span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #000000;">&#125;</span></pre>
+<h3><span class="mw-headline" id="TCP_Client">TCP Client</span></h3>
+<p>This code is very much like the UDP client. Unlike UDP, however, it must call <tt><a href="/connect" title="connect">connect</a>()</tt> before actually transferring data, as TCP requires a negotiated connection. It then calls <tt><a href="/send" title="send">send</a>()</tt> the specified number of times. An interesting observation is that the number of TCP data packets actually sent out on the wire will very probably not equal the number defined in this code. TCP is stream-based rather than datagram based, so it will buffer data and attempt to send it in the most convenient size packets (generally, maximum sized packets).
+</p>
+<pre class="c" style="font-family:monospace;"><span style="color: #0000FF;">#include</span> <span style="color: #000000;">&lt;</span>trsocket.<span style="color: #202020;">h</span><span style="color: #000000;">&gt;</span>
+&#160;
+<span style="color: #0000FF;">#define</span> TM_BUF_SIZE <span style="color: #0000dd;">1400</span>
+<span style="color: #0000FF;">#define</span> TM_PACKETS_TO_SEND <span style="color: #0000dd;">10</span>
+<span style="color: #0000FF;">#define</span> TM_DEST_ADDR “10.129.36.52”
+<span style="color: #0000FF;">#define</span> TM_DEST_PORT <span style="color: #0000dd;">9999</span>
+&#160;
+<span style="color: #0000FF;">char</span> testBuffer<span style="color: #000000;">&#91;</span>TM_BUF_SIZE<span style="color: #000000;">&#93;</span><span style="color: #000000;">;</span>
+<span style="color: #0000FF;">char</span> <span style="color: #000000;">*</span> errorStr<span style="color: #000000;">;</span>
+&#160;
+<span style="color: #0000FF;">int</span> tcpClient<span style="color: #000000;">&#40;</span><span style="color: #0000FF;">void</span><span style="color: #000000;">&#41;</span>
+<span style="color: #000000;">&#123;</span>
+    <span style="color: #0000FF;">int</span> testSocket<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">unsigned</span> <span style="color: #0000FF;">int</span> counter<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">struct</span> <span style="color: #0000FF;">sockaddr_in</span> destAddr<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> errorCode<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> sockOption<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> returnVal<span style="color: #000000;">;</span>
+&#160;
+    returnVal <span style="color: #000000;">=</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">;</span>
+    counter <span style="color: #000000;">=</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Specify the address family */</span>
+    destAddr.<span style="color: #202020;">sin_family</span> <span style="color: #000000;">=</span> AF_INET<span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Specify the destination port */</span>
+    destAddr.<span style="color: #202020;">sin_port</span> <span style="color: #000000;">=</span> htons<span style="color: #000000;">&#40;</span>TM_DEST_PORT<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Specify the destination IP address */</span>
+    destAddr.<span style="color: #202020;">sin_addr</span>.<span style="color: #202020;">s_addr</span> <span style="color: #000000;">=</span> inet_addr<span style="color: #000000;">&#40;</span>TM_DEST_ADDR<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Create a socket */</span>
+    testSocket <span style="color: #000000;">=</span> socket<span style="color: #000000;">&#40;</span>AF_INET<span style="color: #000000;">,</span> SOCK_STREAM<span style="color: #000000;">,</span> IPPROTO_TCP<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/*
+* Verify the socket was created correctly. If not, return
+* immediately
+*/</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>testSocket <span style="color: #000000;">==</span> TM_SOCKET_ERROR<span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+        returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        <span style="color: #0000FF;">goto</span> tcpClientEnd<span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Connect to the server */</span>
+    errorCode <span style="color: #000000;">=</span> connect<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">,</span> <span style="color: #000000;">&amp;</span>destAddr<span style="color: #000000;">,</span> <span style="color: #0000FF;">sizeof</span><span style="color: #000000;">&#40;</span>destAddr<span style="color: #000000;">&#41;</span><span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Verify that we connected correctly */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>errorCode <span style="color: #000000;">&lt;</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+        returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        <span style="color: #0000FF;">goto</span> tcpClientEnd<span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* While we haven’t yet sent enough packets... */</span>
+    <span style="color: #0000FF;">while</span> <span style="color: #000000;">&#40;</span>counter <span style="color: #000000;">&lt;</span> TM_PACKETS_TO_SEND<span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+<span style="color: #008000; font-style: italic;">/* Send another packet to the destination specified above */</span>
+        errorCode <span style="color: #000000;">=</span> send<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">,</span>
+                         testBuffer<span style="color: #000000;">,</span>
+                         TM_BUF_SIZE<span style="color: #000000;">,</span>
+                         <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/*
+* Check if there was an error while sending. If so, break from the
+* loop
+*/</span>
+        <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>errorCode <span style="color: #000000;">&lt;</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span>
+        <span style="color: #000000;">&#123;</span>
+            returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+            errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+            <span style="color: #0000FF; font-weight: bold;">break</span><span style="color: #000000;">;</span>
+        <span style="color: #000000;">&#125;</span>
+<span style="color: #008000; font-style: italic;">/* Increment the number of packets sent by 1 */</span>
+        counter<span style="color: #000000;">++;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+tcpClientEnd<span style="color: #000000;">:</span>
+<span style="color: #008000; font-style: italic;">/* Make sure we have a socket before closing it */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>testSocket <span style="color: #000000;">!=</span> <span style="color: #000000;">-</span><span style="color: #0000dd;">1</span><span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+<span style="color: #008000; font-style: italic;">/* Close the socket */</span>
+        tfClose<span style="color: #000000;">&#40;</span>testSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+    <span style="color: #0000FF;">return</span><span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #000000;">&#125;</span></pre>
+<h3><span class="mw-headline" id="TCP_Server">TCP Server</span></h3>
+<p>This is the most complicated of the examples. It creates a socket, binds that socket to a port, and configures it as a listening socket. This allows it to receive incoming connections. It then calls <tt><a href="/accept" title="accept">accept</a>()</tt>, which will block until an incoming connection request is received. When <tt><a href="/accept" title="accept">accept</a>()</tt> returns, the <tt>'sourceAddr'</tt> structure will have been filled out with the originating IP Address and port of the incoming connection request. <tt><a href="/accept" title="accept">accept</a>()</tt> creates a new socket, which is then used to receive data until the connection is closed by the other side. When this happens, the application goes back to waiting for an incoming connection request.
+</p>
+<pre class="c" style="font-family:monospace;"><span style="color: #0000FF;">#include</span> <span style="color: #000000;">&lt;</span>trsocket.<span style="color: #202020;">h</span><span style="color: #000000;">&gt;</span>
+&#160;
+<span style="color: #0000FF;">#define</span> TM_BUF_SIZE <span style="color: #0000dd;">1400</span>
+<span style="color: #0000FF;">#define</span> TM_DEST_PORT <span style="color: #0000dd;">9999</span>
+&#160;
+<span style="color: #0000FF;">char</span> testBuffer<span style="color: #000000;">&#91;</span>TM_BUF_SIZE<span style="color: #000000;">&#93;</span><span style="color: #000000;">;</span>
+<span style="color: #0000FF;">char</span> <span style="color: #000000;">*</span> strError<span style="color: #000000;">;</span>
+&#160;
+<span style="color: #0000FF;">int</span> tcpServer<span style="color: #000000;">&#40;</span><span style="color: #0000FF;">void</span><span style="color: #000000;">&#41;</span>
+<span style="color: #000000;">&#123;</span>
+    <span style="color: #0000FF;">int</span> listenSocket<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> newSocket<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">struct</span> <span style="color: #0000FF;">sockaddr_in</span> sourceAddr<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">struct</span> <span style="color: #0000FF;">sockaddr_in</span> destAddr<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> errorCode<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> addrLen<span style="color: #000000;">;</span>
+    <span style="color: #0000FF;">int</span> returnVal<span style="color: #000000;">;</span>
+&#160;
+    returnVal <span style="color: #000000;">=</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Specify the address family */</span>
+    destAddr.<span style="color: #202020;">sin_family</span> <span style="color: #000000;">=</span> AF_INET<span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/*
+* Specify the dest port (this being the server, the destination
+* port is the one we’ll bind to
+*/</span>
+    destAddr.<span style="color: #202020;">sin_port</span> <span style="color: #000000;">=</span> htons<span style="color: #000000;">&#40;</span>TM_DEST_PORT<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/*
+* Specify the destination IP address (our IP address). Setting
+* this value to 0 tells the stack that we don’t care what IP
+* address we use - it should pick one. For systems with one IP
+* address, this is the easiest approach.
+*/</span>
+    destAddr.<span style="color: #202020;">sin_addr</span>.<span style="color: #202020;">s_addr</span> <span style="color: #000000;">=</span> inet_addr<span style="color: #000000;">&#40;</span><span style="color: #ff0000;">&quot;0.0.0.0&quot;</span><span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Create a socket */</span>
+    listenSocket <span style="color: #000000;">=</span> socket<span style="color: #000000;">&#40;</span>AF_INET<span style="color: #000000;">,</span> SOCK_STREAM<span style="color: #000000;">,</span> IPPROTO_TCP<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Make sure the socket was created successfully */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>listenSocket <span style="color: #000000;">==</span> TM_SOCKET_ERROR<span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+        returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>listenSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        <span style="color: #0000FF;">goto</span> tcpServerEnd<span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/*
+* Bind the socket to the port and address at which we wish to
+* receive data
+*/</span>
+    errorCode <span style="color: #000000;">=</span> bind<span style="color: #000000;">&#40;</span>listenSocket<span style="color: #000000;">,</span> <span style="color: #000000;">&amp;</span>destAddr<span style="color: #000000;">,</span> <span style="color: #0000FF;">sizeof</span><span style="color: #000000;">&#40;</span>destAddr<span style="color: #000000;">&#41;</span><span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Check for an error in bind */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>errorCode <span style="color: #000000;">&lt;</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+        returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>listenSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        <span style="color: #0000FF;">goto</span> tcpServerEnd<span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Set up the socket as a listening socket */</span>
+    errorCode <span style="color: #000000;">=</span> listen<span style="color: #000000;">&#40;</span>listenSocket<span style="color: #000000;">,</span> <span style="color: #0000dd;">10</span><span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Check for an error in listen */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>errorCode <span style="color: #000000;">&lt;</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+        returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>listenSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+        <span style="color: #0000FF;">goto</span> tcpServerEnd<span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Do this forever... */</span>
+    <span style="color: #0000FF;">while</span> <span style="color: #000000;">&#40;</span><span style="color: #0000dd;">1</span><span style="color: #000000;">&#41;</span>
+    <span style="color: #000000;">&#123;</span>
+<span style="color: #008000; font-style: italic;">/* Get the size of the sockaddr_in structure */</span>
+        addrLen <span style="color: #000000;">=</span> <span style="color: #0000FF;">sizeof</span><span style="color: #000000;">&#40;</span>sourceAddr<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/*
+* Accept an incoming connection request. The address/port info for
+* the connection’s source is stored in sourceAddr. The length of
+* the data written to sourceAddr is stored in addrLen. The
+* initial value of addrLen is checked to make sure too many
+* bytes are not written to sourceAddr
+*/</span>
+        newSocket <span style="color: #000000;">=</span> accept<span style="color: #000000;">&#40;</span>listenSocket<span style="color: #000000;">,</span> <span style="color: #000000;">&amp;</span>sourceAddr<span style="color: #000000;">,</span> <span style="color: #000000;">&amp;</span>addrLen<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Check for an error in accept */</span>
+        <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>newSocket <span style="color: #000000;">&lt;</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span>
+        <span style="color: #000000;">&#123;</span>
+            returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>listenSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+            errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+            <span style="color: #0000FF;">goto</span> tcpServerEnd<span style="color: #000000;">;</span>
+        <span style="color: #000000;">&#125;</span>
+&#160;
+<span style="color: #008000; font-style: italic;">/* Do this forever... */</span>
+        <span style="color: #0000FF;">while</span> <span style="color: #000000;">&#40;</span><span style="color: #0000dd;">1</span><span style="color: #000000;">&#41;</span>
+        <span style="color: #000000;">&#123;</span>
+<span style="color: #008000; font-style: italic;">/* Receive data on the new socket created by accept */</span>
+            errorCode <span style="color: #000000;">=</span> recv<span style="color: #000000;">&#40;</span>newSocket<span style="color: #000000;">,</span>
+                             testBuffer<span style="color: #000000;">,</span>
+                             TM_BUF_SIZE<span style="color: #000000;">,</span>
+                             <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #008000; font-style: italic;">/* Make sure there wasn’t an error */</span>
+            <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>errorCode <span style="color: #000000;">&lt;</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span>
+            <span style="color: #000000;">&#123;</span>
+                tfClose<span style="color: #000000;">&#40;</span>newSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+                returnVal <span style="color: #000000;">=</span> tfGetSocketError<span style="color: #000000;">&#40;</span>newSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+                errorStr <span style="color: #000000;">=</span> tfStrError<span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+                <span style="color: #0000FF;">goto</span> tcpServerEnd<span style="color: #000000;">;</span>
+            <span style="color: #000000;">&#125;</span>
+<span style="color: #008000; font-style: italic;">/*
+* Receiving 0 bytes of data means the connection has been closed.
+* If this happens, close the new socket and break out of this
+* (the inner) loop.
+*/</span>
+            <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>errorCode <span style="color: #000000;">==</span> <span style="color: #0000dd;">0</span><span style="color: #000000;">&#41;</span>
+            <span style="color: #000000;">&#123;</span>
+                tfClose<span style="color: #000000;">&#40;</span>newSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+                <span style="color: #0000FF; font-weight: bold;">break</span><span style="color: #000000;">;</span>
+            <span style="color: #000000;">&#125;</span>
+        <span style="color: #000000;">&#125;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+tcpServerEnd<span style="color: #000000;">:</span>
+<span style="color: #008000; font-style: italic;">/* Make sure there’s a socket there before closing it */</span>
+    <span style="color: #0000FF;">if</span> <span style="color: #000000;">&#40;</span>listenSocket <span style="color: #000000;">!=</span> <span style="color: #000000;">-</span><span style="color: #0000dd;">1</span><span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#123;</span>
+<span style="color: #008000; font-style: italic;">/* Close the listening socket */</span>
+        tfClose<span style="color: #000000;">&#40;</span>listenSocket<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+    <span style="color: #000000;">&#125;</span>
+&#160;
+    <span style="color: #0000FF;">return</span><span style="color: #000000;">&#40;</span>returnVal<span style="color: #000000;">&#41;</span><span style="color: #000000;">;</span>
+<span style="color: #000000;">&#125;</span></pre>
+<p><br />
+<a href="/Table_of_Contents" title="Table of Contents">Table of Contents</a>
+</p>
+<!-- 
+NewPP limit report
+CPU time usage: 0.376 seconds
+Real time usage: 0.381 seconds
+Preprocessor visited node count: 177/1000000
+Preprocessor generated node count: 430/1000000
+Post‐expand include size: 567/2097152 bytes
+Template argument size: 243/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key TreckWiki_db:pcache:idhash:10-0!*!0!!en!2!* and timestamp 20171128063133 and revision id 2996
+ -->
+</div><div class="printfooter">
+Retrieved from "<a href="http://wiki.treck.com/index.php?title=Introduction_to_BSD_Sockets&amp;oldid=2996">http://wiki.treck.com/index.php?title=Introduction_to_BSD_Sockets&amp;oldid=2996</a>"</div>
+		<div id='catlinks' class='catlinks catlinks-allhidden'></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div id="column-one">
+	<h2>Navigation menu</h2>
+	<div id="p-cactions" class="portlet" role="navigation">
+		<h3>Views</h3>
+		<div class="pBody">
+			<ul>
+				<li id="ca-nstab-main" class="selected"><a href="/Introduction_to_BSD_Sockets" title="View the content page [c]" accesskey="c">Page</a></li>
+				<li id="ca-talk" class="new"><a href="/index.php?title=Talk:Introduction_to_BSD_Sockets&amp;action=edit&amp;redlink=1" title="Discussion about the content page [t]" accesskey="t">Discussion</a></li>
+				<li id="ca-viewsource"><a href="/index.php?title=Introduction_to_BSD_Sockets&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li>
+				<li id="ca-history"><a href="/index.php?title=Introduction_to_BSD_Sockets&amp;action=history" rel="archives" title="Past revisions of this page [h]" accesskey="h">History</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal" role="navigation">
+		<h3>Personal tools</h3>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="/index.php?title=Special:UserLogin&amp;returnto=Introduction+to+BSD+Sockets" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo" role="banner">
+<a href="/Main_Page" style="background-image: url(/skins/turbo.png);" title="Visit the main page"></a>
+	</div>
+	<div class="generated-sidebar portlet" id="p-navigation" role="navigation">
+		<h3>Navigation</h3>
+		<div class='pBody'>
+			<ul>
+				<li id="n-mainpage"><a href="/Main_Page" title="Visit the main page [z]" accesskey="z">Main Page</a></li>
+				<li id="n-Treck-User.27s-Manual"><a href="http://wiki.treck.com/Table_of_Contents" rel="nofollow">Treck User's Manual</a></li>
+				<li id="n-Treck-Inc.-Web-Site"><a href="http://www.treck.com" rel="nofollow">Treck Inc. Web Site</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="p-search" class="portlet" role="search">
+		<h3><label for="searchInput">Search</label></h3>
+		<div id="searchBody" class="pBody">
+			<form action="/index.php" id="searchform">
+				<input type='hidden' name="title" value="Special:Search"/>
+				<input type="search" name="search" placeholder="Search" title="Search TreckWiki [f]" accesskey="f" id="searchInput" />
+				<input type="submit" name="go" value="Go" title="Go to a page with this exact name if exists" id="searchGoButton" class="searchButton" />&#160;
+				<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton" />
+			</form>
+
+					</div>
+	</div>
+	<div class="portlet" id="p-tb" role="navigation">
+		<h3>Tools</h3>
+		<div class="pBody">
+			<ul>
+<li id="t-whatlinkshere"><a href="/Special:WhatLinksHere/Introduction_to_BSD_Sockets" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-permalink"><a href="/index.php?title=Introduction_to_BSD_Sockets&amp;oldid=2996" title="Permanent link to this revision of the page">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+</div><!-- end of the left (by default at least) column -->
+<div class="visualClear"></div>
+<div id="footer" role="contentinfo">
+	<div id="f-poweredbyico">
+		<a href="//www.mediawiki.org/"><img src="/skins/common/images/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" width="88" height="31" /></a>
+	</div>
+	<ul id="f-list">
+		<li id="lastmod"> This page was last modified on 25 March 2010, at 10:06.</li>
+		<li id="viewcount">This page has been accessed 51,676 times.</li>
+		<li id="privacy"><a href="/TreckWiki:Privacy_policy" title="TreckWiki:Privacy policy">Privacy policy</a></li>
+		<li id="about"><a href="/TreckWiki:About" title="TreckWiki:About">About TreckWiki</a></li>
+		<li id="disclaimer"><a href="/TreckWiki:General_disclaimer" title="TreckWiki:General disclaimer">Disclaimers</a></li>
+	</ul>
+</div>
+</div>
+<script>/*<![CDATA[*/window.jQuery && jQuery.ready();/*]]>*/</script><script>if(window.mw){
+mw.loader.state({"site":"ready","user":"ready","user.groups":"ready"});
+}</script>
+<script>if(window.mw){
+mw.loader.load(["mediawiki.action.view.postEdit","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","mediawiki.searchSuggest"],null,true);
+}</script>
+<script>if(window.mw){
+mw.config.set({"wgBackendResponseTime":896});
+}</script></body></html>

@@ -1,0 +1,370 @@
+<h1>C Program Examples#2</h1>
+<p>These are some C program examples from my course on systems 
+programming (<a href="https://down.dsg.cs.tcd.ie/cs2014">CS2014</a>),
+the canonical URL for this is 
+<a href="https://down.dsg.cs.tcd.ie/cs2014/examples/c-progs-2/README.html">here</a>.</p>
+<h2>Files in this example:</h2>
+<ul>
+<li>README.md - this file in markdown format</li>
+<li>README.html - this file, in HTML format (<code>'make html'</code> to update that from .md)</li>
+<li><a href="Makefile">Makefile</a> - to build the example and HTML (there's a clean target too)</li>
+<li><a href="refman.pdf">refman.pdf</a> - doxygen automated documentation from javadoc comments</li>
+<li><a href="rnd-dox">rnd-dox</a> - doxygen config file</li>
+<li><a href="rndbytes.c">rndbytes.c</a> - a couple of wee utility fuctions to get stuff from <code>/dev/random</code></li>
+<li><a href="rndbytes.h">rndbytes.h</a> - header for those functions</li>
+<li><a href="rbtest.c">rbtest.c</a> - <code>main()</code> that calls functions from <code>rndbytes.h</code></li>
+<li><a href="rnd-options.c">rnd-options.c</a> - shows different options for API</li>
+</ul>
+<p>After running <code>'make'</code> then these files will be produced (if all
+goes well):</p>
+<ul>
+<li>README.html - the html version of README.md</li>
+<li>rndbytes.o - the rndbytes object file</li>
+<li>rbtest - the rndbytes test program</li>
+<li>rnd-options - built as you like it:-)</li>
+</ul>
+<h2>A More Structured <code>rndbytes.c</code> setup</h2>
+<p>This iteration of the <code>rndbytes</code> example demonstrates a bunch of 
+things that we'll talk about in class:</p>
+<ul>
+<li>Making a header file</li>
+<li>Object files and the build</li>
+<li>Documentation (via doxygen, not sure how relevant, but leads to useful thoughts)</li>
+<li>Coding styles such as <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Coding_Style">Mozilla's</a></li>
+<li>Performance (running <code>time c-prog-2/rbtest 60000</code> vs. <code>time c-prog-1/rndbytes 60000</code>) </li>
+</ul>
+<h2>The header file or the API prototypes</h2>
+<p>Today, the term <a href="https://en.wikipedia.org/wiki/Application_programming_interface">Application Progamming
+Interface</a>
+(API) is a bit ambiguous as to whether we're talking about the kind of API in
+question here, or a web API that one accesses over the Internet via HTTPS. For
+this course we mean the former, except as otherwise stated. Normally,
+that'd be the reverse.</p>
+<p>Here's the source:</p>
+<pre><code>    /*!
+     * @file rndbytes.h
+     * @brief This is the external i/f for the rndbytes example
+     * 
+     * This is part of CS2014
+     *    https://down.dsg.cs.tcd.ie/cs2014/examples/c-progs-2/README.html
+     */
+
+    /* 
+     * Copyright (c) 2017 stephen.farrell@cs.tcd.ie
+     * 
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     * 
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     * 
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     *
+     */
+
+    #ifndef RNDBYTES_H_INCLUDED
+    #define RNDBYTES_H_INCLUDED
+
+    /*!
+     * @brief produce a random byte
+     * @return the random byte
+     *
+     * Get me a random byte from /dev/random 
+     *
+     */
+    unsigned char rndbyte();
+
+    /*!
+     * @brief fill a buffer with random bytes
+     * @param buf an allocated buffer of at least the required size 
+     * @param buflen the number of random bytes to insert into the buffer
+     * @return zero for success, nonzero for error
+     *
+     * Fill me buffer with randoms.
+     *
+     */
+    int rndbytes(unsigned char* buf,int buflen);
+
+    #endif
+</code></pre>
+<p>Noteworthy things:</p>
+<ul>
+<li>doxygen header @ top and before function prototypes</li>
+<li>function prototypes, one we've seen and one we've not </li>
+<li>memory management of <code>buf</code> parameter of <code>rndbytes</code></li>
+<li>semi-colon after prototype</li>
+<li><code>#ifndef RNDBYTES_H_INCLUDED</code> to handle multiple inclusion</li>
+</ul>
+<h2>The Makefile</h2>
+<p>The significant part of the Makefile is below...</p>
+<pre><code>    all: html rbtest
+
+    rbtest: rbtest.c rndbytes.o rndbytes.h
+
+    rndbytes.o: rndbytes.c rndbytes.h
+
+    doc: rbtest rnd-dox latex/refman.pdf
+        doxygen rnd-dox
+
+    latex/refman.pdf:
+        cd latex;make
+
+    rnd-dox:
+        doxygen -g rnd-dox
+
+    html: README.html
+
+    clean:
+        @rm -f rbtest rndbytes.o 
+        @rm -rf latex html
+
+    reallyclean: clean
+        @rm -f README.html rnd-dox
+
+    %.html: %.md
+        $(MDCMD) $(MDOPTS) $(@) $(&lt;)
+</code></pre>
+<h2>Documentation/Comments and all that...</h2>
+<p>There are varying opinions as to whether and how to best document
+your code. Those vary from "don't include any comments" to schemes
+for generating code from "documentation." [refs needed]</p>
+<p>A lot of the "debate" on this topic seems pertty badly justified
+to me, and more like a whole load of opinion. However, there are
+some aspects of documentation on which I think a lot of people
+would agree:</p>
+<ul>
+<li>
+<p>In most development environments, you will in any case have to
+follow the local coding style, so you won't get to choose, until
+you're the one writing the coding style (which takes us beyond this
+course:-). In other words, usually there's no point in worrying
+about this as you'll have no choice.</p>
+</li>
+<li>
+<p>Adding <a href="https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html">Javadoc</a> 
+style comments to APIs is a fine thing. Those do make it easier
+to understand an API, and also force you to think a bit more when
+creating an API, and automatically produced documentation is a
+fine thing, since it saves you time. 
+There's a <a href="https://www.narf.ssji.net/~shtrom/wiki/tips/doxygencheatsheet">cheatsheet</a>
+for doxygen here.</p>
+</li>
+<li>
+<p><code>usage()</code> and help options for command line tools are good, 
+as is a man page, if you might want your tool to be adopted
+by e.g. some Linux distro. If it's just a local tool and not aiming
+to be part of an open-source distro, then you can probably skip 
+the man page.</p>
+</li>
+<li>
+<p>You will inevitably need to leave TODO: and FIXME: breadcrumbs,
+for yourself or later developers. Those are good things if they
+help someone to later debug a problem! But it's clearly a bad
+practice to just leave your code incomplete and think a FIXME:
+is sufficient.</p>
+</li>
+<li>
+<p>Adding comments, but especially keeping comments up to date, 
+takes time, and you probably won't have that much time (or will 
+get bored), so having too many comments does have negative 
+consequences. In the worst case, if code is changed but
+comments aren't then comments might be misleading.</p>
+</li>
+<li>
+<p>There are cases where some fragment of code is just complex
+or non-obvious and really needs some documentation to explain what's
+going on. In-line code comments can be a good way to do that,
+as you will see those when you look at the code, but might
+not see any other artefact. (Unless comments have been 
+stripped.)</p>
+</li>
+<li>
+<p>Making your code as "self-documenting" as you can is good. 
+Choose meaningful names for functions and variables, but
+it's also ok to just use <code>foo</code> or <code>i</code>. Do consider
+what someone reading your code might think, as you 
+write (and re-factor) your code.</p>
+</li>
+</ul>
+<p>The overall goal should be to make your code something that can
+be understood, fixed or refactored by you or someone else, 
+possibly in many years time.</p>
+<p>While Javascript code is often minimised (to save transmission
+and speed up download) there aren't that often equivalent 
+benefits for systems programming code where maintainability
+is often more important.</p>
+<h2>The implementation of the API</h2>
+<p>Here's the modest snippet of code that implements the API:</p>
+<pre><code>    /*!
+     * @file rndbytes.c
+     * @brief This is the implementation of the external i/f for the rndbytes example
+     * 
+     * This is part of CS2014
+     *    https://down.dsg.cs.tcd.ie/cs2014/examples/c-progs-2/README.html
+     */
+    /* 
+     * Copyright (c) 2017 stephen.farrell@cs.tcd.ie
+     * 
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     * 
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     * 
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     *
+     */
+
+    // needed for getting access to /dev/random
+    #include &lt;unistd.h&gt;
+    #include &lt;sys/syscall.h&gt;
+    #include &lt;linux/random.h&gt;
+    #include "rndbytes.h"
+
+    /// TODO: check if conditional compile needed as per: 
+    ///     https://stackoverflow.com/questions/30800331/getrandom-syscall-in-c-not-found
+
+    unsigned char rndbyte()
+    {
+        unsigned long int s;
+        syscall(SYS_getrandom, &amp;s, sizeof(unsigned long int), 0);
+        unsigned char byte=(s&gt;&gt;16)%256;
+        return(byte);
+    }
+
+    int rndbytes(unsigned char* buf,int buflen)
+    {
+        if (!buf) return(1);
+        syscall(SYS_getrandom, buf, buflen, 0);
+        return(0);
+    }
+</code></pre>
+<p>Noteworthy things:</p>
+<ul>
+<li>including the corresponding header file isn't needed by helps with errors as you edit code </li>
+<li><code>rndbytes()</code> function memory management</li>
+</ul>
+<p>An alternative function could have been:</p>
+<pre><code>    int rndbytes(unsigned char** bufp,int buflen)
+    {
+        if (!bufp) return(1);
+        unsigned char *buf=malloc(buflen);
+        if (!buf) return(1);
+        syscall(SYS_getrandom, buf, buflen, 0);
+        *bufp=buf;
+        return(0);
+    }
+</code></pre>
+<p>Or even...</p>
+<pre><code>    unsigned char *rndbytes(int buflen)
+    {
+        unsigned char *buf=malloc(buflen);
+        if (!buf) return(NULL);
+        syscall(SYS_getrandom, buf, buflen, 0);
+        return(buf);
+    }
+</code></pre>
+<p>Both are more error prone - why?</p>
+<p>See <a href="rnd-options.c"><code>rnd-options.c</code></a> for different 
+options that you can conditionally compile.</p>
+<h2>The calling code (that uses the API)</h2>
+<pre><code>    /* 
+     * Copyright (c) 2017 stephen.farrell@cs.tcd.ie
+     * 
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     * 
+     * The above copyright notice and this permission notice shall be included in
+     * all copies or substantial portions of the Software.
+     * 
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+     * THE SOFTWARE.
+     *
+     */
+
+    // usual includes
+    #include &lt;stdio.h&gt;
+    #include &lt;stdlib.h&gt;
+    #include "rndbytes.h"
+
+    #define LIMIT 65536
+
+    void usage(char *progname)
+    {
+        fprintf(stderr,"Print some random numbers from /dev/random.\n");
+        fprintf(stderr,"Options:\n");
+        fprintf(stderr,"\t%s &lt;number&gt; where number is the number of bytes to print [Default: 10, min: 0, max: %d]\n",progname,LIMIT);
+        exit(-1);
+    }
+
+    int main(int argc,char *argv[])
+    {
+        int number=10;
+
+        if (argc==2) {
+            int newnumber=atoi(argv[1]);
+            if (newnumber&lt;=0) {
+                fprintf(stderr,"%d too small\n",newnumber);
+                usage(argv[0]);
+            }
+            if (newnumber&gt;LIMIT) {
+                fprintf(stderr,"%d too big\n",newnumber);
+                usage(argv[0]);
+            }
+            number=newnumber;
+        }
+
+        unsigned char *buf=malloc(number);
+        if (!buf) {
+            fprintf(stderr,"alloc fail\n");
+            return(1);
+        }
+        int rv=rndbytes(buf,number);
+        if (rv) {
+            fprintf(stderr,"rndbytes fail: %d\n",rv);
+            return(rv);
+        }
+
+        for (int i=0;i!=number;i++) {
+            printf("rnd%d: %02x\n",i,buf[i]);
+        }
+
+        free(buf);
+
+        return(0);
+    }
+</code></pre>
+<p>Noteworthy things:</p>
+<ul>
+<li><code>usage()</code> function is a good thing for any command line instruction (CLI)</li>
+<li>memory management</li>
+</ul>

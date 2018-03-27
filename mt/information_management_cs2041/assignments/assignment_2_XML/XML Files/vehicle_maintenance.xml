@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE vehicleMaintenance SYSTEM "vehicle_maintenance.dtd">
+<vehicleMaintenance>
+
+    <service id="40292">
+        <isBeingServiced>No</isBeingServiced>
+        <mechanics>
+            <mechanicID>40391</mechanicID>
+        </mechanics>
+        <priority>high</priority>
+        <dueDate>21-1-2018</dueDate>
+    </service>
+
+    <service id="402918">
+        <isBeingServiced>YES</isBeingServiced>
+        <mechanics>
+            <mechanicID>40393</mechanicID>
+        </mechanics>
+        <priority>low</priority>
+        <dueDate>12-2-2018</dueDate>
+    </service>
+
+    <service id="30291">
+        <isBeingServiced>NO</isBeingServiced>
+        <mechanics>
+            <mechanicID>24829</mechanicID>
+        </mechanics>
+        <priority>medium</priority>
+        <dueDate>12-12-2017</dueDate>
+    </service>
+
+    <repair id="5689">
+        <isBeingRepaired>NO</isBeingRepaired>
+        <priority>low</priority>
+        <dueDate>15-12-2017</dueDate>
+    </repair>
+
+    <repair id="140596">
+        <isBeingRepaired>YES</isBeingRepaired>
+        <mechanics>
+            <mechanicID>40392</mechanicID>
+            <mechanicID>40394</mechanicID>
+        </mechanics>
+        <priority>high</priority>
+        <dueDate>8-12-2017</dueDate>
+    </repair>
+
+    <repair id="1458">
+        <isBeingRepaired>NO</isBeingRepaired>
+        <priority>high</priority>
+        <dueDate>10-12-2017</dueDate>
+    </repair>
+    
+</vehicleMaintenance>

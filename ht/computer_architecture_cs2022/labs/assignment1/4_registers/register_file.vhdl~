@@ -1,0 +1,18 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity register_file is
+Port ( src_s0 : in std_logic;
+src_s1 : in std_logic;
+des_A0 : in std_logic;
+des_A1 : in std_logic;
+Clk : in std_logic;
+data_src : in std_logic;
+data : in std_logic_vector(3 downto 0);
+reg0 : out std_logic_vector(3 downto 0);
+reg1 : out std_logic_vector(3 downto 0);
+reg2 : out std_logic_vector(3 downto 0);
+reg3 : out std_logic_vector(3 downto 0));
+end register_file;

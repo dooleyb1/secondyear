@@ -1,0 +1,602 @@
+gcc -g -I../assignment2/mbedtls-2.6.0/include   -c -o ecdsa.o ecdsa.c
+ecdsa.c:7:1: error: expected identifier or ‘(’ before ‘<’ token
+ <!DOCTYPE html>
+ ^
+ecdsa.c:30:3: error: stray ‘\302’ in program
+   <title>mbedtls/ecdsa.c at development · ARMmbed/mbedtls · GitHub</title>
+   ^
+ecdsa.c:30:3: error: stray ‘\267’ in program
+ecdsa.c:30:3: error: stray ‘\302’ in program
+ecdsa.c:30:3: error: stray ‘\267’ in program
+ecdsa.c:151:8: warning: missing terminating ' character
+   <!-- '"` --><!-- </textarea></xmp> --></option></form><form accept-charset="UTF-8" action="/ARMmbed/mbedtls/search" class="js-site-search-form" data-scoped-search-url="/ARMmbed/mbedtls/search" data-unscoped-search-url="/search" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+        ^
+ecdsa.c:151:3: error: missing terminating ' character
+   <!-- '"` --><!-- </textarea></xmp> --></option></form><form accept-charset="UTF-8" action="/ARMmbed/mbedtls/search" class="js-site-search-form" data-scoped-search-url="/ARMmbed/mbedtls/search" data-unscoped-search-url="/search" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+   ^
+ecdsa.c:624:25: error: too many decimal points in number
+                 mbedtls-2.5.2
+                         ^
+ecdsa.c:644:34: error: invalid suffix "Q2" on integer constant
+                 partner-workshop-17Q2
+                                  ^
+ecdsa.c:743:23: error: too many decimal points in number
+                 yotta-2.3.2
+                       ^
+ecdsa.c:753:23: error: too many decimal points in number
+                 yotta-2.3.1
+                       ^
+ecdsa.c:763:23: error: too many decimal points in number
+                 yotta-2.3.0
+                       ^
+ecdsa.c:773:23: error: too many decimal points in number
+                 yotta-2.2.3
+                       ^
+ecdsa.c:783:23: error: too many decimal points in number
+                 yotta-2.2.2
+                       ^
+ecdsa.c:793:23: error: too many decimal points in number
+                 yotta-2.2.1
+                       ^
+ecdsa.c:803:26: error: too many decimal points in number
+                 polarssl-1.3.9
+                          ^
+ecdsa.c:813:26: error: too many decimal points in number
+                 polarssl-1.3.8
+                          ^
+ecdsa.c:823:26: error: too many decimal points in number
+                 polarssl-1.3.7
+                          ^
+ecdsa.c:833:26: error: too many decimal points in number
+                 polarssl-1.3.6
+                          ^
+ecdsa.c:843:26: error: too many decimal points in number
+                 polarssl-1.3.5
+                          ^
+ecdsa.c:853:26: error: too many decimal points in number
+                 polarssl-1.3.4
+                          ^
+ecdsa.c:863:26: error: too many decimal points in number
+                 polarssl-1.3.3
+                          ^
+ecdsa.c:873:26: error: too many decimal points in number
+                 polarssl-1.3.2
+                          ^
+ecdsa.c:883:26: error: too many decimal points in number
+                 polarssl-1.3.1
+                          ^
+ecdsa.c:893:26: error: too many decimal points in number
+                 polarssl-1.3.0
+                          ^
+ecdsa.c:903:26: error: too many decimal points in number
+                 polarssl-1.3.0-rc0
+                          ^
+ecdsa.c:923:26: error: too many decimal points in number
+                 polarssl-1.2.19
+                          ^
+ecdsa.c:933:26: error: too many decimal points in number
+                 polarssl-1.2.18
+                          ^
+ecdsa.c:943:26: error: too many decimal points in number
+                 polarssl-1.2.17
+                          ^
+ecdsa.c:953:26: error: too many decimal points in number
+                 polarssl-1.2.16
+                          ^
+ecdsa.c:963:26: error: too many decimal points in number
+                 polarssl-1.2.15
+                          ^
+ecdsa.c:973:26: error: too many decimal points in number
+                 polarssl-1.2.14
+                          ^
+ecdsa.c:983:26: error: too many decimal points in number
+                 polarssl-1.2.13
+                          ^
+ecdsa.c:993:26: error: too many decimal points in number
+                 polarssl-1.2.12
+                          ^
+ecdsa.c:1003:26: error: too many decimal points in number
+                 polarssl-1.2.11
+                          ^
+ecdsa.c:1013:26: error: too many decimal points in number
+                 polarssl-1.2.10
+                          ^
+ecdsa.c:1023:26: error: too many decimal points in number
+                 polarssl-1.2.9
+                          ^
+ecdsa.c:1033:26: error: too many decimal points in number
+                 polarssl-1.2.8
+                          ^
+ecdsa.c:1043:26: error: too many decimal points in number
+                 polarssl-1.2.7
+                          ^
+ecdsa.c:1053:26: error: too many decimal points in number
+                 polarssl-1.2.6
+                          ^
+ecdsa.c:1063:26: error: too many decimal points in number
+                 polarssl-1.2.5
+                          ^
+ecdsa.c:1073:26: error: too many decimal points in number
+                 polarssl-1.2.4
+                          ^
+ecdsa.c:1083:26: error: too many decimal points in number
+                 polarssl-1.2.3
+                          ^
+ecdsa.c:1093:26: error: too many decimal points in number
+                 polarssl-1.2.2
+                          ^
+ecdsa.c:1103:26: error: too many decimal points in number
+                 polarssl-1.2.1
+                          ^
+ecdsa.c:1113:26: error: too many decimal points in number
+                 polarssl-1.2.0
+                          ^
+ecdsa.c:1123:26: error: too many decimal points in number
+                 polarssl-1.2.0-pre1
+                          ^
+ecdsa.c:1133:26: error: too many decimal points in number
+                 polarssl-1.1.8
+                          ^
+ecdsa.c:1143:26: error: too many decimal points in number
+                 polarssl-1.1.7
+                          ^
+ecdsa.c:1153:26: error: too many decimal points in number
+                 polarssl-1.1.6
+                          ^
+ecdsa.c:1163:26: error: too many decimal points in number
+                 polarssl-1.1.5
+                          ^
+ecdsa.c:1173:26: error: too many decimal points in number
+                 polarssl-1.1.4
+                          ^
+ecdsa.c:1183:26: error: too many decimal points in number
+                 polarssl-1.1.3
+                          ^
+ecdsa.c:1193:26: error: too many decimal points in number
+                 polarssl-1.1.2
+                          ^
+ecdsa.c:1203:26: error: too many decimal points in number
+                 polarssl-1.1.1
+                          ^
+ecdsa.c:1213:26: error: too many decimal points in number
+                 polarssl-1.1.0
+                          ^
+ecdsa.c:1223:26: error: too many decimal points in number
+                 polarssl-1.1.0-rc1
+                          ^
+ecdsa.c:1233:26: error: too many decimal points in number
+                 polarssl-1.1.0-rc0
+                          ^
+ecdsa.c:1243:26: error: too many decimal points in number
+                 polarssl-1.0.0
+                          ^
+ecdsa.c:1303:26: error: too many decimal points in number
+                 polarssl-0.14.3
+                          ^
+ecdsa.c:1313:26: error: too many decimal points in number
+                 polarssl-0.14.2
+                          ^
+ecdsa.c:1323:26: error: too many decimal points in number
+                 polarssl-0.14.1
+                          ^
+ecdsa.c:1333:26: error: too many decimal points in number
+                 polarssl-0.14.0
+                          ^
+ecdsa.c:1343:26: error: too many decimal points in number
+                 polarssl-0.13.1
+                          ^
+ecdsa.c:1353:26: error: too many decimal points in number
+                 polarssl-0.13.0
+                          ^
+ecdsa.c:1363:26: error: too many decimal points in number
+                 polarssl-0.12.1
+                          ^
+ecdsa.c:1373:26: error: too many decimal points in number
+                 polarssl-0.12.0
+                          ^
+ecdsa.c:1383:26: error: too many decimal points in number
+                 polarssl-0.11.1
+                          ^
+ecdsa.c:1393:26: error: too many decimal points in number
+                 polarssl-0.11.0
+                          ^
+ecdsa.c:1403:26: error: too many decimal points in number
+                 polarssl-0.10.1
+                          ^
+ecdsa.c:1413:26: error: too many decimal points in number
+                 polarssl-0.10.0
+                          ^
+ecdsa.c:1423:25: error: too many decimal points in number
+                 mbedtls-2.6.1
+                         ^
+ecdsa.c:1433:25: error: too many decimal points in number
+                 mbedtls-2.6.1-rc1
+                         ^
+ecdsa.c:1443:25: error: too many decimal points in number
+                 mbedtls-2.6.0
+                         ^
+ecdsa.c:1453:25: error: too many decimal points in number
+                 mbedtls-2.6.0-rc1
+                         ^
+ecdsa.c:1463:25: error: too many decimal points in number
+                 mbedtls-2.5.1
+                         ^
+ecdsa.c:1473:25: error: too many decimal points in number
+                 mbedtls-2.5.0
+                         ^
+ecdsa.c:1483:25: error: too many decimal points in number
+                 mbedtls-2.5.0-rc1
+                         ^
+ecdsa.c:1493:25: error: too many decimal points in number
+                 mbedtls-2.4.2
+                         ^
+ecdsa.c:1503:25: error: too many decimal points in number
+                 mbedtls-2.4.2-rc1
+                         ^
+ecdsa.c:1513:25: error: too many decimal points in number
+                 mbedtls-2.4.1
+                         ^
+ecdsa.c:1523:25: error: too many decimal points in number
+                 mbedtls-2.4.0
+                         ^
+ecdsa.c:1533:25: error: too many decimal points in number
+                 mbedtls-2.3.0
+                         ^
+ecdsa.c:1543:25: error: too many decimal points in number
+                 mbedtls-2.2.1
+                         ^
+ecdsa.c:1553:25: error: too many decimal points in number
+                 mbedtls-2.2.0
+                         ^
+ecdsa.c:1563:25: error: too many decimal points in number
+                 mbedtls-2.1.9
+                         ^
+ecdsa.c:1573:25: error: too many decimal points in number
+                 mbedtls-2.1.9-rc1
+                         ^
+ecdsa.c:1583:25: error: too many decimal points in number
+                 mbedtls-2.1.8
+                         ^
+ecdsa.c:1593:25: error: too many decimal points in number
+                 mbedtls-2.1.7
+                         ^
+ecdsa.c:1603:25: error: too many decimal points in number
+                 mbedtls-2.1.7-rc1
+                         ^
+ecdsa.c:1613:25: error: too many decimal points in number
+                 mbedtls-2.1.6
+                         ^
+ecdsa.c:1623:25: error: too many decimal points in number
+                 mbedtls-2.1.5
+                         ^
+ecdsa.c:1633:25: error: too many decimal points in number
+                 mbedtls-2.1.4
+                         ^
+ecdsa.c:1643:25: error: too many decimal points in number
+                 mbedtls-2.1.3
+                         ^
+ecdsa.c:1653:25: error: too many decimal points in number
+                 mbedtls-2.1.2
+                         ^
+ecdsa.c:1663:25: error: too many decimal points in number
+                 mbedtls-2.1.1
+                         ^
+ecdsa.c:1673:25: error: too many decimal points in number
+                 mbedtls-2.1.0
+                         ^
+ecdsa.c:1683:25: error: too many decimal points in number
+                 mbedtls-2.0.0
+                         ^
+ecdsa.c:1703:25: error: too many decimal points in number
+                 mbedtls-1.3.21
+                         ^
+ecdsa.c:1713:25: error: too many decimal points in number
+                 mbedtls-1.3.21-rc1
+                         ^
+ecdsa.c:1723:25: error: too many decimal points in number
+                 mbedtls-1.3.20
+                         ^
+ecdsa.c:1733:25: error: too many decimal points in number
+                 mbedtls-1.3.19
+                         ^
+ecdsa.c:1764:11: error: invalid suffix "a5154b" on integer constant
+           0a5154b
+           ^
+ecdsa.c:1771:125: warning: missing terminating " character
+           <a href="/ARMmbed/mbedtls/commit/0a5154b8a1fe3d5588c68b3370fabbd8b80420df" class="message" data-pjax="true" title="Clarify the use of ECDSA API
+                                                                                                                             ^
+ecdsa.c:1771:11: error: missing terminating " character
+           <a href="/ARMmbed/mbedtls/commit/0a5154b8a1fe3d5588c68b3370fabbd8b80420df" class="message" data-pjax="true" title="Clarify the use of ECDSA API
+           ^
+ecdsa.c:1773:42: error: stray ‘#’ in program
+ In the ecdsa.c sample application we don&#39;t use hashing, we use ecdsa
+                                          ^
+ecdsa.c:1773:46: error: unknown type name ‘t’
+ In the ecdsa.c sample application we don&#39;t use hashing, we use ecdsa
+                                              ^
+ecdsa.c:1773:52: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘hashing’
+ In the ecdsa.c sample application we don&#39;t use hashing, we use ecdsa
+                                                    ^
+ecdsa.c:1784:26: warning: missing terminating " character
+ ECDSA functions involved.">Clarify the use of ECDSA API</a>
+                          ^
+ecdsa.c:1784:1: error: missing terminating " character
+ ECDSA functions involved.">Clarify the use of ECDSA API</a>
+ ^
+ecdsa.c:1933:70: error: stray ‘#’ in program
+         <td id="LC22" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> !defined(MBEDTLS_CONFIG_FILE)</td>
+                                                                      ^
+ecdsa.c:1937:70: error: stray ‘#’ in program
+         <td id="LC23" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/config.h<span class="pl-pds">&quot;</span></span></td>
+                                                                      ^
+ecdsa.c:1937:151: error: expected identifier or ‘(’ before ‘<’ token
+         <td id="LC23" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/config.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                       ^
+ecdsa.c:1937:201: error: expected identifier or ‘(’ before ‘<’ token
+         <td id="LC23" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/config.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                                                                         ^
+ecdsa.c:1941:70: error: stray ‘#’ in program
+         <td id="LC24" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">else</span></td>
+                                                                      ^
+ecdsa.c:1945:70: error: stray ‘#’ in program
+         <td id="LC25" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> MBEDTLS_CONFIG_FILE</td>
+                                                                      ^
+ecdsa.c:1949:70: error: stray ‘#’ in program
+         <td id="LC26" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">endif</span></td>
+                                                                      ^
+ecdsa.c:1958:70: error: stray ‘#’ in program
+         <td id="LC28" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> defined(MBEDTLS_PLATFORM_C)</td>
+                                                                      ^
+ecdsa.c:1962:70: error: stray ‘#’ in program
+         <td id="LC29" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/platform.h<span class="pl-pds">&quot;</span></span></td>
+                                                                      ^
+ecdsa.c:1962:151: error: expected identifier or ‘(’ before ‘<’ token
+         <td id="LC29" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/platform.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                       ^
+ecdsa.c:1962:203: error: expected identifier or ‘(’ before ‘<’ token
+         <td id="LC29" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/platform.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                                                                           ^
+ecdsa.c:1966:70: error: stray ‘#’ in program
+         <td id="LC30" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">else</span></td>
+                                                                      ^
+ecdsa.c:1970:70: error: stray ‘#’ in program
+         <td id="LC31" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>stdio.h<span class="pl-pds">&gt;</span></span></td>
+                                                                      ^
+ecdsa.c:1970:149: error: expected identifier or ‘(’ before ‘<’ token
+         <td id="LC31" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>stdio.h<span class="pl-pds">&gt;</span></span></td>
+                                                                                                                                                     ^
+ecdsa.c:1970:188: error: expected identifier or ‘(’ before ‘<’ token
+         <td id="LC31" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>stdio.h<span class="pl-pds">&gt;</span></span></td>
+                                                                                                                                                                                            ^
+ecdsa.c:1974:70: error: stray ‘#’ in program
+         <td id="LC32" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">define</span> <span class="pl-en">mbedtls_printf</span>     printf</td>
+                                                                      ^
+ecdsa.c:1978:70: error: stray ‘#’ in program
+         <td id="LC33" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">endif</span></td>
+                                                                      ^
+ecdsa.c:1987:70: error: stray ‘#’ in program
+         <td id="LC35" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> defined(MBEDTLS_ECDSA_C) &amp;&amp; \</td>
+                                                                      ^
+ecdsa.c:1987:130: error: expected identifier or ‘(’ before ‘&’ token
+         <td id="LC35" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> defined(MBEDTLS_ECDSA_C) &amp;&amp; \</td>
+                                                                                                                                  ^
+ecdsa.c:1987:130: error: stray ‘\’ in program
+ecdsa.c:1987:137: error: expected identifier or ‘(’ before ‘<’ token
+         <td id="LC35" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> defined(MBEDTLS_ECDSA_C) &amp;&amp; \</td>
+                                                                                                                                         ^
+ecdsa.c:1991:133: error: expected identifier or ‘(’ before ‘&’ token
+         <td id="LC36" class="blob-code blob-code-inner js-file-line">    <span class="pl-en">defined</span>(MBEDTLS_ENTROPY_C) &amp;&amp; defined(MBEDTLS_CTR_DRBG_C)</td>
+                                                                                                                                     ^
+ecdsa.c:1991:139: warning: return type defaults to ‘int’ [-Wimplicit-int]
+         <td id="LC36" class="blob-code blob-code-inner js-file-line">    <span class="pl-en">defined</span>(MBEDTLS_ENTROPY_C) &amp;&amp; defined(MBEDTLS_CTR_DRBG_C)</td>
+                                                                                                                                           ^
+ecdsa.c: In function ‘defined’:
+ecdsa.c:1991:166: error: expected declaration specifiers before ‘<’ token
+         <td id="LC36" class="blob-code blob-code-inner js-file-line">    <span class="pl-en">defined</span>(MBEDTLS_ENTROPY_C) &amp;&amp; defined(MBEDTLS_CTR_DRBG_C)</td>
+                                                                                                                                                                      ^
+ecdsa.c:1995:70: error: stray ‘#’ in program
+         <td id="LC37" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/entropy.h<span class="pl-pds">&quot;</span></span></td>
+                                                                      ^
+ecdsa.c:1995:151: error: expected declaration specifiers before ‘<’ token
+         <td id="LC37" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/entropy.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                       ^
+ecdsa.c:1995:202: error: expected declaration specifiers before ‘<’ token
+         <td id="LC37" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/entropy.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                                                                          ^
+ecdsa.c:1999:70: error: stray ‘#’ in program
+         <td id="LC38" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/ctr_drbg.h<span class="pl-pds">&quot;</span></span></td>
+                                                                      ^
+ecdsa.c:1999:151: error: expected declaration specifiers before ‘<’ token
+         <td id="LC38" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/ctr_drbg.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                       ^
+ecdsa.c:1999:203: error: expected declaration specifiers before ‘<’ token
+         <td id="LC38" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/ctr_drbg.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                                                                           ^
+ecdsa.c:2003:70: error: stray ‘#’ in program
+         <td id="LC39" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/ecdsa.h<span class="pl-pds">&quot;</span></span></td>
+                                                                      ^
+ecdsa.c:2003:151: error: expected declaration specifiers before ‘<’ token
+         <td id="LC39" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/ecdsa.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                       ^
+ecdsa.c:2003:200: error: expected declaration specifiers before ‘<’ token
+         <td id="LC39" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/ecdsa.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                                                                        ^
+ecdsa.c:2007:70: error: stray ‘#’ in program
+         <td id="LC40" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/sha256.h<span class="pl-pds">&quot;</span></span></td>
+                                                                      ^
+ecdsa.c:2007:151: error: expected declaration specifiers before ‘<’ token
+         <td id="LC40" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/sha256.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                       ^
+ecdsa.c:2007:201: error: expected declaration specifiers before ‘<’ token
+         <td id="LC40" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&quot;</span>mbedtls/sha256.h<span class="pl-pds">&quot;</span></span></td>
+                                                                                                                                                                                                         ^
+ecdsa.c:2016:70: error: stray ‘#’ in program
+         <td id="LC42" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string.h<span class="pl-pds">&gt;</span></span></td>
+                                                                      ^
+ecdsa.c:2016:149: error: expected declaration specifiers before ‘<’ token
+         <td id="LC42" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string.h<span class="pl-pds">&gt;</span></span></td>
+                                                                                                                                                     ^
+ecdsa.c:2016:189: error: expected declaration specifiers before ‘<’ token
+         <td id="LC42" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string.h<span class="pl-pds">&gt;</span></span></td>
+                                                                                                                                                                                             ^
+ecdsa.c:2020:70: error: stray ‘#’ in program
+         <td id="LC43" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">endif</span></td>
+                                                                      ^
+ecdsa.c:2041:70: error: stray ‘#’ in program
+         <td id="LC48" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">define</span> <span class="pl-en">VERBOSE</span></td>
+                                                                      ^
+ecdsa.c:2062:70: error: stray ‘#’ in program
+         <td id="LC53" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">define</span> <span class="pl-en">ECPARAMS</span>    MBEDTLS_ECP_DP_SECP192R1</td>
+                                                                      ^
+ecdsa.c:2071:70: error: stray ‘#’ in program
+         <td id="LC55" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> !defined(ECPARAMS)</td>
+                                                                      ^
+ecdsa.c:2075:70: error: stray ‘#’ in program
+         <td id="LC56" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">define</span> <span class="pl-en">ECPARAMS</span>    <span class="pl-en">mbedtls_ecp_curve_list</span>()-&gt;grp_id</td>
+                                                                      ^
+ecdsa.c:2075:199: error: expected declaration specifiers before ‘grp_id’
+         <td id="LC56" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">define</span> <span class="pl-en">ECPARAMS</span>    <span class="pl-en">mbedtls_ecp_curve_list</span>()-&gt;grp_id</td>
+                                                                                                                                                                                                       ^
+ecdsa.c:2079:70: error: stray ‘#’ in program
+         <td id="LC57" class="blob-code blob-code-inner js-file-line">#endif</td>
+                                                                      ^
+ecdsa.c:2088:70: error: stray ‘#’ in program
+         <td id="LC59" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> !defined(MBEDTLS_ECDSA_C) || !defined(MBEDTLS_SHA256_C) || \</td>
+                                                                      ^
+ecdsa.c:2088:9: error: stray ‘\’ in program
+         <td id="LC59" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> !defined(MBEDTLS_ECDSA_C) || !defined(MBEDTLS_SHA256_C) || \</td>
+         ^
+ecdsa.c:2108:9: error: stray ‘\’ in program
+         <td id="LC64" class="blob-code blob-code-inner js-file-line">           <span class="pl-s"><span class="pl-pds">&quot;</span>MBEDTLS_ENTROPY_C and/or MBEDTLS_CTR_DRBG_C not defined<span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span>);</td>
+         ^
+ecdsa.c:2116:71: error: expected declaration specifiers before ‘<’ token
+         <td id="LC66" class="blob-code blob-code-inner js-file-line">}</td>
+                                                                       ^
+ecdsa.c:2120:70: error: stray ‘#’ in program
+         <td id="LC67" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">else</span></td>
+                                                                      ^
+ecdsa.c:2124:70: error: stray ‘#’ in program
+         <td id="LC68" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> defined(VERBOSE)</td>
+                                                                      ^
+ecdsa.c:2153:300: error: invalid digit "9" in octal constant
+         <td id="LC75" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">mbedtls_printf</span>(<span class="pl-s"><span class="pl-pds">&quot;</span><span class="pl-c1">%c%c</span><span class="pl-pds">&quot;</span></span>, <span class="pl-s"><span class="pl-pds">&quot;</span>0123456789ABCDEF<span class="pl-pds">&quot;</span></span> [buf[i] / <span class="pl-c1">16</span>],</td>
+                                                                                                                                                                                                                                                                                                            ^
+ecdsa.c:2157:146: error: invalid digit "9" in octal constant
+         <td id="LC76" class="blob-code blob-code-inner js-file-line">                       <span class="pl-s"><span class="pl-pds">&quot;</span>0123456789ABCDEF<span class="pl-pds">&quot;</span></span> [buf[i] % <span class="pl-c1">16</span>] );</td>
+                                                                                                                                                  ^
+ecdsa.c:2161:9: error: stray ‘\’ in program
+         <td id="LC77" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span><span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span> );</td>
+         ^
+ecdsa.c:2165:71: error: expected declaration specifiers before ‘<’ token
+         <td id="LC78" class="blob-code blob-code-inner js-file-line">}</td>
+                                                                       ^
+ecdsa.c:2207:9: error: stray ‘\’ in program
+         <td id="LC88" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">mbedtls_printf</span>(<span class="pl-s"><span class="pl-pds">&quot;</span>internal error<span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span>);</td>
+         ^
+ecdsa.c:2228:71: error: expected declaration specifiers before ‘<’ token
+         <td id="LC93" class="blob-code blob-code-inner js-file-line">}</td>
+                                                                       ^
+ecdsa.c:2232:70: error: stray ‘#’ in program
+         <td id="LC94" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">else</span></td>
+                                                                      ^
+ecdsa.c:2236:70: error: stray ‘#’ in program
+         <td id="LC95" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">define</span> <span class="pl-en">dump_buf</span>(<span class="pl-v"> a, b, c </span>)</td>
+                                                                      ^
+ecdsa.c:2240:70: error: stray ‘#’ in program
+         <td id="LC96" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">define</span> <span class="pl-en">dump_pubkey</span>(<span class="pl-v"> a, b </span>)</td>
+                                                                      ^
+ecdsa.c:2244:70: error: stray ‘#’ in program
+         <td id="LC97" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">endif</span></td>
+                                                                      ^
+ecdsa.c:2356:9: error: stray ‘\’ in program
+         <td id="LC124" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span>usage: ecdsa<span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span> );</td>
+         ^
+ecdsa.c:2365:71: error: stray ‘#’ in program
+         <td id="LC126" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> defined(_WIN32)</td>
+                                                                       ^
+ecdsa.c:2369:9: error: stray ‘\’ in program
+         <td id="LC127" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span><span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span> );</td>
+         ^
+ecdsa.c:2373:71: error: stray ‘#’ in program
+         <td id="LC128" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">endif</span></td>
+                                                                       ^
+ecdsa.c:2407:9: error: stray ‘\’ in program
+         <td id="LC136" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span><span class="pl-cce">\n</span>  . Seeding the random number generator...<span class="pl-pds">&quot;</span></span> );</td>
+         ^
+ecdsa.c:2440:9: error: stray ‘\’ in program
+         <td id="LC144" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> failed<span class="pl-cce">\n</span>  ! mbedtls_ctr_drbg_seed returned <span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span>, ret );</td>
+         ^
+ecdsa.c:2440:9: error: stray ‘\’ in program
+ecdsa.c:2457:9: error: stray ‘\’ in program
+         <td id="LC148" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> ok<span class="pl-cce">\n</span>  . Generating key pair...<span class="pl-pds">&quot;</span></span> );</td>
+         ^
+ecdsa.c:2482:9: error: stray ‘\’ in program
+         <td id="LC154" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> failed<span class="pl-cce">\n</span>  ! mbedtls_ecdsa_genkey returned <span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span>, ret );</td>
+         ^
+ecdsa.c:2482:9: error: stray ‘\’ in program
+ecdsa.c:2499:9: error: stray ‘\’ in program
+         <td id="LC158" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> ok (key size: <span class="pl-c1">%d</span> bits)<span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span>, (<span class="pl-k">int</span>) ctx_sign.<span class="pl-smi">grp</span>.<span class="pl-smi">pbits</span> );</td>
+         ^
+ecdsa.c:2559:9: error: stray ‘\’ in program
+         <td id="LC172" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> ok<span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span> );</td>
+         ^
+ecdsa.c:2622:9: error: stray ‘\’ in program
+         <td id="LC187" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> failed<span class="pl-cce">\n</span>  ! mbedtls_ecdsa_genkey returned <span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span>, ret );</td>
+         ^
+ecdsa.c:2622:9: error: stray ‘\’ in program
+ecdsa.c:2634:9: error: stray ‘\’ in program
+         <td id="LC190" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> ok (signature length = <span class="pl-c1">%u</span>)<span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span>, (<span class="pl-k">unsigned</span> <span class="pl-k">int</span>) sig_len );</td>
+         ^
+ecdsa.c:2701:9: error: stray ‘\’ in program
+         <td id="LC206" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> failed<span class="pl-cce">\n</span>  ! mbedtls_ecp_group_copy returned <span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span>, ret );</td>
+         ^
+ecdsa.c:2701:9: error: stray ‘\’ in program
+ecdsa.c:2726:9: error: stray ‘\’ in program
+         <td id="LC212" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> failed<span class="pl-cce">\n</span>  ! mbedtls_ecp_copy returned <span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span>, ret );</td>
+         ^
+ecdsa.c:2726:9: error: stray ‘\’ in program
+ecdsa.c:2764:9: error: stray ‘\’ in program
+         <td id="LC221" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> ok<span class="pl-cce">\n</span>  . Verifying signature...<span class="pl-pds">&quot;</span></span> );</td>
+         ^
+ecdsa.c:2793:9: error: stray ‘\’ in program
+         <td id="LC228" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> failed<span class="pl-cce">\n</span>  ! mbedtls_ecdsa_read_signature returned <span class="pl-c1">%d</span><span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span>, ret );</td>
+         ^
+ecdsa.c:2793:9: error: stray ‘\’ in program
+ecdsa.c:2810:9: error: stray ‘\’ in program
+         <td id="LC232" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span> ok<span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span> );</td>
+         ^
+ecdsa.c:2828:71: error: stray ‘#’ in program
+         <td id="LC236" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">if</span> defined(_WIN32)</td>
+                                                                       ^
+ecdsa.c:2832:9: error: stray ‘\’ in program
+         <td id="LC237" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">mbedtls_printf</span>( <span class="pl-s"><span class="pl-pds">&quot;</span>  + Press Enter to exit this program.<span class="pl-cce">\n</span><span class="pl-pds">&quot;</span></span> );</td>
+         ^
+ecdsa.c:2840:71: error: stray ‘#’ in program
+         <td id="LC239" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">endif</span></td>
+                                                                       ^
+ecdsa.c:2878:72: error: expected declaration specifiers before ‘<’ token
+         <td id="LC248" class="blob-code blob-code-inner js-file-line">}</td>
+                                                                        ^
+ecdsa.c:2882:71: error: stray ‘#’ in program
+         <td id="LC249" class="blob-code blob-code-inner js-file-line">#<span class="pl-k">endif</span> <span class="pl-c"><span class="pl-c">/*</span> MBEDTLS_ECDSA_C &amp;&amp; MBEDTLS_ENTROPY_C &amp;&amp; MBEDTLS_CTR_DRBG_C &amp;&amp;</span></td>
+                                                                       ^
+ecdsa.c:2916:10: warning: missing terminating ' character
+     <!-- '"` --><!-- </textarea></xmp> --></option></form><form accept-charset="UTF-8" action="" class="js-jump-to-line-form" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+          ^
+ecdsa.c:2916:5: error: missing terminating ' character
+     <!-- '"` --><!-- </textarea></xmp> --></option></form><form accept-charset="UTF-8" action="" class="js-jump-to-line-form" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+     ^
+ecdsa.c:2934:31: error: expected declaration specifiers before numeric constant
+       <li class="mr-3">&copy; 2017 <span title="0.16950s from unicorn-3622558956-1zq82">GitHub</span>, Inc.</li>
+                               ^
+ecdsa.c:2964:12: warning: missing terminating ' character
+     You can't perform that action at this time.
+            ^
+ecdsa.c:2964:5: error: missing terminating ' character
+     You can't perform that action at this time.
+     ^
+ecdsa.c:1991:139: warning: type of ‘MBEDTLS_CTR_DRBG_C’ defaults to ‘int’ [-Wimplicit-int]
+         <td id="LC36" class="blob-code blob-code-inner js-file-line">    <span class="pl-en">defined</span>(MBEDTLS_ENTROPY_C) &amp;&amp; defined(MBEDTLS_CTR_DRBG_C)</td>
+                                                                                                                                           ^
+<builtin>: recipe for target 'ecdsa.o' failed
+make: *** [ecdsa.o] Error 1
