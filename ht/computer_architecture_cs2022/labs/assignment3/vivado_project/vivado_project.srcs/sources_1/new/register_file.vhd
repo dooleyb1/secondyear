@@ -5,9 +5,9 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity register_file is
 	Port ( 
-		a_sel: in std_logic_vector(2 downto 0);	
-		b_sel : in std_logic_vector(2 downto 0);
-		d_sel : in std_logic_vector(2 downto 0);
+		a_sel: in std_logic_vector(3 downto 0);	
+		b_sel : in std_logic_vector(3 downto 0);
+		d_sel : in std_logic_vector(3 downto 0);
 		load : in std_logic;
 		data : in std_logic_vector(15 downto 0);
 		a_out : out std_logic_vector(15 downto 0);
@@ -19,7 +19,8 @@ entity register_file is
 		reg4out : out std_logic_vector(15 downto 0);
 		reg5out : out std_logic_vector(15 downto 0);
 		reg6out : out std_logic_vector(15 downto 0);
-		reg7out : out std_logic_vector(15 downto 0)
+		reg7out : out std_logic_vector(15 downto 0);
+		tempout : out std_logic_vector(15 downto 0)
 	);
 end register_file;
 
@@ -37,10 +38,10 @@ architecture Behavioral of register_file is
 	end component;
 	
 	
-	-- 3 to 8 Decoder (D Address Select)
-	component decoder_3to8
+	-- 4 to 9 Decoder (D Address Select)
+	component decoder_4to9
 		Port(
-			des : in std_logic_vector(2 downto 0);
+			des : in std_logic_vector(3 downto 0);
 			Q0 : out std_logic;
 			Q1 : out std_logic;
 			Q2 : out std_logic;
@@ -48,13 +49,14 @@ architecture Behavioral of register_file is
 			Q4 : out std_logic;
 			Q5 : out std_logic;
 			Q6 : out std_logic;
-			Q7 : out std_logic
+			Q7 : out std_logic;
+			Q8 : out std_logic
 		);
 	end component;
 	
 	
-	-- 8 to 1 line multiplexer (ABUS, BBUS)
-	component mux8_16bit
+	-- 9 to 1 line multiplexer (ABUS, BBUS)
+	component mux9_16bit
 		Port(
 			In0 : in std_logic_vector(15 downto 0);
 			In1 : in std_logic_vector(15 downto 0);
@@ -64,15 +66,16 @@ architecture Behavioral of register_file is
 			In5 : in std_logic_vector(15 downto 0);
 			In6 : in std_logic_vector(15 downto 0);
 			In7 : in std_logic_vector(15 downto 0);
-			src : in std_logic_vector(2 downto 0);
+			In8 : in std_logic_vector(15 downto 0);
+			src : in std_logic_vector(3 downto 0);
 			Z : out std_logic_vector(15 downto 0)
 		);
 	end component;
 	
 	-- signals
-	signal 	d_out0, d_out1, d_out2, d_out3, d_out4, d_out5, d_out6 ,d_out7   : std_logic;
+	signal 	d_out0, d_out1, d_out2, d_out3, d_out4, d_out5, d_out6 ,d_out7, temp_sel  : std_logic;
 	signal reg0_out, reg1_out, reg2_out, reg3_out, reg4_out, reg5_out,
-			 reg6_out, reg7_out : std_logic_vector(15 downto 0);
+			 reg6_out, reg7_out, temp_reg_out : std_logic_vector(15 downto 0);
 		
 	begin
 	-- port maps ;-)
@@ -141,8 +144,16 @@ architecture Behavioral of register_file is
 		Q => reg7_out
 	);
 	
+	-- register 7
+    temp_reg: reg16 Port Map(
+        D => data,
+        load => load,
+        d_sel => temp_sel,
+        Q => temp_reg_out
+    );	
+	
 	-- Destination register decoder (D decoder)
-	des_decoder_3to8: decoder_3to8 Port Map(
+	des_decoder_4to9: decoder_4to9 Port Map(
 		des => d_sel,
 		Q0 => d_out0,
 		Q1 => d_out1,
@@ -151,11 +162,12 @@ architecture Behavioral of register_file is
 		Q4 => d_out4,
 		Q5 => d_out5,
 		Q6 => d_out6,
-		Q7 => d_out7
+		Q7 => d_out7,
+		Q8 => temp_sel
 	);
 	
-	-- 8 to 1 source register multiplexer (ABUS mux)
-	A_mux8_16bit: mux8_16bit Port Map(
+	-- 9 to 1 source register multiplexer (ABUS mux)
+	A_mux9_16bit: mux9_16bit Port Map(
 		In0 => reg0_out,
 		In1 => reg1_out,
 		In2 => reg2_out,
@@ -164,12 +176,13 @@ architecture Behavioral of register_file is
 		In5 => reg5_out,
 		In6 => reg6_out,
 		In7 => reg7_out,
+		In8 => temp_reg_out,
 		src => a_sel,
 		Z => a_out
 	);
 	
-	-- 8 to 1 source register multiplexer (BBUS mux)
-	B_mux8_16bit: mux8_16bit Port Map(
+	-- 9 to 1 source register multiplexer (BBUS mux)
+	B_mux9_16bit: mux9_16bit Port Map(
 		In0 => reg0_out,
 		In1 => reg1_out,
 		In2 => reg2_out,
@@ -178,6 +191,7 @@ architecture Behavioral of register_file is
 		In5 => reg5_out,
 		In6 => reg6_out,
 		In7 => reg7_out,
+		In8 => temp_reg_out,
 		src => b_sel,
 		Z => b_out
 	);
@@ -189,7 +203,8 @@ architecture Behavioral of register_file is
     reg4out <= reg4_out;
     reg5out <= reg5_out;
     reg6out <= reg6_out;
-    reg7out <= reg7_out;	
+    reg7out <= reg7_out;
+    tempout <= temp_reg_out;	
 	
 	
 end Behavioral;

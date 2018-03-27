@@ -1,0 +1,408 @@
+#-----------------------------------------------------------
+# Vivado v2017.4 (64-bit)
+# SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
+# IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+# Start of session at: Tue Mar 27 10:35:28 2018
+# Process ID: 3360
+# Current directory: U:/Computer Architecture/Assignment Final/vivado_project
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent5068 U:\Computer Architecture\Assignment Final\vivado_project\vivado_project.xpr
+# Log file: U:/Computer Architecture/Assignment Final/vivado_project/vivado.log
+# Journal file: U:/Computer Architecture/Assignment Final/vivado_project\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project {U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.xpr}
+INFO: [Project 1-313] Project file moved from 'U:/Computer Architecture/assignment2/vivado_project' since last save.
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2017.4/data/ip'.
+open_project: Time (s): cpu = 00:00:12 ; elapsed = 00:00:18 . Memory (MB): peak = 824.070 ; gain = 101.492
+update_compile_order -fileset sources_1
+close [ open {U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/control_memory.vhd} w ]
+add_files {{U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/control_memory.vhd}}
+update_compile_order -fileset sources_1
+close [ open {U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/decoder_4to9.vhd} w ]
+add_files {{U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/decoder_4to9.vhd}}
+update_compile_order -fileset sources_1
+close [ open {U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/mux9_16bit.vhd} w ]
+add_files {{U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/mux9_16bit.vhd}}
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+close [ open {U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/decoder_4to9_tb.vhd} w ]
+add_files -fileset sim_1 {{U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/decoder_4to9_tb.vhd}}
+update_compile_order -fileset sim_1
+set_property top decoder_4to9 [current_fileset]
+set_property top decoder_4to9_tb [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+update_compile_order -fileset sources_1
+update_compile_order -fileset sim_1
+launch_simulation
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'decoder_4to9_tb' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj decoder_4to9_tb_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/decoder_4to9.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity decoder_4to9
+INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/decoder_4to9_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity decoder_4to9_tb
+INFO: [USF-XSim-69] 'compile' step finished in '3' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+Vivado Simulator 2017.4
+Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2017.4/bin/unwrapped/win64.o/xelab.exe -wto cb7fe664b5d6414eb30fd3381f9f2221 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot decoder_4to9_tb_behav xil_defaultlib.decoder_4to9_tb -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.std_logic_arith
+Compiling package ieee.std_logic_unsigned
+Compiling architecture behavioral of entity xil_defaultlib.decoder_4to9 [decoder_4to9_default]
+Compiling architecture behavioral of entity xil_defaultlib.decoder_4to9_tb
+Built simulation snapshot decoder_4to9_tb_behav
+
+****** Webtalk v2017.4 (64-bit)
+  **** SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
+  **** IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+    ** Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+source U:/Computer -notrace
+couldn't read file "U:/Computer": no such file or directory
+INFO: [Common 17-206] Exiting Webtalk at Tue Mar 27 11:22:18 2018...
+run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:10 . Memory (MB): peak = 868.977 ; gain = 0.000
+INFO: [USF-XSim-69] 'elaborate' step finished in '10' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "decoder_4to9_tb_behav -key {Behavioral:sim_1:Functional:decoder_4to9_tb} -tclbatch {decoder_4to9_tb.tcl} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Vivado Simulator 2017.4
+Time resolution is 1 ps
+source decoder_4to9_tb.tcl
+# set curr_wave [current_wave_config]
+# if { [string length $curr_wave] == 0 } {
+#   if { [llength [get_objects]] > 0} {
+#     add_wave /
+#     set_property needs_save false [current_wave_config]
+#   } else {
+#      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+#   }
+# }
+# run 2000ns
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'decoder_4to9_tb_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 2000ns
+launch_simulation: Time (s): cpu = 00:00:07 ; elapsed = 00:00:20 . Memory (MB): peak = 897.930 ; gain = 34.680
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+close [ open {U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/mux9_16bit_tb.vhd} w ]
+add_files -fileset sim_1 {{U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/mux9_16bit_tb.vhd}}
+update_compile_order -fileset sim_1
+set_property top mux9_16bit_tb [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+update_compile_order -fileset sim_1
+set_property top mux9_16bit [current_fileset]
+update_compile_order -fileset sources_1
+launch_simulation
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'mux9_16bit_tb' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj mux9_16bit_tb_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/mux9_16bit.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity mux9_16bit
+INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/mux9_16bit_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity mux9_16bit_tb
+INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+Vivado Simulator 2017.4
+Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2017.4/bin/unwrapped/win64.o/xelab.exe -wto cb7fe664b5d6414eb30fd3381f9f2221 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot mux9_16bit_tb_behav xil_defaultlib.mux9_16bit_tb -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.std_logic_arith
+Compiling package ieee.std_logic_unsigned
+Compiling architecture behavioral of entity xil_defaultlib.mux9_16bit [mux9_16bit_default]
+Compiling architecture behavioral of entity xil_defaultlib.mux9_16bit_tb
+Built simulation snapshot mux9_16bit_tb_behav
+
+****** Webtalk v2017.4 (64-bit)
+  **** SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
+  **** IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+    ** Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+source U:/Computer -notrace
+couldn't read file "U:/Computer": no such file or directory
+INFO: [Common 17-206] Exiting Webtalk at Tue Mar 27 11:26:36 2018...
+INFO: [USF-XSim-69] 'elaborate' step finished in '5' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "mux9_16bit_tb_behav -key {Behavioral:sim_1:Functional:mux9_16bit_tb} -tclbatch {mux9_16bit_tb.tcl} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Vivado Simulator 2017.4
+Time resolution is 1 ps
+source mux9_16bit_tb.tcl
+# set curr_wave [current_wave_config]
+# if { [string length $curr_wave] == 0 } {
+#   if { [llength [get_objects]] > 0} {
+#     add_wave /
+#     set_property needs_save false [current_wave_config]
+#   } else {
+#      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+#   }
+# }
+# run 2000ns
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'mux9_16bit_tb_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 2000ns
+launch_simulation: Time (s): cpu = 00:00:03 ; elapsed = 00:00:10 . Memory (MB): peak = 900.441 ; gain = 0.000
+set_property top register_file [current_fileset]
+update_compile_order -fileset sources_1
+set_property top register_file_tb [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+update_compile_order -fileset sim_1
+launch_simulation
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'register_file_tb' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj register_file_tb_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/reg16.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity reg16
+INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/register_file.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity register_file
+INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/register_file_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity register_file_tb
+INFO: [USF-XSim-69] 'compile' step finished in '1' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+Vivado Simulator 2017.4
+Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2017.4/bin/unwrapped/win64.o/xelab.exe -wto cb7fe664b5d6414eb30fd3381f9f2221 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot register_file_tb_behav xil_defaultlib.register_file_tb -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+ERROR: [VRFC 10-665] expression has 4 elements ; formal src expects 3 [U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/register_file.vhd:180]
+ERROR: [XSIM 43-3321] Static elaboration of top level VHDL design unit register_file_tb in library work failed.
+INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+INFO: [USF-XSim-99] Step results log file:'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim/elaborate.log'
+ERROR: [USF-XSim-62] 'elaborate' step failed with error(s). Please check the Tcl console output or 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim/elaborate.log' file for more information.
+ERROR: [Vivado 12-4473] Detected error while running simulation. Please correct the issue and retry this operation.
+ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors.
+launch_simulation
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'register_file_tb' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj register_file_tb_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/register_file.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity register_file
+INFO: [USF-XSim-69] 'compile' step finished in '1' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+Vivado Simulator 2017.4
+Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2017.4/bin/unwrapped/win64.o/xelab.exe -wto cb7fe664b5d6414eb30fd3381f9f2221 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot register_file_tb_behav xil_defaultlib.register_file_tb -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.std_logic_arith
+Compiling package ieee.std_logic_unsigned
+Compiling architecture behavioral of entity xil_defaultlib.reg16 [reg16_default]
+Compiling architecture behavioral of entity xil_defaultlib.decoder_4to9 [decoder_4to9_default]
+Compiling architecture behavioral of entity xil_defaultlib.mux9_16bit [mux9_16bit_default]
+Compiling architecture behavioral of entity xil_defaultlib.register_file [register_file_default]
+Compiling architecture behavioral of entity xil_defaultlib.register_file_tb
+Built simulation snapshot register_file_tb_behav
+
+****** Webtalk v2017.4 (64-bit)
+  **** SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
+  **** IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+    ** Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+source U:/Computer -notrace
+couldn't read file "U:/Computer": no such file or directory
+INFO: [Common 17-206] Exiting Webtalk at Tue Mar 27 11:37:20 2018...
+INFO: [USF-XSim-69] 'elaborate' step finished in '5' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "register_file_tb_behav -key {Behavioral:sim_1:Functional:register_file_tb} -tclbatch {register_file_tb.tcl} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Vivado Simulator 2017.4
+Time resolution is 1 ps
+source register_file_tb.tcl
+# set curr_wave [current_wave_config]
+# if { [string length $curr_wave] == 0 } {
+#   if { [llength [get_objects]] > 0} {
+#     add_wave /
+#     set_property needs_save false [current_wave_config]
+#   } else {
+#      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+#   }
+# }
+# run 2000ns
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'register_file_tb_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 2000ns
+launch_simulation: Time (s): cpu = 00:00:03 ; elapsed = 00:00:08 . Memory (MB): peak = 926.750 ; gain = 5.527
+close [ open {U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/CAR.vhd} w ]
+add_files {{U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/CAR.vhd}}
+update_compile_order -fileset sources_1
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+close [ open {U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/CAR_tb.vhd} w ]
+add_files -fileset sim_1 {{U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/CAR_tb.vhd}}
+update_compile_order -fileset sim_1
+set_property top CAR [current_fileset]
+set_property top CAR_tb [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+update_compile_order -fileset sources_1
+update_compile_order -fileset sim_1
+launch_simulation
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'CAR_tb' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj CAR_tb_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sources_1/new/CAR.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity CAR
+INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/CAR_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity CAR_tb
+INFO: [USF-XSim-69] 'compile' step finished in '1' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+Vivado Simulator 2017.4
+Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2017.4/bin/unwrapped/win64.o/xelab.exe -wto cb7fe664b5d6414eb30fd3381f9f2221 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot CAR_tb_behav xil_defaultlib.CAR_tb -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling architecture behavioral of entity xil_defaultlib.CAR [car_default]
+Compiling architecture behavioral of entity xil_defaultlib.car_tb
+Built simulation snapshot CAR_tb_behav
+
+****** Webtalk v2017.4 (64-bit)
+  **** SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
+  **** IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+    ** Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+source U:/Computer -notrace
+couldn't read file "U:/Computer": no such file or directory
+INFO: [Common 17-206] Exiting Webtalk at Tue Mar 27 12:40:16 2018...
+run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:05 . Memory (MB): peak = 933.141 ; gain = 0.000
+INFO: [USF-XSim-69] 'elaborate' step finished in '6' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "CAR_tb_behav -key {Behavioral:sim_1:Functional:CAR_tb} -tclbatch {CAR_tb.tcl} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Vivado Simulator 2017.4
+Time resolution is 1 ps
+source CAR_tb.tcl
+# set curr_wave [current_wave_config]
+# if { [string length $curr_wave] == 0 } {
+#   if { [llength [get_objects]] > 0} {
+#     add_wave /
+#     set_property needs_save false [current_wave_config]
+#   } else {
+#      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+#   }
+# }
+# run 2000ns
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'CAR_tb_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 2000ns
+launch_simulation: Time (s): cpu = 00:00:01 ; elapsed = 00:00:09 . Memory (MB): peak = 942.016 ; gain = 9.035
+current_sim simulation_1
+close_sim
+INFO: [Simtcl 6-16] Simulation closed
+close_sim
+INFO: [Simtcl 6-16] Simulation closed
+close_sim
+INFO: [Simtcl 6-16] Simulation closed
+close_sim
+INFO: [Simtcl 6-16] Simulation closed
+launch_simulation
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'CAR_tb' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj CAR_tb_vhdl.prj"
+INFO: [USF-XSim-69] 'compile' step finished in '1' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+Vivado Simulator 2017.4
+Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2017.4/bin/unwrapped/win64.o/xelab.exe -wto cb7fe664b5d6414eb30fd3381f9f2221 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot CAR_tb_behav xil_defaultlib.CAR_tb -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
+INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "CAR_tb_behav -key {Behavioral:sim_1:Functional:CAR_tb} -tclbatch {CAR_tb.tcl} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Vivado Simulator 2017.4
+Time resolution is 1 ps
+source CAR_tb.tcl
+# set curr_wave [current_wave_config]
+# if { [string length $curr_wave] == 0 } {
+#   if { [llength [get_objects]] > 0} {
+#     add_wave /
+#     set_property needs_save false [current_wave_config]
+#   } else {
+#      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+#   }
+# }
+# run 2000ns
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'CAR_tb_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 2000ns
+launch_simulation: Time (s): cpu = 00:00:01 ; elapsed = 00:00:05 . Memory (MB): peak = 942.098 ; gain = 0.000
+close_sim
+INFO: [Simtcl 6-16] Simulation closed
+exit
+INFO: [Common 17-206] Exiting Vivado at Tue Mar 27 13:09:18 2018...
