@@ -92,9 +92,12 @@ public class Dijkstra2 {
         while (iter.hasNext()) {
             Node node = iter.next();
 
+            System.out.println("Adjusting graph for Source Node = " + node.name + ".....");
+
             //Set the node as the source witih the graph, re-adjust distances using Dijkstras
-            tempGraph = Dijkstra2.calculateShortestPathFromSource(competitionGraph, node.name);
-            longestDistance = tempGraph.getLongestDistance();
+            tempGraph = calculateShortestPathFromSource(competitionGraph, node.name);
+            tempGraph.printGraph();
+            longestDistance = competitionGraph.getLongestDistance();
             System.out.println("\n\nLongest distance from source (Node " + node.name + ") = " + longestDistance);
 
             //Time (minutes) = Distance/Speed
@@ -139,8 +142,18 @@ public class Dijkstra2 {
             Node b = new Node(Integer.toString(nodeB_ID));
 
             //If graph already contains nodeA, update it with new distances
-            if(competitionGraph.contains(a))
-                competitionGraph.updateNode(a, b, distance);
+            if(competitionGraph.contains(a)){
+                //If b is already a member node, pass actual node of B
+                if(competitionGraph.contains(b)){
+
+                    Node actualB = competitionGraph.getNode(b.name);
+                    competitionGraph.updateNode(a, actualB, distance);
+                }
+
+                //If b doesn't already exist, pass new b
+                else
+                    competitionGraph.updateNode(a, b, distance);
+            }
 
             //Otherwise just add it to graph
             else{
@@ -161,7 +174,7 @@ public class Dijkstra2 {
 
     public class Graph {
  
-        private Set<Node> nodes;
+        public Set<Node> nodes;
         
         //Graph constructor
         public Graph(){
@@ -175,13 +188,32 @@ public class Dijkstra2 {
          //Adds a new destination and distance to existing node v1
         public void updateNode(Node a, Node b, double dist){
 
-            //Find Node object for v1 and add new destination
-            for(Node node : this.nodes){
+
+            Iterator<Node> iter = this.nodes.iterator();
+
+            while (iter.hasNext()) {
+                Node node = iter.next();
+
                 if(node.name.equals(a.name)){
-                    //Update existing node with a new destination 
                     node.addDestination(b, dist);
                     return;
                 }
+            }
+        }
+
+        public void printGraph(){
+
+            System.out.println("\n****PRINTING GRAPH*****\n-----------------------");
+
+            Iterator<Node> iter = this.nodes.iterator();
+
+            while(iter.hasNext()){
+
+                Node node = iter.next();
+
+                System.out.println("* [Node " + node.name + "] ->");
+                System.out.println("     Distance = " + node.distance);
+                System.out.println("     Shortest Path = " + node.getShortestPathString());
             }
         }
 
@@ -204,8 +236,14 @@ public class Dijkstra2 {
 
         public void printAdjacentNodes(){
 
-            for(Node node : this.nodes)
+            Iterator<Node> iter = this.nodes.iterator();
+
+            while (iter.hasNext()) {
+             
+                Node node = iter.next();
                 node.printAdjacentNodes();
+           
+            }
 
         }
 
@@ -224,7 +262,12 @@ public class Dijkstra2 {
 
         public Node getNode(String nodeID){
             
-            for(Node node : this.nodes){
+            Iterator<Node> iter = this.nodes.iterator();
+
+            while (iter.hasNext()) {
+                
+                Node node = iter.next();
+                
                 if(node.name.equals(nodeID))
                     return node;
             }
@@ -234,12 +277,16 @@ public class Dijkstra2 {
         /* Returns whether or not the graph already contains the current node */
         public boolean contains(Node inputNode) {
 
-            for(Node node : nodes){
+            Iterator<Node> iter = this.nodes.iterator();
+
+            while (iter.hasNext()) {
+                
+                Node node = iter.next();
+
                 if(node.name.equals(inputNode.name))
                     return true;
             }
             return false;
-
         } 
     }
 
@@ -279,6 +326,7 @@ public class Dijkstra2 {
         }
 
         public void setShortestPath(List<Node> newPath){
+            List<Node> copyPath =  (List<Node>) newPath.clone();
             this.shortestPath = newPath;
         }
 
@@ -294,7 +342,7 @@ public class Dijkstra2 {
                     res += ("Node " + node.name + "->");
 
                 else 
-                    res += ("Node" + node.name);
+                    res += ("Node" + node.name + "->Node " + this.name);
 
             }
 
@@ -315,9 +363,36 @@ public class Dijkstra2 {
         }
     }
 
-    public static Graph calculateShortestPathFromSource(Graph graph, String sourceID) {
+    public Node copyNode(Node node){
+
+        Node resNode = new Node(node.name);
+        List<Node> shortestPathCopy = (LinkedList<String>) node.getShortestPath().clone();
+        double dist = node.getDistance();
         
-        Node source = graph.getNode(sourceID);
+    }
+
+    public Graph copyGraph(Graph graph){
+
+        Graph resultGraph = new Graph();
+
+        Iterator<Node> iter = graph.nodes.iterator();
+
+        while (iter.hasNext()){
+
+            Node node = iter.next();
+            Node copyNode = copyNode(node);
+
+            resultGraph.addNode(copyNode);
+        }
+
+        return resultGraph;
+    }
+
+    public Graph calculateShortestPathFromSource(Graph graph, String sourceID) {
+        
+        Graph tempGraph = copyGraph(graph);
+        Node source = tempGraph.getNode(sourceID);
+
         //Set source nodes distance from source to 0
         source.setDistance(0);
      
@@ -334,7 +409,6 @@ public class Dijkstra2 {
             
             //System.out.println("****** PRINTING UNSETTLED NODES *******\n");
             printNodeSet(unsettledNodes);
-
 
             //Get node with lowest distance from source and examine that first
             //System.out.println("Selecting node with lowest distance from unsettledNodes...\n");
@@ -380,7 +454,7 @@ public class Dijkstra2 {
 
         }
         //System.out.println("All nodes successfully settled");
-        return graph;
+        return tempGraph;
     }
 
     private static void printNodeSet(Set<Node> nodeSet){
