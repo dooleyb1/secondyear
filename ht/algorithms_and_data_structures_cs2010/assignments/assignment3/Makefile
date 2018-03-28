@@ -12,10 +12,7 @@ default:
 	$(JC) $(JFLAGS) $(BUILD) *.java
 
 dijkstra:
-	$(JVM) $(JFLAGS) $(RUN) CompetitionDijkstra tinyEWD.txt
-
-dijkstra2:
-	$(JVM) $(JFLAGS) $(RUN) Dijkstra2 tinyEWD.txt
+	$(JVM) $(JFLAGS) $(RUN) DijkstraMedium
 
 floyd:
 	$(JVM) $(JFLAGS) $(RUN) CompetitionFloydWarshall
