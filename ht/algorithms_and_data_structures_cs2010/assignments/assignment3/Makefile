@@ -12,7 +12,8 @@ default:
 	$(JC) $(JFLAGS) $(BUILD) *.java
 
 dijkstra:
-	$(JVM) $(JFLAGS) $(RUN) DijkstraVogella
+	$(JVM) $(JFLAGS) $(RUN) CompetitionDijkstra
+
 
 floyd:
 	$(JVM) $(JFLAGS) $(RUN) CompetitionFloydWarshall
