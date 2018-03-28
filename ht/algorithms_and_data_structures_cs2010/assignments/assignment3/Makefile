@@ -12,7 +12,7 @@ default:
 	$(JC) $(JFLAGS) $(BUILD) *.java
 
 dijkstra:
-	$(JVM) $(JFLAGS) $(RUN) DijkstraMedium
+	$(JVM) $(JFLAGS) $(RUN) DijkstraVogella
 
 floyd:
 	$(JVM) $(JFLAGS) $(RUN) CompetitionFloydWarshall
