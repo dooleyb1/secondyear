@@ -33,7 +33,6 @@ public class DijkstraMedium {
     public static int sC;
 
     public static String filename;
-    public static Edge[] edges;
 
     DijkstraMedium (String filename, int sA, int sB, int sC){
 
@@ -50,45 +49,7 @@ public class DijkstraMedium {
      */
     public int timeRequiredforCompetition(){
 
-        int slowestSpeed = this.sA;
-        System.out.println("Slowest speed is Speed A = " + slowestSpeed);
-
-        if(slowestSpeed > this.sB){
-            slowestSpeed = sB;
-            System.out.println("Slowest speed is now Speed B = " + slowestSpeed);
-        }
-
-        if(slowestSpeed > sC){
-            slowestSpeed = sC;
-            System.out.println("Slowest speed is now Speed C = " + slowestSpeed);
-        }
-
-        //Initialise variables for time calculations
-        double longestTime = 0.0;
-        double longestDistance;
-        double time;
-
-        ArrayList<Integer> visitedEdges = new ArrayList();
-        Edge[] edgesCopy;
-
-        for(Edge e : edges){
-            
-            int id = e.getFromNodeIndex();
-            
-            //If edge hasn't already been calculated
-            if(!visitedEdges.contains(id)){
-                
-                visitedEdges.add(id);
-
-                edgesCopy = edges.clone();
-                Graph g = new Graph(edgesCopy);
-
-                //g.calculateShortestDistanceFrom(id);
-                longestDistance = g.getLongestDistance();
-                System.out.println("Longest Distance when Source Node is [Node " + id + "] : " + longestDistance);
-            }
-        }
-
+        //TO DO
         return -1;
     }
 
@@ -102,7 +63,7 @@ public class DijkstraMedium {
         S = scanner.nextInt();
 
         //Create an array of edges to house the streets (edges)
-        edges = new Edge[this.S];
+        Edge[] edges = new Edge[this.S];
         int i = 0;
 
         //System.out.println("\nN = " + N);
@@ -123,36 +84,13 @@ public class DijkstraMedium {
 
             i++;
         }
+        System.out.println("\nEdges successfully created...");
 
         System.out.println("Creating Graph to house edges...");
         Graph g = new Graph(edges);
         System.out.println("Successfully created Graph...");
         g.calculateShortestDistances();
         g.printResult(); // let's try it 
-
-        ArrayList<Integer> visitedEdges = new ArrayList();
-        
-
-        /*
-        for(Edge e : edges){
-            
-            int id = e.getFromNodeIndex();
-
-            if(!visitedEdges.contains(id)){
-
-                visitedEdges.add(id);
-                edgeCopy = edges.clone();
-
-                System.out.println("\nCreating Graph to house edges...");
-                Graph g = new Graph(edgeCopy);
-                System.out.println("Successfully created Graph...\n");
-
-                g.calculateShortestDistanceFrom(id);
-                g.printResult(); // let's try it    
-
-            }         
-        }
-        */
     }
 
     public class Edge {
@@ -192,7 +130,7 @@ public class DijkstraMedium {
 
     public class Node {
         
-        private double distanceFromSource = Double.POSITIVE_INFINITY;
+        private double distanceFromSource = Double.MAX_VALUE;
         private boolean visited;
         private ArrayList<Edge> edges = new ArrayList<Edge>();
         
@@ -227,24 +165,23 @@ public class DijkstraMedium {
         private int noOfNodes;
         private Edge[] edges;
         private int noOfEdges;
-        private int sourceIndex;
         
         //Graph object constructor
         public Graph(Edge[] edges) {
             
             this.edges = edges;
-            this.noOfNodes = calculateNoOfNodes(this.edges);
+            this.noOfNodes = calculateNoOfNodes(edges);
             this.nodes = new Node[this.noOfNodes];
             
             for (int n = 0; n < this.noOfNodes; n++) {
                   this.nodes[n] = new Node();
             }
             
-            this.noOfEdges = this.edges.length;
+            this.noOfEdges = edges.length;
             
             for (int edgeToAdd = 0; edgeToAdd < this.noOfEdges; edgeToAdd++) {
-                  this.nodes[this.edges[edgeToAdd].getFromNodeIndex()].getEdges().add(this.edges[edgeToAdd]);
-                  this.nodes[this.edges[edgeToAdd].getToNodeIndex()].getEdges().add(this.edges[edgeToAdd]);
+                  this.nodes[edges[edgeToAdd].getFromNodeIndex()].getEdges().add(edges[edgeToAdd]);
+                  this.nodes[edges[edgeToAdd].getToNodeIndex()].getEdges().add(edges[edgeToAdd]);
             }
         }
 
@@ -252,7 +189,7 @@ public class DijkstraMedium {
             
             int noOfNodes = 0;
             
-            for (Edge e : this.edges) {
+            for (Edge e : edges) {
                 if (e.getToNodeIndex() > noOfNodes)
                     noOfNodes = e.getToNodeIndex();
             
@@ -264,58 +201,41 @@ public class DijkstraMedium {
             return noOfNodes;
         }
 
-        public double getLongestDistance(){
-
-            double longestDistance = 0.0;
-
-            for (Node node : this.nodes) {
-                
-                double nodeDist = node.getDistanceFromSource();
-
-                if(nodeDist > longestDistance)
-                    longestDistance = nodeDist; 
-            }
-            return longestDistance;
-
-        }
-
         public void calculateShortestDistances() {
-        
             // node 0 as source
-            this.nodes[0].setDistanceFromSource(0);
+            this.nodes[0].setDistanceFromSource(0.0);
             int nextNode = 0;
             
             // visit every node
             for (int i = 0; i < this.nodes.length; i++) {
-                
+              
                 // loop around the edges of current node
                 ArrayList<Edge> currentNodeEdges = this.nodes[nextNode].getEdges();
                 
                 for (int joinedEdge = 0; joinedEdge < currentNodeEdges.size(); joinedEdge++) {
-                    
+                
                     int neighbourIndex = currentNodeEdges.get(joinedEdge).getNeighbourIndex(nextNode);
                     // only if not visited
                     if (!this.nodes[neighbourIndex].isVisited()) {
-                        
                         double tentative = this.nodes[nextNode].getDistanceFromSource() + currentNodeEdges.get(joinedEdge).getLength();
-                    
-                        if (tentative < nodes[neighbourIndex].getDistanceFromSource())
+                      
+                        if (tentative < nodes[neighbourIndex].getDistanceFromSource()) {
                             nodes[neighbourIndex].setDistanceFromSource(tentative);
+                        }
                     }
                 }
-            }
 
-            // all neighbours checked so node visited
-            nodes[nextNode].setVisited(true);
-            // next node must be with shortest distance
-            nextNode = getNodeShortestDistanced();
-        
+                // all neighbours checked so node visited
+                nodes[nextNode].setVisited(true);
+                // next node must be with shortest distance
+                nextNode = getNodeShortestDistanced();
+            }
         }
 
         private int getNodeShortestDistanced() {
             
             int storedNodeIndex = 0;
-            double storedDist = Double.POSITIVE_INFINITY;
+            double storedDist = Double.MAX_VALUE;
             
             for (int i = 0; i < this.nodes.length; i++) {
 
@@ -333,10 +253,10 @@ public class DijkstraMedium {
         public void printResult() {
             
             String output = "Number of nodes = " + this.noOfNodes;
-            output += "\nNumber of edges = " + this.noOfEdges + "\n";
+            output += "\nNumber of edges = " + this.noOfEdges;
             
             for (int i = 0; i < this.nodes.length; i++) {
-                output += ("\nThe shortest distance from node " + this.sourceIndex + " to node " + i + " is " + this.nodes[i].getDistanceFromSource());
+                output += ("\nThe shortest distance from node 0 to node " + i + " is " + nodes[i].getDistanceFromSource());
             }
             
             System.out.println(output);
@@ -351,7 +271,7 @@ public class DijkstraMedium {
         }
 
         public Edge[] getEdges() {
-            return this.edges;
+            return edges;
         }
 
         public int getNoOfEdges() {
@@ -364,8 +284,6 @@ public class DijkstraMedium {
 
         DijkstraMedium test = new DijkstraMedium("txt_files/tinyEWD.txt", 50, 75, 100);
         test.readFile("txt_files/tinyEWD.txt");
-
-        //int x = test.timeRequiredforCompetition();
     }
 
 }
