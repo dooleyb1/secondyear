@@ -27,17 +27,60 @@ import java.util.NoSuchElementException;
 
 public class CompetitionDijkstra {
 
-	// EdgeWeightedDiGraph class from Algorithms textbook
-	private class EdgeWeightedDiGraph {
-		private final String NEWLINE = System.getProperty("line.separator");
+	static EdgeWeightedDiGraph graph;
 
-		private final int V; // number of vertices in this digraph
+	CompetitionDijkstra(String filename, int sA, int sB, int sC) throws FileNotFoundException {
+		
+		graph = new EdgeWeightedDiGraph(filename);
+		int slowestSpeed = Math.min(Math.min(sA,sB),sC);
+
+		double maxDist = 0.0;
+		
+		//Re-run Dijkstra accounting for every node being source
+		for(int i = 0; i < graph.V(); i++)
+		{
+			System.out.println("\n------------------------------------------");
+			System.out.println("Re-routing with Source = [Node " + i + "]....");
+			System.out.println("------------------------------------------");
+			DijkstraSP routedGraph = new DijkstraSP(graph, i);
+			
+			//Calculate longest distance for current routedGraph (source = i)
+			for(int j = 0; j < graph.V(); j++) {
+				
+				//If there exists a path within the graph to node j
+				if(routedGraph.hasPathTo(j)) {
+					System.out.println("Distance from [Node " + i + "] to [Node " + j + "] : " + routedGraph.distTo(j));
+					//And if the distance to node j is more than current max dist
+					if(maxDist < routedGraph.distTo(j)) {
+
+						maxDist = routedGraph.distTo(j);
+						//System.out.println(maxDist);
+					}
+				}	
+			}
+
+			System.out.println("\nCurrent Max Distance Found = " + maxDist);
+		}
+
+		System.out.println("------------------------------------------");
+		System.out.println("Calculating time required for show...\n");
+		
+		int time = timeRequiredforCompetition(maxDist, slowestSpeed);
+		System.out.println("\nTime required for show: "+ time +"min");
+
+	}
+
+	private class EdgeWeightedDiGraph {
+
+		private final int V; 
 		private int E; 
+
 		private Bag<DirectedEdge>[] adj; 
 		private int[] indegree; 
 
 
 		private EdgeWeightedDiGraph(String filename) throws FileNotFoundException {
+			
 			File file = new File(filename);
 			Scanner in = new Scanner(file);
 			
@@ -45,27 +88,22 @@ public class CompetitionDijkstra {
 			E = in.nextInt();
 			
 			int currentEdges = E;
-			
+
 			adj = (Bag<DirectedEdge>[]) new Bag[V];
 			this.indegree = new int[V];
 			
+			//Create empty adjacency matrix to house vertices
 			for (int v = 0; v < V; v++)
 				adj[v] = new Bag<DirectedEdge>();
-			// System.out.print(adj.length);
-			// System.out.print("\n"+E);
 
+			//Extract all edges from input file
 			for (int i = 0; i < currentEdges; i++) {
 				
 				int v = in.nextInt();
 				int w = in.nextInt();
-				// System.out.println("\n"+E);
-
 				double weight = in.nextDouble();
-				// System.out.print("\n"+weight);
 
 				addEdge(new DirectedEdge(v, w, weight));
-				// System.out.print("\n\nDone: "+i);
-
 			}
 		}
 
@@ -78,13 +116,14 @@ public class CompetitionDijkstra {
 		}
 
 		public void addEdge(DirectedEdge e) {
+			
 			int v = e.from();
-			// System.out.print("\n\nFrom: "+e.from());
-
 			int w = e.to();
-			// System.out.print("\n\nTo: "+e.to());
 
+			//Add vertice to adjacency matrix
 			adj[v].add(e);
+
+			//Increment the in-degree for w
 			indegree[w]++;
 			E++;
 		}
@@ -102,30 +141,19 @@ public class CompetitionDijkstra {
 		}
 
 		public Iterable<DirectedEdge> edges() {
+			
+			//Create empty Bag to house edges
 			Bag<DirectedEdge> list = new Bag<DirectedEdge>();
+			
+			//Iterate over all vertices
 			for (int v = 0; v < V; v++) {
+
 				for (DirectedEdge e : adj(v)) {
 					list.add(e);
 				}
 			}
 			return list;
 		}
-
-		public String toString() {
-			
-			StringBuilder s = new StringBuilder();
-			s.append(V + " " + E + NEWLINE);
-			
-			for (int v = 0; v < V; v++) {
-				s.append(v + ": ");
-				for (DirectedEdge e : adj[v]) {
-					s.append(e + "  ");
-				}
-				s.append(NEWLINE);
-			}
-			return s.toString();
-		}
-
 	}
 
 	private class DirectedEdge {
@@ -151,11 +179,6 @@ public class CompetitionDijkstra {
 		public double weight() {
 			return weight;
 		}
-
-		public String toString() {
-			return v + "->" + w + " " + String.format("%5.2f", weight);
-		}
-
 	}
 
 	private class Bag<Item> implements Iterable<Item> {
@@ -181,6 +204,7 @@ public class CompetitionDijkstra {
 			return n;
 		}
 
+		//Appends an Item to the top of the Bag
 		public void add(Item item) {
 			Node<Item> oldfirst = first;
 			first = new Node<Item>();
@@ -216,15 +240,16 @@ public class CompetitionDijkstra {
 				return item;
 			}
 		}
-
 	}
 
 	private class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer> {
 		
 		private int maxN;
 		private int n; 
+
 		private int[] pq; 
 		private int[] qp; 
+
 		private Key[] keys;
 
 		public IndexMinPQ(int maxN) {
@@ -236,6 +261,7 @@ public class CompetitionDijkstra {
 			pq = new int[maxN + 1];
 			qp = new int[maxN + 1]; 
 			
+			//Initialise all indices in pq to -1
 			for (int i = 0; i <= maxN; i++)
 				qp[i] = -1;
 		}
@@ -263,36 +289,18 @@ public class CompetitionDijkstra {
 			swim(n);
 		}
 
-		public int minIndex() {
-			return pq[1];
-		}
-
-		public Key minKey() {
-			return keys[pq[1]];
-		}
-
 		public int delMin() {
 			
 			int min = pq[1];
 			exch(1, n--);
 			sink(1);
 			assert min == pq[n + 1];
-			qp[min] = -1; // delete
+			qp[min] = -1; 
 			keys[min] = null; // to help with garbage collection
 			pq[n + 1] = -1; // not needed
 			return min;
 		}
 
-		public Key keyOf(int i) {
-			return keys[i];
-		}
-
-		public void changeKey(int i, Key key) {
-			
-			keys[i] = key;
-			swim(qp[i]);
-			sink(qp[i]);
-		}
 
 
 		public void decreaseKey(int i, Key key) {
@@ -301,21 +309,6 @@ public class CompetitionDijkstra {
 			swim(qp[i]);
 		}
 
-		public void increaseKey(int i, Key key) {
-			
-			keys[i] = key;
-			sink(qp[i]);
-		}
-
-		public void delete(int i) {
-			
-			int index = qp[i];
-			exch(index, n--);
-			swim(index);
-			sink(index);
-			keys[i] = null;
-			qp[i] = -1;
-		}
 
 		private boolean greater(int i, int j) {
 			return keys[pq[i]].compareTo(keys[pq[j]]) > 0;
@@ -377,7 +370,6 @@ public class CompetitionDijkstra {
 				return copy.delMin();
 			}
 		}
-
 	}
 
 	// DijkstraSP Class from textbook
@@ -385,40 +377,55 @@ public class CompetitionDijkstra {
 		
 		private double[] distTo; 
 		private DirectedEdge[] edgeTo; 
-		private IndexMinPQ<Double> pq; 
+		private IndexMinPQ<Double> priorityQueue; 
 
 
-		public DijkstraSP(EdgeWeightedDiGraph G, int s) {
+		public DijkstraSP(EdgeWeightedDiGraph graph, int source) {
 
-			distTo = new double[G.V()];
-			edgeTo = new DirectedEdge[G.V()];
+			distTo = new double[graph.V()];
+			edgeTo = new DirectedEdge[graph.V()];
 
-
-			for (int v = 0; v < G.V(); v++)
+			//Initialise all distances to max value
+			for (int v = 0; v < graph.V(); v++)
 				distTo[v] = Double.POSITIVE_INFINITY;
 
-			distTo[s] = 0.0;
+			//Initialise source distance to 0.0
+			distTo[source] = 0.0;
 
-			pq = new IndexMinPQ<Double>(G.V());
-			pq.insert(s, distTo[s]);
+			priorityQueue = new IndexMinPQ<Double>(graph.V());
+			priorityQueue.insert(source, distTo[source]);
 			
-			while (!pq.isEmpty()) {
-				int v = pq.delMin();
-				for (DirectedEdge e : G.adj(v))
+			//While there is a node to settle
+			while (!priorityQueue.isEmpty()) {
+				
+				//Get node with minimum distance and remove from pq
+				int v = priorityQueue.delMin();
+					
+				//For every edge related to v
+				for (DirectedEdge e : graph.adj(v))
 					relax(e);
 			}
 
 		}
 
 		private void relax(DirectedEdge e) {
-			int v = e.from(), w = e.to();
+			
+			int v = e.from();
+			int w = e.to();
+			
+			//If new route is lower
 			if (distTo[w] > distTo[v] + e.weight()) {
+				
 				distTo[w] = distTo[v] + e.weight();
 				edgeTo[w] = e;
-				if (pq.contains(w))
-					pq.decreaseKey(w, distTo[w]);
+				
+				//If pq already contains w
+				if (priorityQueue.contains(w))
+					//Update w with new values
+					priorityQueue.decreaseKey(w, distTo[w]);
+				
 				else
-					pq.insert(w, distTo[w]);
+					priorityQueue.insert(w, distTo[w]);
 			}
 		}
 
@@ -431,73 +438,35 @@ public class CompetitionDijkstra {
 		}
 
 		public Iterable<DirectedEdge> pathTo(int v) {
+			
 			if (!hasPathTo(v))
 				return null;
+			
 			Stack<DirectedEdge> path = new Stack<DirectedEdge>();
+			
+			//Iterate over all edges leading to v, add them to stack
 			for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
 				path.push(e);
 			}
 			return path;
 		}
 	}
-
-	// AssignmentSolution begins here
-	static EdgeWeightedDiGraph ewdGraph;
-
-	CompetitionDijkstra(String filename, int sA, int sB, int sC) throws FileNotFoundException {
-		
-		ewdGraph = new EdgeWeightedDiGraph(filename);
-		int slowestSpeed = Math.min(Math.min(sA,sB),sC);
-//		System.out.println("Slowest speed is: " + slowestSpeed+"\n");
-		
-//		int s = 0;
-//		double longestDistance = 0;
-//		int count = 0;
-		DijkstraSP sp = new DijkstraSP(ewdGraph, 0);
-		double maxDist = 0 ;
-		
-		for( int i=0;i<ewdGraph.V();i++)
-		{
-			DijkstraSP map = new DijkstraSP(ewdGraph, i);
-			//printLongest(i, map, ewdGraph);
-			for(int j=0;j<ewdGraph.V();j++) {
-				if(map.hasPathTo(j)) {
-					if(maxDist<map.distTo(j)) {
-						maxDist = map.distTo(j);
-						//System.out.println(maxDist);
-					}
-				}
-					
-			}
-		}
-		int time = timeRequiredforCompetition(maxDist, slowestSpeed);
-		System.out.println("Time required for show: "+time +"min");
-
-	}
 	
-	/*Method just for testing
-	 *print the longest distance from a given vertex*/
-	public void printLongest(int source, DijkstraSP map, EdgeWeightedDiGraph graph) {
-		double maxDistance = 0;
-		for (int i = 0 ; i < ewdGraph.V();i++) {
-			if (map.hasPathTo(i)){
-				if (maxDistance<map.distTo(i))
-					maxDistance = map.distTo(i);
-					
-			}
-		}
-		System.out.print("Max distance when source vertex is " + source + ": "+ maxDistance+"\n\n");
-	}
-	/**
-	 * @return int: minimum minutes that will pass before the three contestants
-	 *         can meet
-	 */
 	public int timeRequiredforCompetition(double distance, int speed) {
-		return (int)((1000*distance)/speed);
+		
+		System.out.println("\nTime = Distance / Speed");
+
+		System.out.println("     = " + distance + "km / " + speed + "m/minute");
+		
+		double time = (1000*distance)/speed;
+
+		System.out.println("     = " + time + "min");
+		
+		return (int) time;
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
-		CompetitionDijkstra comp = new CompetitionDijkstra("txt_files/1000EWD.txt", 50, 75, 100);
+		CompetitionDijkstra comp = new CompetitionDijkstra("txt_files/tinyEWD.txt", 50, 75, 100);
 
 	}
 
