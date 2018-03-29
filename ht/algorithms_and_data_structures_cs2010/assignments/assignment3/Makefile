@@ -14,7 +14,6 @@ default:
 dijkstra:
 	$(JVM) $(JFLAGS) $(RUN) CompetitionDijkstra
 
-
 floyd:
 	$(JVM) $(JFLAGS) $(RUN) CompetitionFloydWarshall
 

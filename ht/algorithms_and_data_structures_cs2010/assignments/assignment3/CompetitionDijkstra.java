@@ -216,10 +216,6 @@ public class CompetitionDijkstra {
 				return current != null;
 			}
 
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-
 			public Item next() {
 				if (!hasNext())
 					throw new NoSuchElementException();
