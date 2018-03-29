@@ -33,7 +33,10 @@ public class CompetitionFloydWarshall {
 
         this.graph = new AdjMatrixEdgeWeightedDigraph(filename);
         FloydWarshall shortestPaths = new FloydWarshall(this.graph);
-
+        
+        double maxDist = 0.0;
+        int slowestSpeed = Math.min(Math.min(sA,sB),sC);
+        
         for (int v = 0; v < this.graph.V(); v++) {
             
             System.out.println("\n------------------------------------------");
@@ -43,20 +46,36 @@ public class CompetitionFloydWarshall {
             for (int w = 0; w < this.graph.V(); w++) {
                 if (shortestPaths.hasPath(v, w)){
                     System.out.println("Distance from [Node " + v + "] to [Node " + w + "] : " + shortestPaths.dist(v, w));
+                    
+                    if(maxDist < shortestPaths.dist(v, w)) 
+                        maxDist = shortestPaths.dist(v, w);
                 }
                 
                 else
                  System.out.println("  Inf ");
             }
-            System.out.println();
+            System.out.println("\nCurrent Max Distance Found = " + maxDist);
         }
+
+        System.out.println("------------------------------------------");
+        System.out.println("Calculating time required for show...\n");
+
+        int time = timeRequiredforCompetition(maxDist, slowestSpeed);
+        System.out.println("\nTime required for show: "+ time +"min");
     }
 
 
-    public int timeRequiredforCompetition(){
+    public int timeRequiredforCompetition(double distance, int speed){
 
-        //TO DO
-        return -1;
+        System.out.println("\nTime = Distance / Speed");
+
+        System.out.println("     = " + distance + "km / " + speed + "m/m");
+        
+        double time = (1000*distance)/speed;
+        System.out.println("     = " + time + "min");
+    
+        
+        return (int) Math.ceil(time);
     }
 
     public class AdjMatrixEdgeWeightedDigraph {
