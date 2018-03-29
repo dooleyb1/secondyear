@@ -76,7 +76,6 @@ public class CompetitionDijkstra {
 		private int E; 
 
 		private Bag<DirectedEdge>[] adj; 
-		private int[] indegree; 
 
 
 		private EdgeWeightedDiGraph(String filename) throws FileNotFoundException {
@@ -90,7 +89,6 @@ public class CompetitionDijkstra {
 			int currentEdges = E;
 
 			adj = (Bag<DirectedEdge>[]) new Bag[V];
-			this.indegree = new int[V];
 			
 			//Create empty adjacency matrix to house vertices
 			for (int v = 0; v < V; v++)
@@ -123,21 +121,11 @@ public class CompetitionDijkstra {
 			//Add vertice to adjacency matrix
 			adj[v].add(e);
 
-			//Increment the in-degree for w
-			indegree[w]++;
 			E++;
 		}
 
 		public Iterable<DirectedEdge> adj(int v) {
 			return adj[v];
-		}
-
-		public int outdegree(int v) {
-			return adj[v].size();
-		}
-
-		public int indegree(int v) {
-			return indegree[v];
 		}
 
 		public Iterable<DirectedEdge> edges() {
