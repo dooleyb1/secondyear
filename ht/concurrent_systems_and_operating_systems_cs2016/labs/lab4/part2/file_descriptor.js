@@ -55,6 +55,18 @@ This means that all philosophers are stuck in limbo waiting
 for a fork to be released, thus deadlock occurs.
 
 
+--------------------------------------------------------------------------------
+*Livelock
+--------------------------------------------------------------------------------
+
+Livelock occurs when for example all Philosophers decide if 
+you don't manage to pick up a second fork within 10 minutes
+you must put down your current fork and wait 10 minutes before
+trying again. However, if all Philosophers somehow get to the 
+stage where the 10 minute intervals are the exact same, Livelock
+occurs.
+
+
 
 --------------------------------------------------------------------------------
 5 - N Philosophers - Solving Deadlock

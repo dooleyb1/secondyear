@@ -6,6 +6,11 @@ which can lead to deadlock. Occurs when all philosophers
 are hungry, none are eating and each philosopher has 
 one fork.
 
+spin -a philo_deadlock.prm 
+gcc -O2 -g -o pan pan.c -DSAFETY
+./pan -m1000000
+spin -p -t philo_nice_deadlock.prm
+
 ----------------------------------------------------------
 
 2. philo_nice_ordered_selection.prm
@@ -41,7 +46,7 @@ available and then check the right fork.
  -Acceptance cycle therefore, never claim does not hold
  -Now check trail
 
-$ spin -p -t philo_nice_ordered_selection.prm
+$ spin -p -t philo_no_deadlock.prm
 
 
  3218:	proc  1 (P:1) philo_nice_ordered_selection.prm:43 (state 14)	[((right<left))]
