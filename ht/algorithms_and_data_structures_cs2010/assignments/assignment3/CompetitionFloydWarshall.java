@@ -27,13 +27,29 @@ import java.util.NoSuchElementException;
 
 public class CompetitionFloydWarshall {
 
-    /**
-     * @param filename: A filename containing the details of the city road network
-     * @param sA, sB, sC: speeds for 3 contestants
-     */
-    CompetitionFloydWarshall (String filename, int sA, int sB, int sC){
+    static AdjMatrixEdgeWeightedDigraph graph;
 
-        //TODO
+    CompetitionFloydWarshall (String filename, int sA, int sB, int sC) throws FileNotFoundException{
+
+        this.graph = new AdjMatrixEdgeWeightedDigraph(filename);
+        FloydWarshall shortestPaths = new FloydWarshall(this.graph);
+
+        for (int v = 0; v < this.graph.V(); v++) {
+            
+            System.out.println("\n------------------------------------------");
+            System.out.println("Distances From [Node " + v + "]....");
+            System.out.println("------------------------------------------");
+
+            for (int w = 0; w < this.graph.V(); w++) {
+                if (shortestPaths.hasPath(v, w)){
+                    System.out.println("Distance from [Node " + v + "] to [Node " + w + "] : " + shortestPaths.dist(v, w));
+                }
+                
+                else
+                 System.out.println("  Inf ");
+            }
+            System.out.println();
+        }
     }
 
 
@@ -41,6 +57,92 @@ public class CompetitionFloydWarshall {
 
         //TO DO
         return -1;
+    }
+
+    public class AdjMatrixEdgeWeightedDigraph {
+
+        private final int V;
+        private int E;
+        private DirectedEdge[][] edgeFromTo;
+        
+
+        public AdjMatrixEdgeWeightedDigraph(String filename) throws FileNotFoundException {
+            
+            File file = new File(filename);
+            Scanner in = new Scanner(file);
+
+            this.V = in.nextInt();
+            this.E = in.nextInt();
+
+            this.edgeFromTo = new DirectedEdge[V][V];
+            
+            int currentEdges = E;
+
+            for (int i = 0; i < currentEdges; i++) {
+                
+                int v = in.nextInt();
+                int w = in.nextInt();
+                double weight = in.nextDouble();
+                
+                if (v == w) 
+                    addEdge(new DirectedEdge(v, w, Math.abs(weight)));
+                
+                else addEdge(new DirectedEdge(v, w, weight));
+            }
+        }
+
+        public int V() {
+            return V;
+        }
+
+        public int E() {
+            return E;
+        }
+
+        public void addEdge(DirectedEdge e) {
+            
+            int v = e.from();
+            int w = e.to();
+
+            if (edgeFromTo[v][w] == null) {
+                E++;
+                edgeFromTo[v][w] = e;
+            }
+        }
+
+        public Iterable<DirectedEdge> edgeFromTo(int v) {
+            return new AdjIterator(v);
+        }
+
+        // support iteration over graph vertices
+        private class AdjIterator implements Iterator<DirectedEdge>, Iterable<DirectedEdge> {
+            
+            private int v;
+            private int w = 0;
+
+            public AdjIterator(int v) {
+                this.v = v;
+            }
+
+            public Iterator<DirectedEdge> iterator() {
+                return this;
+            }
+
+            public boolean hasNext() {
+                while (w < V) {
+                    if (edgeFromTo[v][w] != null) return true;
+                    w++;
+                }
+                return false;
+            }
+
+            public DirectedEdge next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return edgeFromTo[v][w++];
+            }
+        }
     }
 
     public class FloydWarshall {
@@ -354,72 +456,8 @@ public class CompetitionFloydWarshall {
         }
     }
 
-    public class AdjMatrixEdgeWeightedDigraph {
+    public static void main(String[] args) throws FileNotFoundException {
+        CompetitionFloydWarshall comp = new CompetitionFloydWarshall("txt_files/tinyEWD.txt", 50, 75, 100);
 
-        private final int V;
-        private int E;
-        private DirectedEdge[][] edgeFromTo;
-        
-
-        public AdjMatrixEdgeWeightedDigraph(int V) {
-            
-            this.V = V;
-            this.E = 0;
-            this.edgeFromTo = new DirectedEdge[V][V];
-        }
-
-        public int V() {
-            return V;
-        }
-
-        public int E() {
-            return E;
-        }
-
-        public void addEdge(DirectedEdge e) {
-            
-            int v = e.from();
-            int w = e.to();
-
-            if (edgeFromTo[v][w] == null) {
-                E++;
-                edgeFromTo[v][w] = e;
-            }
-        }
-
-        public Iterable<DirectedEdge> edgeFromTo(int v) {
-            return new AdjIterator(v);
-        }
-
-        // support iteration over graph vertices
-        private class AdjIterator implements Iterator<DirectedEdge>, Iterable<DirectedEdge> {
-            
-            private int v;
-            private int w = 0;
-
-            public AdjIterator(int v) {
-                this.v = v;
-            }
-
-            public Iterator<DirectedEdge> iterator() {
-                return this;
-            }
-
-            public boolean hasNext() {
-                while (w < V) {
-                    if (edgeFromTo[v][w] != null) return true;
-                    w++;
-                }
-                return false;
-            }
-
-            public DirectedEdge next() {
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
-                }
-                return edgeFromTo[v][w++];
-            }
-        }
     }
-
 }
