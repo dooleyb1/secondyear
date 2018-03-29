@@ -75,7 +75,7 @@ public class CompetitionDijkstra {
 		private final int V; 
 		private int E; 
 
-		private Bag<DirectedEdge>[] adj; 
+		private Bag<DirectedEdge>[] edgesAdjacentTo; 
 
 
 		private EdgeWeightedDiGraph(String filename) throws FileNotFoundException {
@@ -88,11 +88,11 @@ public class CompetitionDijkstra {
 			
 			int currentEdges = E;
 
-			adj = (Bag<DirectedEdge>[]) new Bag[V];
+			edgesAdjacentTo = (Bag<DirectedEdge>[]) new Bag[V];
 			
-			//Create empty adjacency matrix to house vertices
+			//Create empty adjacency matrix to house adjacent edges
 			for (int v = 0; v < V; v++)
-				adj[v] = new Bag<DirectedEdge>();
+				edgesAdjacentTo[v] = new Bag<DirectedEdge>();
 
 			//Extract all edges from input file
 			for (int i = 0; i < currentEdges; i++) {
@@ -118,14 +118,14 @@ public class CompetitionDijkstra {
 			int v = e.from();
 			int w = e.to();
 
-			//Add vertice to adjacency matrix
-			adj[v].add(e);
+			//Add directed edge e to v's adjacent edges
+			edgesAdjacentTo[v].add(e);
 
 			E++;
 		}
 
-		public Iterable<DirectedEdge> adj(int v) {
-			return adj[v];
+		public Iterable<DirectedEdge> edgesAdjacentTo(int v) {
+			return edgesAdjacentTo[v];
 		}
 
 		public Iterable<DirectedEdge> edges() {
@@ -136,7 +136,7 @@ public class CompetitionDijkstra {
 			//Iterate over all vertices
 			for (int v = 0; v < V; v++) {
 
-				for (DirectedEdge e : adj(v)) {
+				for (DirectedEdge e : edgesAdjacentTo(v)) {
 					list.add(e);
 				}
 			}
@@ -390,7 +390,7 @@ public class CompetitionDijkstra {
 				int v = priorityQueue.delMin();
 					
 				//For every edge related to v
-				for (DirectedEdge e : graph.adj(v))
+				for (DirectedEdge e : graph.edgesAdjacentTo(v))
 					relax(e);
 			}
 
@@ -444,13 +444,13 @@ public class CompetitionDijkstra {
 		
 		System.out.println("\nTime = Distance / Speed");
 
-		System.out.println("     = " + distance + "km / " + speed + "m/minute");
+		System.out.println("     = " + distance + "km / " + speed + "m/m");
 		
 		double time = (1000*distance)/speed;
-
 		System.out.println("     = " + time + "min");
+	
 		
-		return (int) time;
+		return (int) Math.ceil(time);
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
