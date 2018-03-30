@@ -6,6 +6,7 @@ TEST = .:hamcrest-core-1.3.jar:junit-4.11.jar org.junit.runner.JUnitCore
 RUN = .:jars:hamcrest-core-1.3.jar:json-simple-1.1.jar
 BUILD = *:. 
 
+
 .SUFFIXES: .java .class .jar
 
 default:
@@ -14,11 +15,11 @@ default:
 dijkstra:
 	$(JVM) $(JFLAGS) $(RUN) CompetitionDijkstra
 
+test:
+	$(JVM) $(JFLAGS) $(TEST) CompetitionTests
+		
 floyd:
 	$(JVM) $(JFLAGS) $(RUN) CompetitionFloydWarshall
-
-test:
-	$(JVM) $(JFLAGS) $(TEST) CompetitiomTests
 
 clean: 
 	$(RM) *.class
