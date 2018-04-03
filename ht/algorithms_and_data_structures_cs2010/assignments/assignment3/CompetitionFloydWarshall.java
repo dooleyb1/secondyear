@@ -57,9 +57,6 @@ public class CompetitionFloydWarshall {
                         if(maxDist < shortestPaths.dist(v, w)) 
                             maxDist = shortestPaths.dist(v, w);
                     }
-                    
-                    else
-                     System.out.println("  Inf ");
                 }
                 //System.out.println("\nCurrent Max Distance Found = " + maxDist);
             }
@@ -500,10 +497,5 @@ public class CompetitionFloydWarshall {
             }
             return list;
         }
-    }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        //CompetitionFloydWarshall comp = new CompetitionFloydWarshall("txt_files/tinyEWD.txt", 50, 75, 100);
-
     }
 }

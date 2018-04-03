@@ -477,10 +477,4 @@ public class CompetitionDijkstra {
 		
 		return (int) Math.ceil(time);
 	}
-
-	public static void main(String[] args) throws FileNotFoundException {
-		//CompetitionDijkstra comp = new CompetitionDijkstra("txt_files/1000EWD.txt", 50, 75, 100);
-
-	}
-
 }
