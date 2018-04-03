@@ -3,9 +3,22 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import java.util.Stack;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
+import java.lang.UnsupportedOperationException;
+import java.util.NoSuchElementException;
 
 public class CompetitionTests {
 
@@ -16,6 +29,78 @@ public class CompetitionTests {
 
         assertEquals("Slowest speed should be 50", 50, dijk.slowestSpeed);
         assertEquals("Graph should have 8 vertices",8, dijk.graph.V());
+    }
+
+    @Test
+    public void testNegativeCycleEWD() throws FileNotFoundException{
+
+        boolean thrown = false;
+
+        try{
+            CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("negativeCycleEWD.txt", 50, 75, 100);
+        } catch (UnsupportedOperationException e) {
+            thrown = true;
+        }
+
+        assertTrue("Graph should have negative cycle", thrown);
+    }
+
+
+
+    @Test
+    public void testEdgeWeightedDiGraph() throws FileNotFoundException{
+
+        File file = new File("tinyEWD.txt");
+        Scanner in = new Scanner(file);
+        EdgeWeightedDiGraph g = new EdgeWeightedDiGraph(in);
+
+        DijkstraSP dijk = new DijkstraSP(g, 0);
+        Iterator<Integer> it = dijk.priorityQueue.iterator();
+        int x;
+
+        if(it.hasNext())
+            x = it.next();
+
+        Iterable<DirectedEdge> it2 = dijk.pathTo(3);
+        Iterable<DirectedEdge> itFalse = dijk.pathTo(2);
+        Iterable<DirectedEdge> edges = g.edges();
+
+    }
+
+    @Test 
+    public void testEdgeWeightedDirectedCycle() throws FileNotFoundException{
+
+        File file = new File("tinyEWD.txt");
+        Scanner in = new Scanner(file);
+        EdgeWeightedDiGraph g = new EdgeWeightedDiGraph(in);
+
+        EdgeWeightedDirectedCycle cycle = new EdgeWeightedDirectedCycle(g);
+        Iterable<DirectedEdge> x = cycle.cycle();
+        assertTrue("Graph should have a cycle", cycle.hasCycle());
+
+        file = new File("singleNodeEWD.txt");
+        in = new Scanner(file);
+        EdgeWeightedDiGraph h = new EdgeWeightedDiGraph(in);
+
+        EdgeWeightedDirectedCycle cycle2 = new EdgeWeightedDirectedCycle(h);
+        Iterable<DirectedEdge> xy = cycle2.cycle();
+        assertFalse("Graph should not have a cycle", cycle2.hasCycle());
+    }
+
+    @Test
+    public void testDijkstraFileNotFound() throws FileNotFoundException{
+
+        CompetitionDijkstra dijk = new CompetitionDijkstra("imnotafile.txt", 50, 75, 100);
+
+        assertNull("Graph should be set to null", dijk.graph);
+        assertFalse("Should be an invalid graph", dijk.isValidGraph);
+    }
+
+    @Test
+    public void testDijkstraNegativeSpeed() throws FileNotFoundException{
+
+        CompetitionDijkstra dijk = new CompetitionDijkstra("tinyEWD.txt", -1, 60, 100);
+        assertEquals("Competition time should be -1 mins", -1, dijk.timeRequiredforCompetition());
     }
 
     @Test 
@@ -85,6 +170,17 @@ public class CompetitionTests {
 		assertEquals("Competition time should be 182 mins", 182, dijk.timeRequiredforCompetition());
     }
 
+    @Test
+    public void testAdjMatrixEdgeWeightedDigraph() throws FileNotFoundException{
+
+        File file = new File("tinyEWD.txt");
+        Scanner in = new Scanner(file);
+        AdjMatrixEdgeWeightedDigraph g = new AdjMatrixEdgeWeightedDigraph(in);
+        FloydWarshall floyd = new FloydWarshall(g);
+
+        Iterable<DirectedEdge> x = floyd.path(0,4);
+    }
+
     //------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------
 
@@ -95,6 +191,22 @@ public class CompetitionTests {
 
     	assertEquals("Slowest speed should be 50", 50, floyd.slowestSpeed);
         assertEquals("Graph should have 8 vertices",8, floyd.graph.V());
+    }
+
+    @Test
+    public void testFWFileNotFound() throws FileNotFoundException{
+
+        CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("imnotafile.txt", 50, 75, 100);
+
+        assertNull("Graph should be set to null", floyd.graph);
+        assertFalse("Should be an invalid graph", floyd.isValidGraph);
+    }
+
+    @Test
+    public void testFWNegativeSpeed() throws FileNotFoundException{
+
+        CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("tinyEWD.txt", -1, 60, 100);
+        assertEquals("Competition time should be -1 mins", -1, floyd.timeRequiredforCompetition());
     }
 
     @Test 
