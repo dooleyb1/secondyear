@@ -30,56 +30,78 @@ public class CompetitionDijkstra {
 	public static EdgeWeightedDiGraph graph;
 	public int slowestSpeed;
 	public double maxDist;
+	public String filename;
 	public boolean isValidGraph;
 
 
 	CompetitionDijkstra(String filename, int sA, int sB, int sC) throws FileNotFoundException {
 		
-		this.graph = new EdgeWeightedDiGraph(filename);
-		this.slowestSpeed = Math.min(Math.min(sA,sB),sC);
+		try{
+			this.graph = new EdgeWeightedDiGraph(filename);
+			this.slowestSpeed = Math.min(Math.min(sA,sB),sC);
+			this.filename = filename;
 
-		maxDist = 0.0;
-		
-		//Re-run Dijkstra accounting for every node being source (ONLY IF VALID GRAPH)
-		if(this.graph.isValid()){
+			maxDist = 0.0;
 			
-			this.isValidGraph = true;
-			
-			for(int i = 0; i < graph.V(); i++) {
+			//Re-run Dijkstra accounting for every node being source (ONLY IF VALID GRAPH)
+			if(this.graph.isValid()){
 				
-				//System.out.println("\n------------------------------------------");
-				//System.out.println("Re-routing with Source = [Node " + i + "]....");
-				//System.out.println("------------------------------------------");
-				DijkstraSP routedGraph = new DijkstraSP(graph, i);
+				this.isValidGraph = true;
 				
-				//Calculate longest distance for current routedGraph (source = i)
-				for(int j = 0; j < graph.V(); j++) {
+				for(int i = 0; i < graph.V(); i++) {
 					
-					//If there exists a path within the graph to node j
-					if(routedGraph.hasPathTo(j)) {
-						//System.out.println("Distance from [Node " + i + "] to [Node " + j + "] : " + routedGraph.distTo(j));
-						//And if the distance to node j is more than current max dist
-						if(this.maxDist < routedGraph.distTo(j)) {
+					//System.out.println("\n------------------------------------------");
+					//System.out.println("Re-routing with Source = [Node " + i + "]....");
+					//System.out.println("------------------------------------------");
+					DijkstraSP routedGraph = new DijkstraSP(graph, i);
+					
+					//Calculate longest distance for current routedGraph (source = i)
+					for(int j = 0; j < graph.V(); j++) {
+						
+						//If there exists a path within the graph to node j
+						if(routedGraph.hasPathTo(j)) {
+							//System.out.println("Distance from [Node " + i + "] to [Node " + j + "] : " + routedGraph.distTo(j));
+							//And if the distance to node j is more than current max dist
+							if(this.maxDist < routedGraph.distTo(j)) {
 
-							this.maxDist = routedGraph.distTo(j);
-							//System.out.println(maxDist);
-						}
-					}	
+								this.maxDist = routedGraph.distTo(j);
+								//System.out.println(maxDist);
+							}
+						}	
+					}
+
+					//System.out.println("\nCurrent Max Distance Found = " + maxDist);
 				}
-
-				//System.out.println("\nCurrent Max Distance Found = " + maxDist);
 			}
+
+			else
+				this.isValidGraph = false;
+
+			//System.out.println("------------------------------------------");
+			//System.out.println("Calculating time required for show...\n");
+			
+			//int time = timeRequiredforCompetition(maxDist, slowestSpeed);
+			//ystem.out.println("\nTime required for show: "+ time +"min");
+		} catch (FileNotFoundException e){
+			this.filename = null;
 		}
 
-		else
-			this.isValidGraph = false;
+	}
 
-		//System.out.println("------------------------------------------");
-		//System.out.println("Calculating time required for show...\n");
+	public int timeRequiredforCompetition() {
 		
-		//int time = timeRequiredforCompetition(maxDist, slowestSpeed);
-		//ystem.out.println("\nTime required for show: "+ time +"min");
+		if(this.maxDist <= 0.0 || this.slowestSpeed <= 0 || this.filename == null)
+			return -1;
 
+		//System.out.println("\nTime = Distance / Speed");
+
+		//System.out.println("     = " + distance + "km / " + speed + "m/m");
+		
+		double time = (1000*this.maxDist)/this.slowestSpeed;
+		//System.out.println("     = " + time + "min");
+	
+		
+		return (int) Math.ceil(time);
 	}
 
 	public class EdgeWeightedDiGraph {
@@ -90,7 +112,7 @@ public class CompetitionDijkstra {
 
 		private Bag<DirectedEdge>[] edgesAdjacentTo; 
 
-
+		@SuppressWarnings("unchecked")
 		private EdgeWeightedDiGraph(String filename) throws FileNotFoundException {
 			
 			File file = new File(filename);
@@ -249,6 +271,10 @@ public class CompetitionDijkstra {
 				current = current.next;
 				return item;
 			}
+
+			public void remove() {
+    			throw new UnsupportedOperationException();
+			}
 		}
 	}
 
@@ -262,6 +288,7 @@ public class CompetitionDijkstra {
 
 		private Key[] keys;
 
+		@SuppressWarnings("unchecked")
 		public IndexMinPQ(int maxN) {
 
 			this.maxN = maxN;
@@ -460,21 +487,5 @@ public class CompetitionDijkstra {
 			}
 			return path;
 		}
-	}
-	
-	public int timeRequiredforCompetition(double distance, int speed) {
-		
-		if(distance <= 0.0 || speed <= 0)
-			return -1;
-
-		//System.out.println("\nTime = Distance / Speed");
-
-		//System.out.println("     = " + distance + "km / " + speed + "m/m");
-		
-		double time = (1000*distance)/speed;
-		//System.out.println("     = " + time + "min");
-	
-		
-		return (int) Math.ceil(time);
 	}
 }

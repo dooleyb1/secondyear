@@ -25,63 +25,69 @@ import java.util.NoSuchElementException;
  * This class implements the competition using Floyd-Warshall algorithm
  */
 
-public class CompetitionFloydWarshall {
+public class CompetitionFloydWarshall{
 
     public static AdjMatrixEdgeWeightedDigraph graph;
     public int slowestSpeed;
     public double maxDist;
     public boolean isValidGraph;
+    public String filename;
 
     CompetitionFloydWarshall (String filename, int sA, int sB, int sC) throws FileNotFoundException{
 
-        this.graph = new AdjMatrixEdgeWeightedDigraph(filename);
-        FloydWarshall shortestPaths = new FloydWarshall(this.graph);
-        
-        this.maxDist = 0.0;
-        this.slowestSpeed = Math.min(Math.min(sA,sB),sC);
-        
-        if(this.graph.isValid()){
+        try{
+            this.graph = new AdjMatrixEdgeWeightedDigraph(filename);
+            FloydWarshall shortestPaths = new FloydWarshall(this.graph);
+            
+            this.maxDist = 0.0;
+            this.slowestSpeed = Math.min(Math.min(sA,sB),sC);
+            this.filename = filename;
 
-            this.isValidGraph = true;
+            if(this.graph.isValid()){
 
-            for (int v = 0; v < this.graph.V(); v++) {
-                
-                //System.out.println("\n------------------------------------------");
-                //System.out.println("Distances From [Node " + v + "]....");
-                //System.out.println("------------------------------------------");
+                this.isValidGraph = true;
 
-                for (int w = 0; w < this.graph.V(); w++) {
-                    if (shortestPaths.hasPath(v, w)){
-                        //System.out.println("Distance from [Node " + v + "] to [Node " + w + "] : " + shortestPaths.dist(v, w));
-                        
-                        if(maxDist < shortestPaths.dist(v, w)) 
-                            maxDist = shortestPaths.dist(v, w);
+                for (int v = 0; v < this.graph.V(); v++) {
+                    
+                    //System.out.println("\n------------------------------------------");
+                    //System.out.println("Distances From [Node " + v + "]....");
+                    //System.out.println("------------------------------------------");
+
+                    for (int w = 0; w < this.graph.V(); w++) {
+                        if (shortestPaths.hasPath(v, w)){
+                            //System.out.println("Distance from [Node " + v + "] to [Node " + w + "] : " + shortestPaths.dist(v, w));
+                            
+                            if(this.maxDist < shortestPaths.dist(v, w)) 
+                                this.maxDist = shortestPaths.dist(v, w);
+                        }
                     }
+                    //System.out.println("\nCurrent Max Distance Found = " + maxDist);
                 }
-                //System.out.println("\nCurrent Max Distance Found = " + maxDist);
             }
+
+            else
+                this.isValidGraph = false;
+
+            //System.out.println("------------------------------------------");
+            //System.out.println("Calculating time required for show...\n");
+
+            //int time = timeRequiredforCompetition(maxDist, slowestSpeed);
+            //System.out.println("\nTime required for show: "+ time +"min");
+        } catch (FileNotFoundException e){
+            this.filename = null;
         }
-
-        else
-            this.isValidGraph = false;
-
-        //System.out.println("------------------------------------------");
-        //System.out.println("Calculating time required for show...\n");
-
-        //int time = timeRequiredforCompetition(maxDist, slowestSpeed);
-        //System.out.println("\nTime required for show: "+ time +"min");
     }
 
 
-    public int timeRequiredforCompetition(double distance, int speed){
+    public int timeRequiredforCompetition(){
 
-        if(distance <= 0.0 || speed <= 0)
+        if(this.maxDist <= 0.0 || this.slowestSpeed <= 0 || this.filename == null)
             return -1;
         //System.out.println("\nTime = Distance / Speed");
 
         //System.out.println("     = " + distance + "km / " + speed + "m/m");
         
-        double time = (1000*distance)/speed;
+        double time = (1000*this.maxDist)/this.slowestSpeed;
         //System.out.println("     = " + time + "min");
     
         
@@ -177,6 +183,10 @@ public class CompetitionFloydWarshall {
                     w++;
                 }
                 return false;
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException();
             }
 
             public DirectedEdge next() {
@@ -362,6 +372,7 @@ public class CompetitionFloydWarshall {
         }
 
         private class ListIterator<Item> implements Iterator<Item> {
+            
             private Node<Item> current;
 
             public ListIterator(Node<Item> first) {
@@ -370,6 +381,10 @@ public class CompetitionFloydWarshall {
 
             public boolean hasNext() {
                 return current != null;
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException();
             }
 
             public Item next() {
@@ -449,7 +464,7 @@ public class CompetitionFloydWarshall {
 
         private Bag<DirectedEdge>[] edgesAdjacentTo; 
 
-
+        @SuppressWarnings("unchecked")
         private EdgeWeightedDiGraph(int V) {
         
             this.V = V;
