@@ -2,7 +2,7 @@ JFLAGS = -cp
 JC = javac
 JVM = java
 
-ZIP = AdjMatrixEdgeWeightedDigraph.java Bag.java CompetitionDijkstra.java CompetitionFloydWarshall.java CompetitionTests.java DijkstraSP.java DirectedEdge.java EdgeWeightedDiGraph.java EdgeWeightedDirectedCycle.java FloydWarshall.java IndexMinPQ.java 1000EWD.txt dualNodeEWD.txt emptyEWD.txt invalidEWD.txt singleNodeEWD.txt tinyEWD.txt negativeCycleEWD.txt
+ZIP = AdjMatrixEdgeWeightedDigraph.java Bag.java CompetitionDijkstra.java CompetitionFloydWarshall.java CompetitionTests.java DijkstraSP.java DirectedEdge.java EdgeWeightedDiGraph.java FloydWarshall.java IndexMinPQ.java 1000EWD.txt emptyEWD.txt invalidEWD.txt singleNodeEWD.txt tinyEWD.txt negativeCycleEWD.txt
 
 TEST = .:hamcrest-core-1.3.jar:junit-4.11.jar org.junit.runner.JUnitCore 
 RUN = .:jars:hamcrest-core-1.3.jar:json-simple-1.1.jar

@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 public class Bag<Item> implements Iterable<Item> {
 		
 		private Node<Item> first;
-		private int n;
+		public int n;
 
 		public class Node<Item> {
 			private Item item;

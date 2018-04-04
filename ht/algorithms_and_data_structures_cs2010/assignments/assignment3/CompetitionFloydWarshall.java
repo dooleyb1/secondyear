@@ -4,9 +4,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Stack;
-
+import java.lang.NullPointerException;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /*
  * A Contest to Meet (ACM) is a reality TV contest that sets three contestants at three random
@@ -34,7 +33,7 @@ public class CompetitionFloydWarshall{
     public FloydWarshall shortestPaths;
     public boolean isValidGraph;
 
-    CompetitionFloydWarshall (String filename, int sA, int sB, int sC) throws FileNotFoundException{
+    CompetitionFloydWarshall (String filename, int sA, int sB, int sC){
 
         
         try{
@@ -44,19 +43,18 @@ public class CompetitionFloydWarshall{
             Scanner in = new Scanner(file);
             this.graph = new AdjMatrixEdgeWeightedDigraph(in);
             this.shortestPaths = new FloydWarshall(this.graph);
+            this.maxDist = 0.0;
+            this.slowestSpeed = Math.min(Math.min(sA,sB),sC);
+            this.filename = filename;
         
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException | NullPointerException e){
             
             this.filename = null;
             this.graph = null;
             this.isValidGraph = false;
         }
-            
-        this.maxDist = 0.0;
-        this.slowestSpeed = Math.min(Math.min(sA,sB),sC);
-        this.filename = filename;
 
-        if(this.graph != null && this.graph.isValid()){
+        if(this.shortestPaths != null && this.graph.isValid()){
 
             this.isValidGraph = true;
 

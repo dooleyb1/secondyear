@@ -13,11 +13,11 @@ public class EdgeWeightedDiGraph {
 		private final int V; 
 		private int E; 
 		private boolean isValid;
-
+		public int[] indegree;
 		public Bag<DirectedEdge>[] edgesAdjacentTo; 
 
 		@SuppressWarnings("unchecked")
-		public EdgeWeightedDiGraph(Scanner in) throws FileNotFoundException {
+		public EdgeWeightedDiGraph(Scanner in) {
 			
 			this.V = in.nextInt();
 			this.E = in.nextInt();
@@ -27,24 +27,48 @@ public class EdgeWeightedDiGraph {
 
 			edgesAdjacentTo = (Bag<DirectedEdge>[]) new Bag[V];
 			
-			//Create empty adjacency matrix to house adjacent edges
-			for (int v = 0; v < this.V; v++)
-				edgesAdjacentTo[v] = new Bag<DirectedEdge>();
+			if(this.V < 3)
+				this.isValid = false;
 
-			//Extract all edges from input file
-			for (int i = 0; i < currentEdges; i++) {
-				
-				int v = in.nextInt();
-				int w = in.nextInt();
-				double weight = in.nextDouble();
+			if(this.isValid){
+				this.indegree = new int[V];
+				//Create empty adjacency matrix to house adjacent edges
+				for (int v = 0; v < this.V; v++)
+					edgesAdjacentTo[v] = new Bag<DirectedEdge>();
 
-				//Verify that there is no negative vertices/weights
-				if( v >= 0 && w >= 0 && weight >= 0.0)
-					addEdge(new DirectedEdge(v, w, weight));
+				//Extract all edges from input file
+				for (int i = 0; i < currentEdges; i++) {
+					
+					int v = in.nextInt();
+					int w = in.nextInt();
+					double weight = in.nextDouble();
 
-				else
-					this.isValid = false;
+					//Verify that there is no negative vertices/weights
+					if( v >= 0 && w >= 0 && weight >= 0.0)
+						addEdge(new DirectedEdge(v, w, weight));
+
+					else
+						this.isValid = false;
+				}
+				validateGraph();
 			}
+		}
+
+		public void validateGraph(){
+
+			if(!this.isValid)
+				return;
+			
+			boolean graphValid = true;
+
+			for(int v=0; v<this.V; v++){
+				if(indegree[v] < 1){
+					graphValid = false;
+					break;
+				}
+			}
+			this.isValid = graphValid;
+
 		}
 
 		public boolean isValid() {
@@ -66,7 +90,7 @@ public class EdgeWeightedDiGraph {
 			
 			int v = e.from();
 			int w = e.to();
-
+			indegree[w]++;
 			//Add directed edge e to v's adjacent edges
 			edgesAdjacentTo[v].add(e);
 

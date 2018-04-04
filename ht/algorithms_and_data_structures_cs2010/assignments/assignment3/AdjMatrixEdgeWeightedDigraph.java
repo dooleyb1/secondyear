@@ -15,7 +15,7 @@ public class AdjMatrixEdgeWeightedDigraph {
         private DirectedEdge[][] edgeFromTo;
         private boolean isValid;
 
-        public AdjMatrixEdgeWeightedDigraph(Scanner in) throws FileNotFoundException {
+        public AdjMatrixEdgeWeightedDigraph(Scanner in){
 
             this.V = in.nextInt();
             this.E = in.nextInt();
@@ -24,26 +24,31 @@ public class AdjMatrixEdgeWeightedDigraph {
             this.edgeFromTo = new DirectedEdge[V][V];
             
             int currentEdges = E;
+            
+            if(this.V < 3)
+                this.isValid = false;
 
-            for (int i = 0; i < currentEdges; i++) {
-                
-                int v = in.nextInt();
-                int w = in.nextInt();
-                double weight = in.nextDouble();
-                
-                if( v >= 0 && w >= 0){
-
-                    if (v == w) 
-                        addEdge(new DirectedEdge(v, w, Math.abs(weight)));
+            if(this.isValid){
+                for (int i = 0; i < currentEdges; i++) {
                     
-                    else addEdge(new DirectedEdge(v, w, weight));
-                }
+                    int v = in.nextInt();
+                    int w = in.nextInt();
+                    double weight = in.nextDouble();
+                    
+                    if( v >= 0 && w >= 0){
 
-                else
-                    this.isValid = false;
+                        if (v == w) 
+                            addEdge(new DirectedEdge(v, w, Math.abs(weight)));
+                        
+                        else addEdge(new DirectedEdge(v, w, weight));
+                    }
+
+                    else
+                        this.isValid = false;
+                }
             }
         }
-
+        
         public boolean isValid() {
             if(this.isValid)
                 return true;

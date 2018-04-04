@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 public class CompetitionTests {
 
     @Test
-    public void testDijkstraConstructor() throws FileNotFoundException{
+    public void testDijkstraConstructor(){
 
     	CompetitionDijkstra dijk = new CompetitionDijkstra("tinyEWD.txt", 50, 75, 100);
 
@@ -32,7 +32,7 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testNegativeCycleEWD() throws FileNotFoundException{
+    public void testNegativeCycleEWD() {
 
         boolean thrown = false;
 
@@ -48,47 +48,52 @@ public class CompetitionTests {
 
 
     @Test
-    public void testEdgeWeightedDiGraph() throws FileNotFoundException{
+    public void testEdgeWeightedDiGraph() {
 
-        File file = new File("tinyEWD.txt");
-        Scanner in = new Scanner(file);
-        EdgeWeightedDiGraph g = new EdgeWeightedDiGraph(in);
+        try{
+            File file = new File("tinyEWD.txt");
+            Scanner in = new Scanner(file);
+            EdgeWeightedDiGraph g = new EdgeWeightedDiGraph(in);
 
-        DijkstraSP dijk = new DijkstraSP(g, 0);
-        Iterator<Integer> it = dijk.priorityQueue.iterator();
-        int x;
+            DijkstraSP dijk = new DijkstraSP(g, 0);
+            Iterator<Integer> it = dijk.priorityQueue.iterator();
+            int x;
 
-        if(it.hasNext())
-            x = it.next();
+            if(it.hasNext())
+                x = it.next();
 
-        Iterable<DirectedEdge> it2 = dijk.pathTo(3);
-        Iterable<DirectedEdge> itFalse = dijk.pathTo(2);
-        Iterable<DirectedEdge> edges = g.edges();
+            Iterable<DirectedEdge> it2 = dijk.pathTo(3);
+            Iterable<DirectedEdge> itFalse = dijk.pathTo(2);
+            Iterable<DirectedEdge> edges = g.edges();
+        
+        } catch(FileNotFoundException e){
 
-    }
+        }
 
-    @Test 
-    public void testEdgeWeightedDirectedCycle() throws FileNotFoundException{
-
-        File file = new File("tinyEWD.txt");
-        Scanner in = new Scanner(file);
-        EdgeWeightedDiGraph g = new EdgeWeightedDiGraph(in);
-
-        EdgeWeightedDirectedCycle cycle = new EdgeWeightedDirectedCycle(g);
-        Iterable<DirectedEdge> x = cycle.cycle();
-        assertTrue("Graph should have a cycle", cycle.hasCycle());
-
-        file = new File("singleNodeEWD.txt");
-        in = new Scanner(file);
-        EdgeWeightedDiGraph h = new EdgeWeightedDiGraph(in);
-
-        EdgeWeightedDirectedCycle cycle2 = new EdgeWeightedDirectedCycle(h);
-        Iterable<DirectedEdge> xy = cycle2.cycle();
-        assertFalse("Graph should not have a cycle", cycle2.hasCycle());
     }
 
     @Test
-    public void testDijkstraFileNotFound() throws FileNotFoundException{
+    public void testInputA(){
+
+        CompetitionDijkstra dijk = new CompetitionDijkstra("input-A.txt", 60,50,75);
+        CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("input-A.txt", 60,50,75);
+
+        assertEquals("Testing input-A.txt", -1, floyd.timeRequiredforCompetition());
+        assertEquals("Testing input-A.txt", -1, dijk.timeRequiredforCompetition());
+    }
+
+    @Test
+    public void testInputF(){
+
+        CompetitionDijkstra dijk = new CompetitionDijkstra("input-F.txt", 50,80,60);
+        CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("input-F.txt", 50,80,60);
+
+        assertEquals("Testing input-B.txt for Floyd", -1, floyd.timeRequiredforCompetition());
+        assertEquals("Testing input-B.txt for Dijk", -1, dijk.timeRequiredforCompetition());
+    }
+
+    @Test
+    public void testDijkstraFileNotFound() {
 
         CompetitionDijkstra dijk = new CompetitionDijkstra("imnotafile.txt", 50, 75, 100);
 
@@ -97,14 +102,14 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testDijkstraNegativeSpeed() throws FileNotFoundException{
+    public void testDijkstraNegativeSpeed() {
 
         CompetitionDijkstra dijk = new CompetitionDijkstra("tinyEWD.txt", -1, 60, 100);
         assertEquals("Competition time should be -1 mins", -1, dijk.timeRequiredforCompetition());
     }
 
     @Test 
-    public void testDijkTinyEWD() throws FileNotFoundException{
+    public void testDijkTinyEWD() {
 
     	CompetitionDijkstra dijk = new CompetitionDijkstra("tinyEWD.txt", 50, 75, 100);
 
@@ -113,7 +118,7 @@ public class CompetitionTests {
     }
 
     @Test 
-    public void testDijk1000EWD() throws FileNotFoundException{
+    public void testDijk1000EWD() {
 
     	CompetitionDijkstra dijk = new CompetitionDijkstra("1000EWD.txt", 50, 75, 100);
 
@@ -123,7 +128,7 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testDijkEmptyEWD() throws FileNotFoundException{
+    public void testDijkEmptyEWD() {
 
     	CompetitionDijkstra dijk = new CompetitionDijkstra("emptyEWD.txt", 50, 75, 100);
 
@@ -134,7 +139,7 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testDijkInvalidEWD() throws FileNotFoundException{
+    public void testDijkInvalidEWD() {
 
     	CompetitionDijkstra dijk = new CompetitionDijkstra("invalidEWD.txt", 50, 75, 100);
 
@@ -142,7 +147,7 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testDijkValidEWD() throws FileNotFoundException{
+    public void testDijkValidEWD() {
 
     	CompetitionDijkstra dijk = new CompetitionDijkstra("tinyEWD.txt", 50, 75, 100);
 
@@ -150,7 +155,7 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testDijkSingleNodeEWD() throws FileNotFoundException{
+    public void testDijkSingleNodeEWD() {
 
     	CompetitionDijkstra dijk = new CompetitionDijkstra("singleNodeEWD.txt", 50, 75, 100);
 
@@ -161,31 +166,25 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testDijkDualNodeEWD() throws FileNotFoundException{
+    public void testAdjMatrixEdgeWeightedDigraph() {
 
-    	CompetitionDijkstra dijk = new CompetitionDijkstra("dualNodeEWD.txt", 50, 75, 100);
+        try{
+            File file = new File("tinyEWD.txt");
+            Scanner in = new Scanner(file);
+            AdjMatrixEdgeWeightedDigraph g = new AdjMatrixEdgeWeightedDigraph(in);
+            FloydWarshall floyd = new FloydWarshall(g);
 
-        assertEquals("Graph should have 2 vertices",2, dijk.graph.V());
-        assertEquals("Longest distance should be 9.1km", 9.1, dijk.maxDist, 0.001);
-		assertEquals("Competition time should be 182 mins", 182, dijk.timeRequiredforCompetition());
-    }
+            Iterable<DirectedEdge> x = floyd.path(0,4);
+        } catch (FileNotFoundException e){
 
-    @Test
-    public void testAdjMatrixEdgeWeightedDigraph() throws FileNotFoundException{
-
-        File file = new File("tinyEWD.txt");
-        Scanner in = new Scanner(file);
-        AdjMatrixEdgeWeightedDigraph g = new AdjMatrixEdgeWeightedDigraph(in);
-        FloydWarshall floyd = new FloydWarshall(g);
-
-        Iterable<DirectedEdge> x = floyd.path(0,4);
+        }
     }
 
     //------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------
 
     @Test
-    public void testFWConstructor() throws FileNotFoundException{
+    public void testFWConstructor() {
         
         CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("tinyEWD.txt", 50, 75, 100);
 
@@ -194,7 +193,7 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testFWFileNotFound() throws FileNotFoundException{
+    public void testFWFileNotFound() {
 
         CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("imnotafile.txt", 50, 75, 100);
 
@@ -203,14 +202,14 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testFWNegativeSpeed() throws FileNotFoundException{
+    public void testFWNegativeSpeed() {
 
         CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("tinyEWD.txt", -1, 60, 100);
         assertEquals("Competition time should be -1 mins", -1, floyd.timeRequiredforCompetition());
     }
 
     @Test 
-    public void testFWTinyEWD() throws FileNotFoundException{
+    public void testFWTinyEWD() {
 
     	CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("tinyEWD.txt", 50, 75, 100);
 
@@ -219,7 +218,7 @@ public class CompetitionTests {
     }
 
     @Test 
-    public void testFW1000EWD() throws FileNotFoundException{
+    public void testFW1000EWD() {
 
     	CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("1000EWD.txt", 50, 75, 100);
 
@@ -229,7 +228,7 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testFWEmptyEWD() throws FileNotFoundException{
+    public void testFWEmptyEWD() {
 
     	CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("emptyEWD.txt", 50, 75, 100);
 
@@ -240,7 +239,7 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testFWInvalidEWD() throws FileNotFoundException{
+    public void testFWInvalidEWD() {
 
     	CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("invalidEWD.txt", 50, 75, 100);
 
@@ -248,7 +247,7 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testFWValidEWD() throws FileNotFoundException{
+    public void testFWValidEWD() {
 
     	CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("tinyEWD.txt", 50, 75, 100);
 
@@ -256,7 +255,7 @@ public class CompetitionTests {
     }
 
     @Test
-    public void testFWSingleNodeEWD() throws FileNotFoundException{
+    public void testFWSingleNodeEWD() {
 
     	CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("singleNodeEWD.txt", 50, 75, 100);
 
@@ -266,15 +265,6 @@ public class CompetitionTests {
         assertEquals("Competition time should be -1 mins", -1, floyd.timeRequiredforCompetition());
     }
 
-    @Test
-    public void testFWDualNodeEWD() throws FileNotFoundException{
-
-    	CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("dualNodeEWD.txt", 50, 75, 100);
-
-        assertEquals("Graph should have 2 vertices",2, floyd.graph.V());
-        assertEquals("Longest distance should be 9.1km", 9.1, floyd.maxDist, 0.001);
-		assertEquals("Competition time should be 182 mins", 182, floyd.timeRequiredforCompetition());
-    }
     //TODO - more tests
     
 }

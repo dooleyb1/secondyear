@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.NullPointerException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -34,7 +35,7 @@ public class CompetitionDijkstra {
 	public boolean isValidGraph;
 
 
-	CompetitionDijkstra(String filename, int sA, int sB, int sC) throws FileNotFoundException {
+	CompetitionDijkstra(String filename, int sA, int sB, int sC) {
 		
 		try{
 			
@@ -42,20 +43,18 @@ public class CompetitionDijkstra {
 			File file = new File(filename);
 			Scanner in = new Scanner(file);
 			this.graph = new EdgeWeightedDiGraph(in);
+			this.slowestSpeed = Math.min(Math.min(sA,sB),sC);
+			this.filename = filename;
+
+			this.maxDist = 0.0;
 		
-		} catch (FileNotFoundException e){
-			
+		} catch (FileNotFoundException | NullPointerException e){
 			this.graph = null;
 			this.isValidGraph = false;	
+			this.filename = null;
 		}
 
-
-		this.slowestSpeed = Math.min(Math.min(sA,sB),sC);
-		this.filename = filename;
-
-		maxDist = 0.0;
-
-			//Re-run Dijkstra accounting for every node being source (ONLY IF VALID GRAPH)
+		//Re-run Dijkstra accounting for every node being source (ONLY IF VALID GRAPH)
 		if(this.graph != null && this.graph.isValid()){
 
 			this.isValidGraph = true;

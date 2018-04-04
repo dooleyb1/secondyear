@@ -11,6 +11,7 @@ import java.util.NoSuchElementException;
 public class FloydWarshall {
 
         public boolean hasNegativeCycle;
+        public boolean allPositiveIndegree;
         public double[][] distTo;
         public DirectedEdge[][] edgeTo;
 
@@ -65,6 +66,7 @@ public class FloydWarshall {
                 }
             }
         }
+
 
         public boolean hasNegativeCycle() {
             return hasNegativeCycle;
