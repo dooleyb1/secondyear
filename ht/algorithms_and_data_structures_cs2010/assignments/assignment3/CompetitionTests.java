@@ -36,13 +36,9 @@ public class CompetitionTests {
 
         boolean thrown = false;
 
-        try{
-            CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("negativeCycleEWD.txt", 50, 75, 100);
-        } catch (UnsupportedOperationException e) {
-            thrown = true;
-        }
+        CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("negativeCycleEWD.txt", 50, 75, 100);
 
-        assertTrue("Graph should have negative cycle", thrown);
+        assertTrue("Graph should have negative cycle", floyd.shortestPaths.hasNegativeCycle());
     }
 
 
@@ -73,6 +69,54 @@ public class CompetitionTests {
     }
 
     @Test
+    public void solvingHerTests(){
+
+        //DIJKSTRA CAN'T TAKE NEGATIVE WEIGHTS??
+        CompetitionDijkstra d = new CompetitionDijkstra("input-I.txt", 4, 7, 1);
+        //assertEquals("Testing input-I.txt for Dijk", 10000, d.timeRequiredforCompetition());
+
+        CompetitionFloydWarshall f = new CompetitionFloydWarshall("input-I.txt", 4, 7, 1);
+        assertEquals("Testing input-I.txt for Floyd", 10000, f.timeRequiredforCompetition());
+
+        d = new CompetitionDijkstra("input-F.txt", 50,80,60);
+        assertEquals("Testing input-F.txt for Dijk", -1, d.timeRequiredforCompetition());
+
+        f = new CompetitionFloydWarshall("input-F.txt", 50,80,60);
+        assertEquals("Testing input-F.txt for Floyd", -1, f.timeRequiredforCompetition());
+
+        d = new CompetitionDijkstra("input-C.txt", 50,100,100);
+        assertEquals("Testing input-C.txt for Dijk", -1, d.timeRequiredforCompetition());
+
+        f = new CompetitionFloydWarshall("input-C.txt", 50,100,100);
+        assertEquals("Testing input-C.txt for Floyd", -1, f.timeRequiredforCompetition());
+
+        d = new CompetitionDijkstra("input-I.txt", 3233,7,2368726);
+        //assertEquals("Testing input-I.txt for Dijk", 1429, d.timeRequiredforCompetition());
+
+        f = new CompetitionFloydWarshall("input-I.txt", 3233,7,2368726);
+        assertEquals("Testing input-I.txt for Floyd", 1429, f.timeRequiredforCompetition());
+
+        d = new CompetitionDijkstra("input-N.txt", 7333,74444,117171);
+        //assertEquals("Testing input-N.txt for Dijk", 1, d.timeRequiredforCompetition());
+
+        f = new CompetitionFloydWarshall("input-N.txt", 7333,74444,117171);
+        assertEquals("Testing input-N.txt for Floyd", 1, f.timeRequiredforCompetition());
+
+    }
+
+    @Test
+    public void testInputI(){
+
+        CompetitionDijkstra dijk = new CompetitionDijkstra("input-I.txt", 4,7,1);
+        CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("input-I.txt", 4,7,1);
+
+        //assertEquals("Testing input-I.txt for Floyd", 10000, floyd.timeRequiredforCompetition());
+        //assertEquals("Testing input-I.txt for Dijk", 10000, dijk.timeRequiredforCompetition());
+    }
+
+
+
+    @Test
     public void testInputA(){
 
         CompetitionDijkstra dijk = new CompetitionDijkstra("input-A.txt", 60,50,75);
@@ -86,10 +130,8 @@ public class CompetitionTests {
     public void testInputF(){
 
         CompetitionDijkstra dijk = new CompetitionDijkstra("input-F.txt", 50,80,60);
-        CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("input-F.txt", 50,80,60);
 
-        assertEquals("Testing input-B.txt for Floyd", -1, floyd.timeRequiredforCompetition());
-        assertEquals("Testing input-B.txt for Dijk", -1, dijk.timeRequiredforCompetition());
+        assertEquals("Testing input-F.txt for Dijk", -1, dijk.timeRequiredforCompetition());
     }
 
     @Test

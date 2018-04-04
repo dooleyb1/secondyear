@@ -10,10 +10,11 @@ import java.util.NoSuchElementException;
 
 public class AdjMatrixEdgeWeightedDigraph {
 
-        private final int V;
-        private int E;
-        private DirectedEdge[][] edgeFromTo;
-        private boolean isValid;
+        public final int V;
+        public int E;
+        public DirectedEdge[][] edgeFromTo;
+        public int[] indegree;
+        public boolean isValid;
 
         public AdjMatrixEdgeWeightedDigraph(Scanner in){
 
@@ -29,6 +30,9 @@ public class AdjMatrixEdgeWeightedDigraph {
                 this.isValid = false;
 
             if(this.isValid){
+
+                this.indegree = new int[V];
+
                 for (int i = 0; i < currentEdges; i++) {
                     
                     int v = in.nextInt();
@@ -46,7 +50,25 @@ public class AdjMatrixEdgeWeightedDigraph {
                     else
                         this.isValid = false;
                 }
+                validateGraph();
             }
+        }
+
+        public void validateGraph(){
+
+            if(!this.isValid)
+                return;
+            
+            boolean graphValid = true;
+
+            for(int v=0; v<this.V; v++){
+                if(indegree[v] < 1){
+                    graphValid = false;
+                    break;
+                }
+            }
+            this.isValid = graphValid;
+
         }
         
         public boolean isValid() {
@@ -68,6 +90,7 @@ public class AdjMatrixEdgeWeightedDigraph {
             
             int v = e.from();
             int w = e.to();
+            indegree[w]++;
 
             if (edgeFromTo[v][w] == null) {
                 E++;

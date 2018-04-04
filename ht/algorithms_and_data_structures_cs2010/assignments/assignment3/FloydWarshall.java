@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 public class FloydWarshall {
 
         public boolean hasNegativeCycle;
-        public boolean allPositiveIndegree;
+        public boolean isValid;
         public double[][] distTo;
         public DirectedEdge[][] edgeTo;
 
@@ -79,14 +79,14 @@ public class FloydWarshall {
         public double dist(int s, int t) {
 
             if (hasNegativeCycle())
-                throw new UnsupportedOperationException("Negative cost cycle exists");
+                throw new UnsupportedOperationException();
             return distTo[s][t];
         }
 
         public Iterable<DirectedEdge> path(int s, int t) {
 
             if (hasNegativeCycle())
-                throw new UnsupportedOperationException("Negative cost cycle exists");
+                throw new UnsupportedOperationException();
             
             if (!hasPath(s, t)) 
                 return null;

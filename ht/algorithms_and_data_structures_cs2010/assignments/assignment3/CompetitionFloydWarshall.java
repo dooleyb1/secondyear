@@ -6,6 +6,7 @@ import java.util.Scanner;
 import java.util.Stack;
 import java.lang.NullPointerException;
 import java.util.Iterator;
+import java.lang.UnsupportedOperationException;
 
 /*
  * A Contest to Meet (ACM) is a reality TV contest that sets three contestants at three random
@@ -47,14 +48,14 @@ public class CompetitionFloydWarshall{
             this.slowestSpeed = Math.min(Math.min(sA,sB),sC);
             this.filename = filename;
         
-        } catch (FileNotFoundException | NullPointerException e){
+        } catch (FileNotFoundException | NullPointerException | UnsupportedOperationException e){
             
             this.filename = null;
             this.graph = null;
             this.isValidGraph = false;
-        }
+        } 
 
-        if(this.shortestPaths != null && this.graph.isValid()){
+        if(this.shortestPaths != null && this.graph.isValid() && !this.shortestPaths.hasNegativeCycle){
 
             this.isValidGraph = true;
 
