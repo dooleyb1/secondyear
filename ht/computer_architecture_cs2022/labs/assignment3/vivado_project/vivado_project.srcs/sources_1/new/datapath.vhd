@@ -6,21 +6,31 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity datapath is
 	Port (
 		data_in : in std_logic_vector(15 downto 0);
-		constant_in : in std_logic_vector(15 downto 0);
-		a_address : in std_logic_vector(2 downto 0);
-		b_address : in std_logic_vector(2 downto 0);
-		d_address : in std_logic_vector(2 downto 0);
+		
+		PC_in : in std_logic_vector(15 downto 0);
+		
+        SB: in std_logic_vector(2 downto 0);	        
+		
+		MB : in std_logic;        
+        MD : in std_logic;
+        MM : in std_logic;
+        
+        DA : in std_logic_vector(2 downto 0);
+        AA : in std_logic_vector(2 downto 0);
+        BA : in std_logic_vector(2 downto 0);
+        
+        TD : in std_logic;
+        TA : in std_logic;
+        TB : in std_logic;
+        
 		FS : in std_logic_vector(4 downto 0);
-		write : in std_logic;
-		v_out : out std_logic;
-		c_out : out std_logic;
-		n_out : out std_logic;
-		z_out : out std_logic;
-		mb_select : in std_logic;
-		md_select : in std_logic;
+		RW : in std_logic;
+		Clk : in std_logic;
+
 		bus_a_adr_out : out std_logic_vector(15 downto 0);
 		bus_b_data_out : out std_logic_vector(15 downto 0);
 		f_data_out : out std_logic_vector(15 downto 0);
+		
 		reg_0_data_out : out std_logic_vector(15 downto 0);
 		reg_1_data_out : out std_logic_vector(15 downto 0);
 		reg_2_data_out : out std_logic_vector(15 downto 0);
@@ -28,7 +38,12 @@ entity datapath is
 		reg_4_data_out : out std_logic_vector(15 downto 0);
 		reg_5_data_out : out std_logic_vector(15 downto 0);
 		reg_6_data_out : out std_logic_vector(15 downto 0);
-		reg_7_data_out : out std_logic_vector(15 downto 0)
+		reg_7_data_out : out std_logic_vector(15 downto 0);
+		
+		Vflag : out std_logic_vector;
+		Cflag : out std_logic_vector;
+		Nflag : out std_logic_vector;
+		Zflag : out std_logic_vector
 	);
 end datapath;
 
@@ -38,13 +53,18 @@ architecture Behavioral of datapath is
 	-- 16 Bit Register File
 	component register_file
 		Port(
-			a_sel: in std_logic_vector(2 downto 0);	
-			b_sel : in std_logic_vector(2 downto 0);
-			d_sel : in std_logic_vector(2 downto 0);
-			load : in std_logic;
+			DA: in std_logic_vector(3 downto 0);	
+			AA : in std_logic_vector(3 downto 0);
+			BA : in std_logic_vector(3 downto 0);
+			
+			Clk : in std_logic;
+			RW : in std_logic;
+			
 			data : in std_logic_vector(15 downto 0);
+			
 			a_out : out std_logic_vector(15 downto 0);
 			b_out : out std_logic_vector(15 downto 0);
+			
 			reg0out : out std_logic_vector(15 downto 0);
 			reg1out : out std_logic_vector(15 downto 0);
 			reg2out : out std_logic_vector(15 downto 0);
@@ -52,7 +72,8 @@ architecture Behavioral of datapath is
 			reg4out : out std_logic_vector(15 downto 0);
 			reg5out : out std_logic_vector(15 downto 0);
 			reg6out : out std_logic_vector(15 downto 0);
-			reg7out : out std_logic_vector(15 downto 0)
+			reg7out : out std_logic_vector(15 downto 0);
+			tempout : out std_logic_vector(15 downto 0)
 		);
 	end component;
 	
@@ -71,31 +92,49 @@ architecture Behavioral of datapath is
 		Port(
 			A : in std_logic_vector(15 downto 0);
 			B : in std_logic_vector(15 downto 0);
+			
 			FS : in std_logic_vector(4 downto 0);
+			
 			V : out std_logic;
 			C : out std_logic;
 			N : out std_logic;
 			Z : out std_logic;	
+			
 			F : out std_logic_vector(15 downto 0)
 		);
 	end component;
 	
+	--Zero Fill
+	component Zero_fill
+        Port ( 
+            SB : in std_logic_vector(2 downto 0);
+            zeroFill : out std_logic_vector(15 downto 0)
+        );
+        end component;
+	
 	-- signals
-	signal a_data, b_data, mb_out, f_out, md_out, reg0out, reg1out, reg2out, reg3out, reg4out, 
-	           reg5out, reg6out, reg7out: std_logic_vector(15 downto 0);
-		
+	signal a_data, b_data, mb_out, f_out, md_out, mm_out, reg0out, reg1out, reg2out, reg3out, reg4out, 
+	           reg5out, reg6out, reg7out, tempout, conIn: std_logic_vector(15 downto 0);
+	
+	signal z_temp, c_temp, n_temp, v_temp : std_logic;
+	
 	begin
 	-- port Maps ;-)
 	
 	-- Register File
 	reg_file: register_file Port Map(
-		a_sel => a_address,	
-		b_sel => b_address,
-		d_sel => d_address,
-		load => write,
+		AA => AA,	
+		BA => BA,
+		DA => DA,
+		
+		RW => RW,
+		Clk => Clk,
+		
 		data => md_out,
+		
 		a_out => a_data,
 		b_out => b_data,
+		
 		reg0out => reg0out,
         reg1out => reg1out,
         reg2out => reg2out,
@@ -103,14 +142,15 @@ architecture Behavioral of datapath is
         reg4out => reg4out,
         reg5out => reg5out,
         reg6out => reg6out,
-        reg7out => reg7out 
+        reg7out => reg7out,
+        tempout => tempout 
 	);
 	
 	-- MUX B
 	mux_b: mux2_16bit Port Map(
 		In0 => b_data,
-		In1 => constant_in,
-		s => mb_select,
+		In1 => conIn,
+		s => MB,
 		Z => mb_out
 	);
 	
@@ -118,11 +158,14 @@ architecture Behavioral of datapath is
 	funct_unit: function_unit Port Map(
 		A => a_data,
 		B => mb_out,
+		
 		FS => FS,
-		V => v_out,
-		C => c_out,
-		N => n_out,
-		Z => z_out,	
+		
+		V => v_temp,
+		C => c_temp,
+		N => n_temp,
+		Z => z_temp,	
+		
 		F => f_out
 	);
 	
@@ -130,12 +173,27 @@ architecture Behavioral of datapath is
 	mux_d: mux2_16bit Port Map(
 		In0 => f_out,
 		In1 => data_in,
-		s => md_select,
+		s => MD,
 		Z => md_out
 	);
 	
+	-- MUX M
+    mux_m: mux2_16bit Port Map(
+        In0 => a_data,
+        In1 => PC_in,
+        s => MM,
+        Z => mm_out
+    );
+    
+    --Zero Fill
+    z_fill: Zero_fill Port Map(
+         SB => SB,
+         zeroFill => ConIn
+    );
+	
 	bus_a_adr_out <= a_data;
 	bus_b_data_out <= mb_out;
+	
 	f_data_out <= f_out;
 	
 	reg_0_data_out <= reg0out;

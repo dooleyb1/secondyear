@@ -5,10 +5,11 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity register_file is
 	Port ( 
-		a_sel: in std_logic_vector(3 downto 0);	
-		b_sel : in std_logic_vector(3 downto 0);
-		d_sel : in std_logic_vector(3 downto 0);
-		load : in std_logic;
+		DA: in std_logic_vector(3 downto 0);	
+		AA : in std_logic_vector(3 downto 0);
+		BA : in std_logic_vector(3 downto 0);
+		Clk : in std_logic;
+		RW : in std_logic;
 		data : in std_logic_vector(15 downto 0);
 		a_out : out std_logic_vector(15 downto 0);
 		b_out : out std_logic_vector(15 downto 0);
@@ -31,8 +32,8 @@ architecture Behavioral of register_file is
 	component reg16
 		Port(
 			D : in std_logic_vector(15 downto 0);
-			d_sel : in std_logic;
 			load : in std_logic;
+			Clk : in std_logic;
 			Q : out std_logic_vector(15 downto 0)
 		);
 	end component;
@@ -83,78 +84,78 @@ architecture Behavioral of register_file is
 	-- register 0
 	reg00: reg16 Port Map(
 		D => data,
-		load => load,
-		d_sel => d_out0,
+		Clk => Clk,
+		load => d_out0,
 		Q => reg0_out
 	);
 	
 	-- register 1
 	reg01: reg16 Port Map(
 		D => data,
-		load => load,
-		d_sel => d_out1,
+		Clk => Clk,
+		load => d_out1,
 		Q => reg1_out
 	);
 	
 	-- register 2
 	reg02: reg16 Port Map(
 		D => data,
-		load => load,
-		d_sel => d_out2,
+		Clk => Clk,
+		load => d_out2,
 		Q => reg2_out
 	);
 	
 	-- register 3
 	reg03: reg16 Port Map(
 		D => data,
-		load => load,
-		d_sel => d_out3,
+		Clk => Clk,
+		load => d_out3,
 		Q => reg3_out
 	);
 	
 	-- register 4
 	reg04: reg16 Port Map(
 		D => data,
-		load => load,
-		d_sel => d_out4,
+		Clk => Clk,
+		load => d_out4,
 		Q => reg4_out
 	);
 	
 	-- register 5
 	reg05: reg16 Port Map(
 		D => data,
-		load => load,
-		d_sel => d_out5,
+		Clk => Clk,
+		load => d_out5,
 		Q => reg5_out
 	);
 	
 	-- register 6
 	reg06: reg16 Port Map(
 		D => data,
-		load => load,
-		d_sel => d_out6,
+		Clk => Clk,
+		load => d_out6,
 		Q => reg6_out
 	);
 	
 	-- register 7
 	reg07: reg16 Port Map(
 		D => data,
-		load => load,
-		d_sel => d_out7,
+		Clk => Clk,
+		load => d_out7,
 		Q => reg7_out
 	);
 	
-	-- register 7
+	-- register temp
     temp_reg: reg16 Port Map(
         D => data,
-        load => load,
-        d_sel => temp_sel,
+        Clk => Clk,
+        load => temp_sel,
         Q => temp_reg_out
     );	
 	
 	-- Destination register decoder (D decoder)
 	des_decoder_4to9: decoder_4to9 Port Map(
-		des => d_sel,
+		des => DA,
 		Q0 => d_out0,
 		Q1 => d_out1,
 		Q2 => d_out2,
@@ -177,7 +178,7 @@ architecture Behavioral of register_file is
 		In6 => reg6_out,
 		In7 => reg7_out,
 		In8 => temp_reg_out,
-		src => a_sel,
+		src => AA,
 		Z => a_out
 	);
 	
@@ -192,7 +193,7 @@ architecture Behavioral of register_file is
 		In6 => reg6_out,
 		In7 => reg7_out,
 		In8 => temp_reg_out,
-		src => b_sel,
+		src => BA,
 		Z => b_out
 	);
 	

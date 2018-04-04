@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2017.4 (64-bit)
+# SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
+# IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+# Start of session at: Wed Mar 28 11:09:33 2018
+# Process ID: 8208
+# Current directory: U:/Computer Architecture/Assignment Final/vivado_project
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent2604 U:\Computer Architecture\Assignment Final\vivado_project\vivado_project.xpr
+# Log file: U:/Computer Architecture/Assignment Final/vivado_project/vivado.log
+# Journal file: U:/Computer Architecture/Assignment Final/vivado_project\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project {U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.xpr}
+uupdate_compile_order -fileset sources_1

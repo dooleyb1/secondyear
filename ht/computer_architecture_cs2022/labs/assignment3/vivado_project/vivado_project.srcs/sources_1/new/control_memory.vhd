@@ -255,8 +255,9 @@ variable control_mem : mem_array:=(
     variable control_out : std_logic_vector(27 downto 0);
 
 begin
-addr := conv_integer(IN_CAR);
-control_out := control_mem(addr);
+    addr := conv_integer(IN_CAR);
+    control_out := control_mem(addr);
+   
     MW <= control_out(0);
     MM <= control_out(1);
     RW <= control_out(2);
