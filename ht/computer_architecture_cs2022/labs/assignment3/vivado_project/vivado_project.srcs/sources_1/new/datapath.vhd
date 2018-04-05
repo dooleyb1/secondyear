@@ -15,21 +15,17 @@ entity datapath is
         MD : in std_logic;
         MM : in std_logic;
         
-        DA : in std_logic_vector(2 downto 0);
-        AA : in std_logic_vector(2 downto 0);
-        BA : in std_logic_vector(2 downto 0);
-        
-        TD : in std_logic;
-        TA : in std_logic;
-        TB : in std_logic;
+        Dsel : in std_logic_vector(3 downto 0);
+        Asel : in std_logic_vector(3 downto 0);
+        Bsel : in std_logic_vector(3 downto 0);
+
         
 		FS : in std_logic_vector(4 downto 0);
 		RW : in std_logic;
 		Clk : in std_logic;
 
-		bus_a_adr_out : out std_logic_vector(15 downto 0);
-		bus_b_data_out : out std_logic_vector(15 downto 0);
-		f_data_out : out std_logic_vector(15 downto 0);
+		adr_out : out std_logic_vector(15 downto 0);
+		data_out : out std_logic_vector(15 downto 0);
 		
 		reg_0_data_out : out std_logic_vector(15 downto 0);
 		reg_1_data_out : out std_logic_vector(15 downto 0);
@@ -39,11 +35,12 @@ entity datapath is
 		reg_5_data_out : out std_logic_vector(15 downto 0);
 		reg_6_data_out : out std_logic_vector(15 downto 0);
 		reg_7_data_out : out std_logic_vector(15 downto 0);
+		reg_8_data_out : out std_logic_vector(15 downto 0);
 		
-		Vflag : out std_logic_vector;
-		Cflag : out std_logic_vector;
-		Nflag : out std_logic_vector;
-		Zflag : out std_logic_vector
+		Vflag : out std_logic;
+		Cflag : out std_logic;
+		Nflag : out std_logic;
+		Zflag : out std_logic
 	);
 end datapath;
 
@@ -73,9 +70,26 @@ architecture Behavioral of datapath is
 			reg5out : out std_logic_vector(15 downto 0);
 			reg6out : out std_logic_vector(15 downto 0);
 			reg7out : out std_logic_vector(15 downto 0);
-			tempout : out std_logic_vector(15 downto 0)
+			reg8out : out std_logic_vector(15 downto 0)
 		);
 	end component;
+	
+	-- ALU + Shifter Function Unit
+    component function_unit
+        Port(
+            A : in std_logic_vector(15 downto 0);
+            B : in std_logic_vector(15 downto 0);
+            
+            FS : in std_logic_vector(4 downto 0);
+            
+            V : out std_logic;
+            C : out std_logic;
+            N : out std_logic;
+            Z : out std_logic;    
+            
+            F : out std_logic_vector(15 downto 0)
+        );
+    end component;
 	
 	-- 2 to 1 line multiplexer
 	component mux2_16bit
@@ -84,23 +98,6 @@ architecture Behavioral of datapath is
 			In1 : in std_logic_vector(15 downto 0);
 			s : in std_logic;
 			Z : out std_logic_vector(15 downto 0)
-		);
-	end component;
-	
-	-- ALU + Shifter Function Unit
-	component function_unit
-		Port(
-			A : in std_logic_vector(15 downto 0);
-			B : in std_logic_vector(15 downto 0);
-			
-			FS : in std_logic_vector(4 downto 0);
-			
-			V : out std_logic;
-			C : out std_logic;
-			N : out std_logic;
-			Z : out std_logic;	
-			
-			F : out std_logic_vector(15 downto 0)
 		);
 	end component;
 	
@@ -113,96 +110,79 @@ architecture Behavioral of datapath is
         end component;
 	
 	-- signals
-	signal a_data, b_data, mb_out, f_out, md_out, mm_out, reg0out, reg1out, reg2out, reg3out, reg4out, 
-	           reg5out, reg6out, reg7out, tempout, conIn: std_logic_vector(15 downto 0);
-	
-	signal z_temp, c_temp, n_temp, v_temp : std_logic;
+	signal Data, BOut, ABus, BBus, Fsig, ConIn : std_logic_vector(15 downto 0);
 	
 	begin
 	-- port Maps ;-)
 	
 	-- Register File
 	reg_file: register_file Port Map(
-		AA => AA,	
-		BA => BA,
-		DA => DA,
+		AA => Asel,	
+		BA => Bsel,
+		DA => Dsel,
 		
 		RW => RW,
 		Clk => Clk,
 		
-		data => md_out,
+		data => Data,
 		
-		a_out => a_data,
-		b_out => b_data,
+		a_out => ABus,
+		b_out => BOut,
 		
-		reg0out => reg0out,
-        reg1out => reg1out,
-        reg2out => reg2out,
-        reg3out => reg3out,
-        reg4out => reg4out,
-        reg5out => reg5out,
-        reg6out => reg6out,
-        reg7out => reg7out,
-        tempout => tempout 
-	);
-	
-	-- MUX B
-	mux_b: mux2_16bit Port Map(
-		In0 => b_data,
-		In1 => conIn,
-		s => MB,
-		Z => mb_out
+		reg0out => reg_0_data_out,
+        reg1out => reg_1_data_out,
+        reg2out => reg_2_data_out,
+        reg3out => reg_3_data_out,
+        reg4out => reg_4_data_out,
+        reg5out => reg_5_data_out,
+        reg6out => reg_6_data_out,
+        reg7out => reg_7_data_out,
+        reg8out => reg_8_data_out
 	);
 	
 	-- Function Unit
-	funct_unit: function_unit Port Map(
-		A => a_data,
-		B => mb_out,
-		
-		FS => FS,
-		
-		V => v_temp,
-		C => c_temp,
-		N => n_temp,
-		Z => z_temp,	
-		
-		F => f_out
-	);
+    funct_unit: function_unit Port Map(
+        A => ABus,
+        B => BBus,
+        
+        FS => FS,
+        
+        V => Vflag,
+        C => Cflag,
+        N => Nflag,
+        Z => Zflag,    
+        
+        F => Fsig
+    );
 	
+	-- MUX B
+	mux_b: mux2_16bit Port Map(
+		In0 => BOut,
+		In1 => ConIn,
+		s => MB,
+		Z => data_out
+	);
+
 	-- MUX D
 	mux_d: mux2_16bit Port Map(
-		In0 => f_out,
+		In0 => Fsig,
 		In1 => data_in,
 		s => MD,
-		Z => md_out
+		Z => Data
 	);
 	
 	-- MUX M
     mux_m: mux2_16bit Port Map(
-        In0 => a_data,
+        In0 => ABus,
         In1 => PC_in,
         s => MM,
-        Z => mm_out
+        Z => adr_out
     );
     
     --Zero Fill
     z_fill: Zero_fill Port Map(
          SB => SB,
          zeroFill => ConIn
-    );
-	
-	bus_a_adr_out <= a_data;
-	bus_b_data_out <= mb_out;
-	
-	f_data_out <= f_out;
-	
-	reg_0_data_out <= reg0out;
-	reg_1_data_out <= reg1out;
-	reg_2_data_out <= reg2out;
-	reg_3_data_out <= reg3out;
-	reg_4_data_out <= reg4out;
-	reg_5_data_out <= reg5out;
-	reg_6_data_out <= reg6out;
-	reg_7_data_out <= reg7out;
+    ); 
 	 
 end Behavioral;

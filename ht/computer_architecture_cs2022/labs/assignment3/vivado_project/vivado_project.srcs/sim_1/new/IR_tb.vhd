@@ -12,6 +12,7 @@ architecture Behavioral of IR_tb is
         Port ( 
             IR_IN : in std_logic_vector(15 downto 0);
             IL : in std_logic;
+            CLK : in std_logic;
             OPCODE : out std_logic_vector(6 downto 0);
             DR : out std_logic_vector(2 downto 0);
             SA : out std_logic_vector(2 downto 0);
@@ -24,6 +25,7 @@ architecture Behavioral of IR_tb is
     --inputs    
     signal IR_IN : std_logic_vector(15 downto 0):= x"0000";
     signal IL : std_logic := '0';
+    signal CLK : std_logic := '0';
     
     --outputs
     signal OPCODE : std_logic_vector(6 downto 0):= "0000000";
@@ -38,6 +40,7 @@ begin
     Port Map(
         IR_IN => IR_IN,
         IL => IL,
+        CLK => CLK,
         OPCODE => OPCODE,
         DR => DR,
         SA => SA,
@@ -49,14 +52,18 @@ begin
         
         --Test loading random IR_IN (0xFFAB)
         -----------------------------------
-        --OPCODE = 1111 111 
-        --DR = 110
-        --SA = 101
-        --SB = 011
+        --OPCODE = 1111 111 (7F)
+        --DR = 110 (6)
+        --SA = 101 (5)
+        --SB = 011 (3)
         
         IR_IN <= x"FFAB";
         IL <= '1';
-        wait for 1ns;
+        CLK <= '1';
+        wait for 10ns;
+        
+        CLK <= '0';
+        wait for 10ns;
         
         --Test loading blank IR_IN (0x0000)
         -----------------------------------
@@ -67,7 +74,11 @@ begin
         
         IR_IN <= x"0000";
         IL <= '1';
-        wait for 1ns;        
+        CLK <= '1';
+        wait for 10ns;   
+        
+        CLK <= '0';
+        wait for 10ns;     
            
         --Test IL low (IL = 0) Shouldn't change outputs
         -----------------------------------
@@ -78,7 +89,11 @@ begin
         
         IR_IN <= x"FCDA";
         IL <= '0';
-        wait for 1ns;           
+        CLK <= '1';
+        wait for 1ns;   
+        
+        CLK <= '0';
+        wait for 10ns;         
            
      end process;
     

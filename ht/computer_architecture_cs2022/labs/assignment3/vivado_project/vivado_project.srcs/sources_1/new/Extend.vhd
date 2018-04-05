@@ -5,7 +5,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity Extend is
     Port ( 
-        DR_SB : in std_logic_vector(5 downto 0);
+        DR_SA_SB : in std_logic_vector(8 downto 0);
         Ext : out std_logic_vector(15 downto 0)
     );
 end Extend;
@@ -16,8 +16,8 @@ architecture Behavioral of Extend is
 
 begin
 
-    ext_sig(5 downto 0) <= DR_SB;
-    ext_sig(15 downto 6) <= "0000000000" when DR_SB(5) = '0' else "1111111111";
+    ext_sig(8 downto 0) <= DR_SA_SB;
+    ext_sig(15 downto 9) <= "0000000";
     Ext <= ext_sig;
 
 end Behavioral;

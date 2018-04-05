@@ -8,11 +8,15 @@ entity register_file is
 		DA: in std_logic_vector(3 downto 0);	
 		AA : in std_logic_vector(3 downto 0);
 		BA : in std_logic_vector(3 downto 0);
+		
 		Clk : in std_logic;
 		RW : in std_logic;
+		
 		data : in std_logic_vector(15 downto 0);
+		
 		a_out : out std_logic_vector(15 downto 0);
 		b_out : out std_logic_vector(15 downto 0);
+		
 		reg0out : out std_logic_vector(15 downto 0);
 		reg1out : out std_logic_vector(15 downto 0);
 		reg2out : out std_logic_vector(15 downto 0);
@@ -21,7 +25,7 @@ entity register_file is
 		reg5out : out std_logic_vector(15 downto 0);
 		reg6out : out std_logic_vector(15 downto 0);
 		reg7out : out std_logic_vector(15 downto 0);
-		tempout : out std_logic_vector(15 downto 0)
+		reg8out : out std_logic_vector(15 downto 0)
 	);
 end register_file;
 
@@ -43,6 +47,7 @@ architecture Behavioral of register_file is
 	component decoder_4to9
 		Port(
 			des : in std_logic_vector(3 downto 0);
+			RW : in std_logic;
 			Q0 : out std_logic;
 			Q1 : out std_logic;
 			Q2 : out std_logic;
@@ -74,9 +79,11 @@ architecture Behavioral of register_file is
 	end component;
 	
 	-- signals
-	signal 	d_out0, d_out1, d_out2, d_out3, d_out4, d_out5, d_out6 ,d_out7, temp_sel  : std_logic;
+	-- select signals
+	signal 	d_out0, d_out1, d_out2, d_out3, d_out4, d_out5, d_out6 ,d_out7, d_out8  : std_logic;
+	--register data signals
 	signal reg0_out, reg1_out, reg2_out, reg3_out, reg4_out, reg5_out,
-			 reg6_out, reg7_out, temp_reg_out : std_logic_vector(15 downto 0);
+			 reg6_out, reg7_out, reg8_out : std_logic_vector(15 downto 0);
 		
 	begin
 	-- port maps ;-)
@@ -146,16 +153,17 @@ architecture Behavioral of register_file is
 	);
 	
 	-- register temp
-    temp_reg: reg16 Port Map(
+    reg08: reg16 Port Map(
         D => data,
         Clk => Clk,
-        load => temp_sel,
-        Q => temp_reg_out
+        load => d_out8,
+        Q => reg8_out
     );	
 	
 	-- Destination register decoder (D decoder)
 	des_decoder_4to9: decoder_4to9 Port Map(
 		des => DA,
+		RW => RW,
 		Q0 => d_out0,
 		Q1 => d_out1,
 		Q2 => d_out2,
@@ -164,7 +172,7 @@ architecture Behavioral of register_file is
 		Q5 => d_out5,
 		Q6 => d_out6,
 		Q7 => d_out7,
-		Q8 => temp_sel
+		Q8 => d_out8
 	);
 	
 	-- 9 to 1 source register multiplexer (ABUS mux)
@@ -177,7 +185,7 @@ architecture Behavioral of register_file is
 		In5 => reg5_out,
 		In6 => reg6_out,
 		In7 => reg7_out,
-		In8 => temp_reg_out,
+		In8 => reg8_out,
 		src => AA,
 		Z => a_out
 	);
@@ -192,7 +200,7 @@ architecture Behavioral of register_file is
 		In5 => reg5_out,
 		In6 => reg6_out,
 		In7 => reg7_out,
-		In8 => temp_reg_out,
+		In8 => reg8_out,
 		src => BA,
 		Z => b_out
 	);
@@ -205,7 +213,7 @@ architecture Behavioral of register_file is
     reg5out <= reg5_out;
     reg6out <= reg6_out;
     reg7out <= reg7_out;
-    tempout <= temp_reg_out;	
+    reg8out <= reg8_out;
 	
 	
 end Behavioral;

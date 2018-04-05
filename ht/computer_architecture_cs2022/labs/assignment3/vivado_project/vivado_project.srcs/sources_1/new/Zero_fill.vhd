@@ -12,9 +12,14 @@ end Zero_fill;
 
 
 architecture Behavioral of Zero_fill is
+    
     signal zf : std_logic_vector(15 downto 0);
+
 begin
+    
     zf(2 downto 0) <= SB;
     zf(15 downto 3) <= "0000000000000";
+    
     zeroFill <= zf;
+
 end Behavioral;

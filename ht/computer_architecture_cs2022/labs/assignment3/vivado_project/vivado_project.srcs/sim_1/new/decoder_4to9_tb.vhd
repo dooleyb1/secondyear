@@ -11,6 +11,7 @@ architecture Behavioral of decoder_4to9_tb is
     component decoder_4to9 is
         Port ( 
             des : in std_logic_vector(3 downto 0);  
+            RW : in std_logic;
             Q0 : out std_logic;
             Q1 : out std_logic;
             Q2 : out std_logic;
@@ -27,6 +28,7 @@ architecture Behavioral of decoder_4to9_tb is
       
     --inputs    
     signal des : std_logic_vector(3 downto 0) := "0000";
+    signal RW : std_logic := '0';
     
     --outputs    
     signal Q0 : std_logic := '0';
@@ -44,6 +46,7 @@ begin
     UUT: decoder_4to9
     Port Map(
        	des => des,
+       	RW => RW,
         Q0 => Q0,
         Q1 => Q1,
         Q2 => Q2,
@@ -58,6 +61,8 @@ begin
     
 simulation_process :process
 begin
+        RW <= '1';
+        
         --Select line 0 (Q0 should be high/1)
         des <= "0000";
         wait for 1ns;
