@@ -33,18 +33,17 @@ architecture Behavioral of programme_cpu is
             MD : in std_logic;
             MM : in std_logic;
                 
-            Dsel : in std_logic_vector(2 downto 0);
-            Asel : in std_logic_vector(2 downto 0);
-            Bsel : in std_logic_vector(2 downto 0);
+            Dsel : in std_logic_vector(3 downto 0);
+            Asel : in std_logic_vector(3 downto 0);
+            Bsel : in std_logic_vector(3 downto 0);
         
                 
             FS : in std_logic_vector(4 downto 0);
             RW : in std_logic;
             Clk : in std_logic;
         
-            bus_a_adr_out : out std_logic_vector(15 downto 0);
-            bus_b_data_out : out std_logic_vector(15 downto 0);
-            f_data_out : out std_logic_vector(15 downto 0);
+            adr_out : out std_logic_vector(15 downto 0);
+            data_out : out std_logic_vector(15 downto 0);
                 
             reg_0_data_out : out std_logic_vector(15 downto 0);
             reg_1_data_out : out std_logic_vector(15 downto 0);
@@ -63,48 +62,38 @@ architecture Behavioral of programme_cpu is
     end component;
     
 	-- Microprogrammed Control
-    component micro_control
+    component microprogrammed_control
         Port(
-            Vflag : in std_logic;
-            Cflag : in std_logic;
-            Nflag : in std_logic;
-            Zflag : in std_logic;
-            
-            memory_instruction : in std_logic_vector(15 downto 0);
-            
-            Clk : in std_logic;
-            reset : in std_logic;
-            
-            -- MW to Memory
-            MW : out std_logic;
-            -- MM to Mux M
-            MM : out std_logic;
-            -- MD to Mux D
-            MD : out std_logic;
-            -- MB to Mux B
-            MB : out std_logic;
-    
-            -- FS to Function Unit
-            FS : out std_logic_vector(4 downto 0);
-            -- RW to Register File (Read/Write)
-            RW : out std_logic;
-    
-            -- TB to Register File (Temp B)
-            TB : out std_logic;
-            -- TA to Register File (Temp A)
-            TA : out std_logic;
-            -- TD to Register File (Temp D)
-            TD : out std_logic;
-    
-            --DR to Register File (OR'd with TD)
-            DR : out std_logic_vector(2 downto 0);
-            --SA to Register File (OR'd with TA)
-            SA : out std_logic_vector(2 downto 0);
-            --SB to Register File (OR'd with TB)
-            SB : out std_logic_vector(2 downto 0);
-    
-            -- PC_OUT to Mux M
-            PCout : out std_logic_vector(15 downto 0)
+        Vflag, Cflag, Nflag, Zflag : in std_logic;
+        
+        instruction: in std_logic_vector(15 downto 0);
+        clk : in std_logic;
+        reset: in std_logic;
+        
+        PCout : out std_logic_vector(15 downto 0);
+        
+        TD : out std_logic;
+        TA : out std_logic;
+        TB : out std_logic;
+        
+        MB : out std_logic;
+        FS : out std_logic_vector(4 downto 0);
+        MD : out std_logic;
+        RW : out std_logic;
+        MM : out std_logic;
+        MW : out std_logic;
+        
+        --for testing
+        PL : out std_logic;
+        PI : out std_logic;
+        IL : out std_logic;
+        MC : out std_logic;
+        MS : out std_logic_vector(2 downto 0);
+        NA : out std_logic_vector(7 downto 0);
+        
+        DR : out std_logic_vector(2 downto 0);
+        SA : out std_logic_vector(2 downto 0);
+        SB : out std_logic_vector(2 downto 0)
         );
     end component;
     
@@ -118,8 +107,8 @@ architecture Behavioral of programme_cpu is
         );
     end component;
 
-    signal bus_a_adr_out : std_logic_vector(15 downto 0);
-    signal bus_b_data_out : std_logic_vector(15 downto 0);
+    signal adr_out : std_logic_vector(15 downto 0);
+    signal data_out : std_logic_vector(15 downto 0);
     
     signal VFlag : std_logic;
     signal CFlag : std_logic;
@@ -139,29 +128,30 @@ architecture Behavioral of programme_cpu is
     signal memOut : std_logic_vector(15 downto 0);
     signal pcOut : std_logic_vector(15 downto 0);
     
-    signal reg0out : std_logic_vector(15 downto 0); --reg0
-    signal reg1out : std_logic_vector(15 downto 0); --reg1
-    signal reg2out : std_logic_vector(15 downto 0); --reg2
-    signal reg3out : std_logic_vector(15 downto 0); --reg3
-    signal reg4out : std_logic_vector(15 downto 0); --reg4
-    signal reg5out : std_logic_vector(15 downto 0); --reg5
-    signal reg6out : std_logic_vector(15 downto 0); --reg6
-    signal reg7out : std_logic_vector(15 downto 0); --reg7
+--    signal reg0out : std_logic_vector(15 downto 0); --reg0
+--    signal reg1out : std_logic_vector(15 downto 0); --reg1
+--    signal reg2out : std_logic_vector(15 downto 0); --reg2
+--    signal reg3out : std_logic_vector(15 downto 0); --reg3
+--    signal reg4out : std_logic_vector(15 downto 0); --reg4
+--    signal reg5out : std_logic_vector(15 downto 0); --reg5
+--    signal reg6out : std_logic_vector(15 downto 0); --reg6
+--    signal reg7out : std_logic_vector(15 downto 0); --reg7
 
 
 begin
 
-    MC : micro_control Port Map(
+    MC : microprogrammed_control Port Map(
             
             Vflag => VFlag,
             Cflag => CFlag,
             Nflag => NFlag,
             Zflag => Zflag,
             
-            memory_instruction => memOut,
-            
+            instruction => memOut,
             clk => clk,
             reset => reset,
+            
+            PCout => pcOut,
             
             MW => MW,
             MM => MM,
@@ -177,12 +167,10 @@ begin
             
             DR => DR,
             SA => SA,
-            SB => SB,
-            
-            PCout => pcOut
+            SB => SB
         );
 
-    DP : Datapath Port Map(
+    DP : datapath Port Map(
             
             data_in => memOut,
             PC_in => pcOut,
@@ -193,28 +181,28 @@ begin
             MD => MD,
             MM => MM,
            
-            DSel(2 downto 0) => DR,
-            DSel(3) => TD,
             ASel(2 downto 0) => SA,
             ASel(3) => TA,
             BSel(2 downto 0) => SB,
             BSel(3) => TB,
+            DSel(2 downto 0) => DR,
+            DSel(3) => TD,
             
             FS => FS,
             RW => RW,
             Clk => clk,
             
-            bus_a_adr_out => bus_a_adr_out,
-            bus_b_data_out => bus_b_data_out,
+            adr_out => adr_out,
+            data_out => data_out,
             
-            reg_0_data_out => reg0out,
-            reg_1_data_out => reg1out,
-            reg_2_data_out => reg2out,
-            reg_3_data_out => reg3out,
-            reg_4_data_out => reg4out,
-            reg_5_data_out => reg5out,
-            reg_6_data_out => reg6out,
-            reg_7_data_out => reg7out,
+            reg_0_data_out => reg0,
+            reg_1_data_out => reg1,
+            reg_2_data_out => reg2,
+            reg_3_data_out => reg3,
+            reg_4_data_out => reg4,
+            reg_5_data_out => reg5,
+            reg_6_data_out => reg6,
+            reg_7_data_out => reg7,
             
             VFlag => VFlag,
             CFlag => CFlag,
@@ -223,8 +211,8 @@ begin
         );
         
     mem : memory Port Map(
-            address => bus_a_adr_out,
-            data_in => bus_b_data_out,
+            address => adr_out,
+            data_in => data_out,
             clk => clk,
             MW => MW,
             data_out => memOut

@@ -157,7 +157,7 @@ memory_m: process(IN_CAR)
 variable control_mem : mem_array:=(
 
     -- Module 0
-    x"C020306" , x"C02000E", x"C02018C", X"0000000", 
+    x"C020306" , x"C02400E", x"C02018C", X"C02018C", 
     X"0000000", X"0000000", X"0000000", X"0000000", 
     X"0000000", X"0000000", X"0000000", X"0000000", 
     X"0000000", X"0000000", X"0000000", X"0000000", 
@@ -229,7 +229,7 @@ variable control_mem : mem_array:=(
     X"0000000", X"0000000", X"0000000", X"0000000",
 
     -- Module C
-    x"C10C002" , x"0030000", X"0000000", X"0000000", 
+    x"C12C002" , x"0030000", X"0000000", X"0000000", 
     --Fetches the instruction next in memory and 
     --Execute what is now in the instruction reg and go to opcode specified in instruction
     X"0000000", X"0000000", X"0000000", X"0000000", 

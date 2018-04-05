@@ -33,6 +33,6 @@ begin
             temp_inc_pc := conv_std_logic_vector(temp_pc, 16);
             pc := temp_inc_pc;
         end if;
-        PC_OUT <= pc after 2ns;
+        PC_OUT <= pc after 10ns;
     end process;
 end Behavioral;

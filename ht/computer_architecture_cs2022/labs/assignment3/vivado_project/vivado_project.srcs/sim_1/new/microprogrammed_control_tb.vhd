@@ -1,5 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity microprogrammed_control_tb is
 --  Port ( );
@@ -7,111 +9,147 @@ end microprogrammed_control_tb;
 
 architecture Behavioral of microprogrammed_control_tb is
 
-    -- declare component to test
-    component microprogrammed_control is
+    component microprogrammed_control
         Port ( 
-		Vflag : in std_logic;
-        Cflag : in std_logic;
-        Nflag : in std_logic;
-        Zflag : in std_logic;
-        
-        memory_instruction : in std_logic_vector(15 downto 0);
-        
-        Clk : in std_logic;
-        reset : in std_logic;
-        
-        -- MW to Memory
-        MW : out std_logic;
-        -- MM to Mux M
-        MM : out std_logic;
-        -- MD to Mux D
-        MD : out std_logic;
-        -- MB to Mux B
-        MB : out std_logic;
-
-        -- FS to Function Unit
-        FS : out std_logic_vector(4 downto 0);
-        -- RW to Register File (Read/Write)
-        RW : out std_logic;
-
-        -- TD to Register File (Temp D)
-        TD : out std_logic;
-        -- TA to Register File (Temp A)
-        TA : out std_logic;
-        -- TB to Register File (Temp B)
-        TB : out std_logic;
-
-        --DR to Register File (OR'd with TD)
-        DR : out std_logic_vector(2 downto 0);
-        --SA to Register File (OR'd with TA)
-        SA : out std_logic_vector(2 downto 0);
-        --SB to Register File (OR'd with TB)
-        SB : out std_logic_vector(2 downto 0);
-
-        -- PC_OUT to Mux M
-        PCout : out std_logic_vector(15 downto 0)
+            Vflag, Cflag, Nflag, Zflag : in std_logic;
+            instruction: in std_logic_vector(15 downto 0);
+            clk : in std_logic;
+            reset: in std_logic;
+            
+            PCout : out std_logic_vector(15 downto 0);
+            
+            TD : out std_logic;
+            TA : out std_logic;
+            TB : out std_logic;
+            MB : out std_logic;
+            FS : out std_logic_vector(4 downto 0);
+            MD : out std_logic;
+            RW : out std_logic;
+            MM : out std_logic;
+            MW : out std_logic;
+            
+            PL : out std_logic;
+            PI : out std_logic;
+            IL : out std_logic;
+            MC : out std_logic;
+            MS : out std_logic_vector(2 downto 0);
+            NA : out std_logic_vector(7 downto 0);
+            
+            DR : out std_logic_vector(2 downto 0);
+            SA : out std_logic_vector(2 downto 0);
+            SB : out std_logic_vector(2 downto 0)
         );
     end component;
+
+    signal Vflag, Cflag, Nflag, Zflag : std_logic;
+    signal instruction : std_logic_vector(15 downto 0);
+    signal clk : std_logic;
+    signal reset : std_logic;
+    signal PC : std_logic_vector(15 downto 0);
+    signal TD : std_logic;
+    signal TA : std_logic;
+    signal TB : std_logic; 
+    signal MB : std_logic;
+    signal FS : std_logic_vector(4 downto 0);
+    signal MD : std_logic;
+    signal RW : std_logic;
+    signal MM : std_logic;
+    signal MW : std_logic;
     
-    -- signals for tests (initialise to 0)
+    signal PL : std_logic;
+    signal PI : std_logic;
+    signal IL : std_logic;
+    signal MC : std_logic;
+    signal MS : std_logic_vector(2 downto 0);
+    signal NA : std_logic_vector(7 downto 0);
     
-    --inputs    
-    signal Vflag, Cflag, Nflag, Zflag : std_logic := '0';
-    signal memory_instruction : std_logic_vector(15 downto 0) := x"0000";
-    signal Clk, reset : std_logic := '0';
-    
-    --outputs
-    signal MW, MM, MD, MB  : std_logic := '0';
-    signal FS : std_logic_vector(4 downto 0) := "00000";
-    signal RW : std_logic := '0';
-    
-    signal TB, TA, TD  : std_logic := '0';
-    signal DR, SA, SB  : std_logic_vector(2 downto 0) := "000";
-    signal PCout : std_logic_vector(15 downto 0) := x"0000";
-        
+    signal DR : std_logic_vector(2 downto 0);
+    signal SA : std_logic_vector(2 downto 0);
+    signal SB : std_logic_vector(2 downto 0);
+
 begin
 
-    -- instantiate component for test, connect ports to internal signals
-    UUT: microprogrammed_control
-    Port Map(
-        Vflag => Vflag,
-        Cflag => Cflag,
-        Nflag => Nflag,
-        Zflag => Zflag,
+    UTT: microprogrammed_control
+        port map (
+            Vflag => Vflag,
+            Cflag => Cflag,
+            Nflag => Nflag,
+            Zflag => Zflag,
+            instruction => instruction,
+            clk => clk,
+            reset => reset,
+            PCout => PC,
+            TD => TD,
+            TA => TA,
+            TB => TB,
+            MB => MB,
+            FS => FS,
+            MD => MD,
+            RW => RW,
+            MM => MM,
+            MW => MW,
+            
+            PL => PL,
+            PI => PI,
+            IL => IL,
+            MC => MC,
+            MS => MS,
+            NA => NA,
+
+            DR => DR,
+            SA => SA,
+            SB => SB
+        );
+
+process
+    begin
+        Vflag <= '0';
+        Cflag <= '0';
+        Nflag <= '0';
+        Zflag <= '0';
         
-        memory_instruction => memory_instruction,
+        clk <= '1';
+        reset <= '1';
+        wait for 50 ns;
+        clk <= '0';
+        reset <= '0';
+        wait for 50ns;
         
-        Clk => Clk, 
-        reset => reset,
+        instruction <= x"0000";
         
-        MW => MW,
-        MM => MM,
-        MD => MD,
-        MB => MB,
+        clk <= '1';
+        wait for 50ns;
+        clk <= '0';
+        wait for 50ns;
         
-        FS => FS,
-        RW => RW,
+
+        clk <= '1';
+        wait for 50ns;
+        clk <= '0';
+        wait for 50ns;
+
+
+        clk <= '1';
+        wait for 50ns;
+        clk <= '0';
+        wait for 50ns;
         
-        TD => TD,
-        TA => TA,
-        TB => TB,
+        instruction <= x"0400";
         
-        DR => DR,
-        SA => SA, 
-        SB => SB,
+        clk <= '1';
+        wait for 50ns;
+        clk <= '0';
+        wait for 50ns;
         
-        PCout => PCout
-    );
-    
-simulation_process :process
-begin
-              
-        memory_instruction <= x"0045";
-        Clk <= '1';
-        wait for 10ns;
+        clk <= '1';
+        wait for 50ns;
+        clk <= '0';
+        wait for 50ns;
         
-        
-        
-     end process;
-    
+        clk <= '1';
+        wait for 50ns;
+        clk <= '0';
+        wait for 50ns;    
+end process;
+
 end Behavioral;
