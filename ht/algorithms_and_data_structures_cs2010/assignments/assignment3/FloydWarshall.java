@@ -59,6 +59,7 @@ public class FloydWarshall {
                     }
                     
                     // check for negative cycle
+                    //System.out.println("dist["+v+"]["+v+"] = " + distTo[v][v]);
                     if (distTo[v][v] < 0.0) {
                         hasNegativeCycle = true;
                         return;

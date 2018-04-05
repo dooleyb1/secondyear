@@ -42,6 +42,7 @@ public class CompetitionFloydWarshall{
             this.filename = filename;
             File file = new File(filename);
             Scanner in = new Scanner(file);
+            
             this.graph = new AdjMatrixEdgeWeightedDigraph(in);
             this.shortestPaths = new FloydWarshall(this.graph);
             this.maxDist = 0.0;
@@ -76,12 +77,18 @@ public class CompetitionFloydWarshall{
                 //System.out.println("\nCurrent Max Distance Found = " + maxDist);
             }
         }
+        else {
+            //System.out.println("Invalid graph!");
+            //System.out.println("this.shortestPaths != null?" + this.shortestPaths != null);
+            //System.out.println("this.graph.isValid()?" + this.graph.isValid());
+            //System.out.println("!this.shortestPaths.hasNegativeCycle?" + !this.shortestPaths.hasNegativeCycle);
+        }
 
 
         //System.out.println("------------------------------------------");
         //System.out.println("Calculating time required for show...\n");
 
-        //int time = timeRequiredforCompetition(maxDist, slowestSpeed);
+        //int time = timeRequiredforCompetition();
         //System.out.println("\nTime required for show: "+ time +"min");
     }
 

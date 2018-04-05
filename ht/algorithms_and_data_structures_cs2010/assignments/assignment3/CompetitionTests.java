@@ -20,6 +20,32 @@ import java.io.FileNotFoundException;
 import java.lang.UnsupportedOperationException;
 import java.util.NoSuchElementException;
 
+/*
+    1. Justify the choice of the data structures used in CompetitionDijkstra and CompetitionFloydWarshall
+
+        a) CompetitionDijkstra:
+
+            -In Dijkstra's shortest path algorithm only one node is considered to be the source node and
+            the shortest paths to all other nodes are found with respect to that node. Since Dijkstra's 
+            shortest path algorithm requires a graphs Nodes and Vertices to contain both
+            edge weightings and directions I decided to make use of Sedgewick and Waynes data structure
+            which represents an Edge-Weighted Directional Graph. This can be found within the
+            EdgeWeightedDiGraph class. This class effeciently and easily allows us to access the adjacency
+            matrick of vertices by using another data structure by Sedewick & Wayne which is the Bag 
+            of Directed Edges data structure. 
+
+        b) CompetitionFloydWarshall
+
+            -Floyd Warhsall's algorithm is used when any of the nodes can be the source so you need to find
+            the shortest path from all nodes to every other node. Floyd Warshall's shortest path algorithm 
+            is quite similar to Dijkstra's however it allows for negative weighted edges whereas Dijkstra's does not.
+            To accomodate for this we use a different data structure which is of the form of an Adjacency Matrix 
+            containing the optimal edge to take between node x and node y. This is then used to populate a
+            two dimensional array containing the best routes between all nodes.
+
+    2. 
+ */
+
 public class CompetitionTests {
 
     @Test
@@ -68,41 +94,6 @@ public class CompetitionTests {
 
     }
 
-    @Test
-    public void solvingHerTests(){
-
-        //DIJKSTRA CAN'T TAKE NEGATIVE WEIGHTS??
-        CompetitionDijkstra d = new CompetitionDijkstra("input-I.txt", 4, 7, 1);
-        //assertEquals("Testing input-I.txt for Dijk", 10000, d.timeRequiredforCompetition());
-
-        CompetitionFloydWarshall f = new CompetitionFloydWarshall("input-I.txt", 4, 7, 1);
-        assertEquals("Testing input-I.txt for Floyd", 10000, f.timeRequiredforCompetition());
-
-        d = new CompetitionDijkstra("input-F.txt", 50,80,60);
-        assertEquals("Testing input-F.txt for Dijk", -1, d.timeRequiredforCompetition());
-
-        f = new CompetitionFloydWarshall("input-F.txt", 50,80,60);
-        assertEquals("Testing input-F.txt for Floyd", -1, f.timeRequiredforCompetition());
-
-        d = new CompetitionDijkstra("input-C.txt", 50,100,100);
-        assertEquals("Testing input-C.txt for Dijk", -1, d.timeRequiredforCompetition());
-
-        f = new CompetitionFloydWarshall("input-C.txt", 50,100,100);
-        assertEquals("Testing input-C.txt for Floyd", -1, f.timeRequiredforCompetition());
-
-        d = new CompetitionDijkstra("input-I.txt", 3233,7,2368726);
-        //assertEquals("Testing input-I.txt for Dijk", 1429, d.timeRequiredforCompetition());
-
-        f = new CompetitionFloydWarshall("input-I.txt", 3233,7,2368726);
-        assertEquals("Testing input-I.txt for Floyd", 1429, f.timeRequiredforCompetition());
-
-        d = new CompetitionDijkstra("input-N.txt", 7333,74444,117171);
-        //assertEquals("Testing input-N.txt for Dijk", 1, d.timeRequiredforCompetition());
-
-        f = new CompetitionFloydWarshall("input-N.txt", 7333,74444,117171);
-        assertEquals("Testing input-N.txt for Floyd", 1, f.timeRequiredforCompetition());
-
-    }
 
     @Test
     public void testInputI(){
@@ -257,16 +248,6 @@ public class CompetitionTests {
 
     	assertEquals("Longest distance should be 1.86km", 1.86, floyd.maxDist, 0.001);
         assertEquals("Competition time should be 38 mins", 38, floyd.timeRequiredforCompetition());
-    }
-
-    @Test 
-    public void testFW1000EWD() {
-
-    	CompetitionFloydWarshall floyd = new CompetitionFloydWarshall("1000EWD.txt", 50, 75, 100);
-
-    	assertEquals("Graph should have 1000 vertices", 1000, floyd.graph.V());
-    	assertEquals("Longest distance should be 1.39863", 1.39863, floyd.maxDist, 0.001);
-        assertEquals("Competition time should be 28 mins", 28, floyd.timeRequiredforCompetition());
     }
 
     @Test

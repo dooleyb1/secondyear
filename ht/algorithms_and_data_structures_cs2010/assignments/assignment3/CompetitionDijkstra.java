@@ -42,6 +42,7 @@ public class CompetitionDijkstra {
 			this.filename = filename;
 			File file = new File(filename);
 			Scanner in = new Scanner(file);
+			
 			this.graph = new EdgeWeightedDiGraph(in);
 			this.slowestSpeed = Math.min(Math.min(sA,sB),sC);
 			this.filename = filename;
