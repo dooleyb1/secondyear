@@ -12,7 +12,7 @@ architecture Behavioral of reg16_tb is
         Port ( 
         	D : in std_logic_vector(15 downto 0);
 			load : in std_logic;
-			d_sel : in std_logic;
+			Clk : in std_logic;
 			Q : out std_logic_vector(15 downto 0)
 		);
     end component;
@@ -21,8 +21,8 @@ architecture Behavioral of reg16_tb is
      
     --inputs    
     signal D : std_logic_vector(15 downto 0):= x"0000";
+    signal Clk : std_logic := '0';  
     signal load : std_logic := '0';  
-    signal d_sel : std_logic := '0';  
     
     --outputs
     signal Q : std_logic_vector(15 downto 0):= x"0000";
@@ -33,8 +33,8 @@ begin
     UUT: reg16
     Port Map(
         D => D,
+        Clk => Clk,
         load => load,
-        d_sel => d_sel,
         Q => Q
     );
     
@@ -43,26 +43,27 @@ begin
         --check that when load is 0 output stays the same (0x0000)
         D <= x"000A";
         load <= '0';
-        d_sel <= '0';
-        wait for 1ns;
+        Clk <= '0';
+        wait for 10ns;
         
-        --check that when load is 1 & d_sel is 0 output stays the same
-        d_sel <= '1';
-        wait for 1ns;
+        --check that when load is 1 & clk is 0 output stays the same
+        load<= '1';
+        wait for 10ns;
         
-        --check that when load is 1 output changes to 0x000A
-        load <= '1';
-        wait for 1ns;
+        --check that when clk is 1 and load is 1 output changes to 0x000A
+        Clk <= '1';
+        wait for 10ns;
 
         --check that when load is 0 remains as 0x000A
         D <= x"00FF";
         load <= '0';
-        wait for 1ns;
+        Clk <= '0';
+        wait for 10ns;
         
         --check that when load is 1 output changes to 0x00FF
         load <= '1';
-        d_sel <= '1';
-        wait for 1ns;
+        Clk <= '1';
+        wait for 10ns;
 
      end process;
     

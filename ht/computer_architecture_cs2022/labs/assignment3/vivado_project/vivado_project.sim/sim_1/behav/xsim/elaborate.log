@@ -1,6 +1,6 @@
 Vivado Simulator 2017.4
 Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
-Running: C:/Xilinx/Vivado/2017.4/bin/unwrapped/win64.o/xelab.exe -wto cb7fe664b5d6414eb30fd3381f9f2221 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot microprogrammed_control_tb_behav xil_defaultlib.microprogrammed_control_tb -log elaborate.log 
+Running: C:/Xilinx/Vivado/2017.4/bin/unwrapped/win64.o/xelab.exe -wto cb7fe664b5d6414eb30fd3381f9f2221 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot mux2_8bit_tb_behav xil_defaultlib.mux2_8bit_tb -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Completed static elaboration
@@ -10,15 +10,6 @@ Time Resolution for simulation is 1ps
 Compiling package std.standard
 Compiling package std.textio
 Compiling package ieee.std_logic_1164
-Compiling package ieee.std_logic_arith
-Compiling package ieee.std_logic_unsigned
-Compiling architecture behavioral of entity xil_defaultlib.control_memory [control_memory_default]
-Compiling architecture behavioral of entity xil_defaultlib.CAR [car_default]
 Compiling architecture behavioral of entity xil_defaultlib.mux2_8bit [mux2_8bit_default]
-Compiling architecture behavioral of entity xil_defaultlib.IR [ir_default]
-Compiling architecture behavioral of entity xil_defaultlib.mux8_1bit [mux8_1bit_default]
-Compiling architecture behavioral of entity xil_defaultlib.Extend [extend_default]
-Compiling architecture behavioral of entity xil_defaultlib.PC [pc_default]
-Compiling architecture behavioral of entity xil_defaultlib.microprogrammed_control [microprogrammed_control_default]
-Compiling architecture behavioral of entity xil_defaultlib.microprogrammed_control_tb
-Built simulation snapshot microprogrammed_control_tb_behav
+Compiling architecture behavioral of entity xil_defaultlib.mux2_8bit_tb
+Built simulation snapshot mux2_8bit_tb_behav
