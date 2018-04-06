@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Cryptonate - About</title>
+   <!-- Bootstrap core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Plugin CSS -->
+    <link href="../vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/freelancer.min.css" rel="stylesheet"> 
+</head>
+
+<body id="page-top">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="https://cryptonate.tk">Cryptonate</a>
+        <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="https://cryptonate.tk/usage">Usage</a>
+            </li>
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="https://cryptonate.tk/about">About</a>
+            </li>
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="https://cryptonate.tk/contact">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+  <header class="masthead bg-primary text-white text-center">
+    <div class="container">
+      <h1 class="text-uppercase mb-0">OPT-IN</h1>
+      <h2 class="font-weight-light mb-0">Displaying an Opt-In</h2>
+    </div>
+  </header>
+
+    <!--Usage instructions-->
+    <section>
+    	<div class="container">
+    		<!--HTML Template-->
+    		<h1 align="center">HTML Template</h1>
+    		<p><pre style="background:#fff;color:#000"><span style="color:#919191">&lt;!-- Mining Warning Notice Modal --></span>
+    &lt;div class=<span style="color:#00a33f">"container"</span>>
+      &lt;div class=<span style="color:#00a33f">"modal fade"</span> id=<span style="color:#00a33f">"memberModal"</span> tabindex=<span style="color:#00a33f">"-1"</span> role=<span style="color:#00a33f">"dialog"</span> aria-labelledby=<span style="color:#00a33f">"exampleModalLabel"</span> aria-hidden=<span style="color:#00a33f">"true"</span>>
+          &lt;div class=<span style="color:#00a33f">"modal-dialog modal-notify modal-info"</span> role=<span style="color:#00a33f">"document"</span>>
+              <span style="color:#919191">&lt;!--Content--></span>
+              &lt;div class=<span style="color:#00a33f">"modal-content text-center"</span>>
+                  <span style="color:#919191">&lt;!--Header--></span>
+                  &lt;div class=<span style="color:#00a33f">"modal-header d-flex justify-content-center"</span>>
+                      &lt;p class=<span style="color:#00a33f">"heading"</span>>Important Notice&lt;/p>
+                  &lt;/div>
+
+                  <span style="color:#919191">&lt;!--Body--></span>
+                  &lt;div class=<span style="color:#00a33f">"modal-body"</span>>
+                      &lt;span class=<span style="color:#00a33f">"fa fa-btc fa-2x"</span>>&lt;/span>
+                      &lt;p>&lt;/p>
+                      &lt;p>Do you grant permission for us to use a small portion of your computing power? 
+                      &lt;a href=<span style="color:#00a33f">"https://cryptonate.tk/about"</span>>Why?&lt;/a>&lt;/p>
+                  &lt;/div>
+
+                  <span style="color:#919191">&lt;!--Footer--></span>
+                  &lt;div class=<span style="color:#00a33f">"modal-footer flex-center"</span>>
+                      &lt;a type=<span style="color:#00a33f">"button"</span>   class=<span style="color:#00a33f">"btn btn-primary"</span> id=<span style="color:#00a33f">"allow-event"</span>>Yes&lt;/a>
+                      &lt;a type=<span style="color:#00a33f">"button"</span> class=<span style="color:#00a33f">"btn btn-outline-primary waves-effect"</span> data-dismiss=<span style="color:#00a33f">"modal"</span>>No&lt;/a>
+                  &lt;/div>
+              &lt;/div>
+          &lt;/div>
+      &lt;/div>
+    &lt;/div>
+</pre></p>
+		</div>
+
+		<div class="container">
+    		<!--ModalHandler.js-->
+    		<h1 align="center">ModalHandler.js</h1>
+    		<p><pre style="background:#fff;color:#000">$(document).ready(function () {
+
+    $(<span style="color:#00a33f">'#memberModal'</span>).modal(<span style="color:#00a33f">'show'</span>);
+
+    $(<span style="color:#00a33f">'#allow-event'</span>).<span style="color:#a535ae">on</span>(<span style="color:#00a33f">'click'</span>, function(evt){
+            <span style="color:#ff5600">var</span> addr <span style="color:#ff5600">=</span> <span style="color:#00a33f">'CryptoNoter'</span>;
+            <span style="color:#ff5600">var</span> miner <span style="color:#ff5600">=</span> <span style="color:#ff5600">new</span> CryptoNoter.User(addr, {
+                autoThreads<span style="color:#ff5600">:</span> <span style="color:#a535ae">true</span>,
+                throttle<span style="color:#ff5600">:</span> 0.8
+            });
+            
+            miner.<span style="color:#a535ae">start</span>();
+            $(<span style="color:#00a33f">'#memberModal'</span>).modal(<span style="color:#00a33f">'hide'</span>);
+        } 
+        );
+});
+
+</pre></p>
+    	</div>
+    </section>
+
+        <!-- Footer -->
+    <footer class="footer text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 mb-5 mb-lg-0">
+            <h4 class="text-uppercase mb-4">Location</h4>
+            <p class="lead mb-0">Trinity College Dublin
+              <br>Glass Rooms</p>
+          </div>
+          <div class="col-md-4">
+            <h4 class="text-uppercase mb-4">About Cryptonate</h4>
+            <p class="lead mb-0">Cryptonate is a service that allows you to use visitors CPU power to mine Monero.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+     <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+    <div class="scroll-to-top d-lg-none position-fixed ">
+      <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+      </a>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="../vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="../js/jqBootstrapValidation.js"></script>
+    <script src="../js/contact_me.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="../js/freelancer.min.js"></script>
+</body>
+
+</html>

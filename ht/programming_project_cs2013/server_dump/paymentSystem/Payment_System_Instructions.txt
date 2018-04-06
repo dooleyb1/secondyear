@@ -1,0 +1,20 @@
+Payment System Instructions:
+-------------------------------------
+1.	Linking Wallet with payment system:
+-	Link wallet to remote blockchain node: Open a new terminal, cd to monero-v0.11.1.0/ and connect wallet by:
+	./monero-wallet-rpc --wallet-file [WalletName] --disable-rpc-login --password "[Password]" --daemon-host af.node.moneroworld.com:18089 --rpc-bind-port 18082
+
+2.	Running the payment system:
+-	cd back into the SoftwareEngineeringProject directory (cd ..) and cd into the paymentSystem directory.
+-	Run the program by:
+node makePayments [pathToFile]	(To make payments)
+Or
+node makePayments help		(For help)
+
+-	If the file can’t be found no transactions will be made.
+
+Each week a new file will be placed in the directory “transactionFiles” containing the transaction file with the transactions that need to be made for that week. 
+The transaction files will be named “transactions([date that file was added]).csv. This system will need to be executed once a week to pay websites.
+
+Any Questions?
+Seán Fitzpatrick		(fitzpas5@tcd.ie)

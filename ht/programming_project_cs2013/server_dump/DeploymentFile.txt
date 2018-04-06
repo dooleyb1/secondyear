@@ -1,0 +1,85 @@
+-------------------------------------------------------------------------------------------
+How to use your visitors CPU Power to Mine Monero:
+-------------------------------------------------------------------------------------------
+
+1. Visit https://cryptonate.tk
+2. Read Usage - https://cryptonate.tk/usage/
+3. Set up a Monero wallet e.g through https://mymonero.com/#/
+4. Enter wallet details and other info into 'Generate Miner Code' section of cryptonate.tk
+5. Copy generated code within <head> tags of webpage you intend to run miner on.
+6. Mine!
+
+Questions? dooleyb1@tcd.ie
+
+------------------------------------------------------------------------------------------
+How to provide an opt-in popup for your website?
+------------------------------------------------------------------------------------------
+
+1. Visit https://cryptonate.tk/opt-in/
+2. Copy/Change the HTML Template to your liking
+3. Place ModalHandler.js somewhere that will run upon webpage load
+
+Questions? dooleyb1@tcd.ie
+
+-------------------------------------------------------------------------------------------
+How to run Contribution to mining pool per website:
+--------------------------------------------------------------------------------------------	
+
+	1. To run on default settings, in the command line(UNIX) run command 'tmux'
+	2. In tmux mode run the jar file 'BackendCryptonate-1.0-RELEASE.jar' using the command 'java -BackendCryptonate-1.0-RELEASE.jar'
+	3. Then detach from tmux.
+	Optionally to change setttings modify the BackendCryptonate Source file reassemble and build the file and convert to a jar file and follow the instructions above.
+
+**There are 2 payment systems one that takes the the addresses and monero values and the other takes the addresses and hashes mined.** 
+Both are descibed below. 
+	
+--------------------------------------------------------------------------------------------
+Payment System 1  Instructions (Take monero value):
+--------------------------------------------------------------------------------------------
+
+1.	Linking Wallet with payment system:
+-	Link wallet to remote blockchain node: Open a new terminal, cd to monero-v0.11.1.0/ and connect wallet by:
+	./monero-wallet-rpc --wallet-file [WalletName] --disable-rpc-login --password "[Password]" --daemon-host af.node.moneroworld.com:18089 --rpc-bind-port 18082
+
+2.	Running the payment system:
+-	cd back into the SoftwareEngineeringProject directory (cd ..) and cd into the paymentSystem directory.
+-	Run the program by:
+node makePayments [pathToFile]	(To make payments)
+Or
+node makePayments help		(For help)
+
+-	If the file can’t be found no transactions will be made.
+
+Each week a new file will be placed in the directory “transactionFiles” containing the transaction file with the transactions that need to be made for that week. 
+The transaction files will be named “transactions([date that file was added]).csv. This system will need to be executed once a week to pay websites.
+
+Any Questions?
+Seán Fitzpatrick		(fitzpas5@tcd.ie)
+
+---------------------------------------------------------------------------------------------
+Payment System 2 Instructions (Takes number of hashes):
+---------------------------------------------------------------------------------------------
+
+This System is a temporary solution. It takes transactions information is csv files in the form 
+[address],[number of hashes submitted]
+With each transaction on a new line.
+The system will then make a rough conversion from hashes to Monero value based on the information from our mining pool.
+
+1.	Linking Wallet with payment system:
+-	Link wallet to remote blockchain node: Open a new terminal, cd to monero-v0.11.1.0/ and connect wallet by:
+	./monero-wallet-rpc --wallet-file [WalletName] --disable-rpc-login --password "[Password]" --daemon-host af.node.moneroworld.com:18089 --rpc-bind-port 18082
+
+2.	Running the payment system:
+-	cd back into the SoftwareEngineeringProject directory (cd ..) and cd into the paymentSystem directory.
+-	Run the program by:
+node makePayments2 [pathToFile]	(To make payments)
+Or
+node makePayments help		(For help)
+
+-	If the file can’t be found no transactions will be made.
+
+Each week a new file will be placed in the directory “transactionFiles” containing the transaction file with the transactions that need to be made for that week. 
+The transaction files will be named “transactions([date that file was added]).csv. This system will need to be executed once a week to pay websites.
+
+Any Questions?
+Seán Fitzpatrick		(fitzpas5@tcd.ie)
