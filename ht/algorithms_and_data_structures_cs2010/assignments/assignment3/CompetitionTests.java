@@ -4,18 +4,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Stack;
-
 import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
 import java.io.FileNotFoundException;
 import java.lang.UnsupportedOperationException;
 import java.util.NoSuchElementException;
@@ -36,14 +31,37 @@ import java.util.NoSuchElementException;
 
         b) CompetitionFloydWarshall
 
-            -Floyd Warhsall's algorithm is used when any of the nodes can be the source so you need to find
-            the shortest path from all nodes to every other node. Floyd Warshall's shortest path algorithm 
+            -Floyd-Warhsall's algorithm is used when any of the nodes can be the source so you need to find
+            the shortest path from all nodes to every other node. Floyd-Warshall's shortest path algorithm 
             is quite similar to Dijkstra's however it allows for negative weighted edges whereas Dijkstra's does not.
             To accomodate for this we use a different data structure which is of the form of an Adjacency Matrix 
             containing the optimal edge to take between node x and node y. This is then used to populate a
             two dimensional array containing the best routes between all nodes.
 
-    2. 
+    2. a) Explain theoretical differences in the performance of Dijkstra and Floyd-Warshall algorithms
+        in the given problem.
+
+    
+            - With respect to the given problem Dijkstra's shortest path algorithm is the less ideal of the
+            two algorithms to use in theory as it is designed for finding the shortest path from one source node.
+            This means that Dijkstra's algorithm has to be performed V times for V being the amount of nodes
+            within the graph. Without the use of a min-priority queue Dijkstra's runs in O(V^2) or when using
+            a min-priority queue O(E + V log V) - E bein the number of edges in the graph.
+            
+            Whereas by using Floyd-Warshall, you compare all possible paths through the graph between each 
+            pair of vertices. This is much more ideal for the current problem at hand where we need to know
+            the longest path from any two vertices in order to compute the minimum time needed for the competition
+            to run. However, the Floyd-Warshall algorithm runs in O(V^3).
+
+        b) Also explain how would their relative performance be affected by the density of the graph. Which would you choose in which set of circumstances and why?
+
+            - Within densly populated graphs the Floyd-Warshall algorithm is the more ideal of the two. Whereas
+            if a graph is sparsely populated yet connected, Dijkstra's shortest path algorithm is a better choice.
+            This is since the running time of Dijkstra being repeated is O(E*V + V^2 log V) which is significantly 
+            better than the O(V^3) run time of Floyd-Warshall when E is smaller than V^2. 
+
+            -Densly Populated : Floyd-Warshall
+            -Sparsly Populated (Non-Negative Edges) : Dijkstra's 
  */
 
 public class CompetitionTests {
