@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This document contains the XML Model for the info of all Admins within the larger Emergency Services Vehicle Maintenance System model -->
+
+<!--  The + cardinality is used for Admin as there must be at least one Admin registered in the system or an infinite amount of Admins-->
+
+<!ELEMENT Admin_Info (Admin)+>
+
+<!-- Each Admin has a required attribute 'user_id', so if any changes are made to the system the ID of the Admin can be used as a reference. Each Admin can have multiple roles however must have at least one, hence the + cardinality is used. The cardinality * is used for 'user_privileges' as if no priveleges are specified, the Admin has root access to everything in the system. -->
+
+<!ELEMENT Admin (user_name, user_role+, user_privileges*)>
+<!ATTLIST Admin user_id CDATA #REQUIRED>
+<!ELEMENT user_id (#PCDATA)>
+
+<!ELEMENT user_name   (first_name, surname)>
+		<!ELEMENT first_name (#PCDATA)>
+		<!ELEMENT surname (#PCDATA)>
+<!ELEMENT user_role (#PCDATA)>
+
+<!-- The user privileges 'mechanic_ids' and 'vehicle_ids' has the cardinality ? as not all Admins necessarily have access to both or any of them. 'mechanic_id' and 'vehicle_id' has the cardinality + as there must be at least one of each in the database.  -->
+
+<!ELEMENT user_privileges (mechanic_ids?, vehicle_ids?)>
+		<!ELEMENT mechanic_ids (mechanic_id+)>
+			<!ELEMENT mechanic_id (#PCDATA)>
+		<!ELEMENT vehicle_ids (vehicle_id+)>
+			<!ELEMENT vehicle_id (#PCDATA)>
+

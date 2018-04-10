@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Vehicle_Management SYSTEM "Vehicle_Management.dtd">
+
+<Vehicle_Management>
+
+  <Vehicle VehicleID="2019" NeedsService="YES" isBeingServiced="YES">
+
+    <VehicleDetails>
+      <Type>Ambulance</Type>
+      <Make>Ford</Make>
+      <Model>Transit</Model>
+      <Year>2010</Year>
+      <RegNo>10-D-34056</RegNo>
+      <Mileage>342116</Mileage>
+      <Colour>Yellow</Colour>
+    </VehicleDetails>
+
+  </Vehicle>
+
+  <Vehicle VehicleID="4930" NeedsService="YES" isBeingServiced="NO">
+
+    <VehicleDetails>
+      <Type>Ambulance</Type>
+      <Make>Ford</Make>
+      <Model>Transit</Model>
+      <Year>2017</Year>
+      <RegNo>171-KE-133</RegNo>
+      <Mileage>60539</Mileage>
+      <Colour>Yellow</Colour>
+    </VehicleDetails>
+
+  </Vehicle>
+
+  <Vehicle VehicleID="13984" NeedsService="NO" isBeingServiced="NO">
+
+    <VehicleDetails>
+      <Type>Ambulance</Type>
+      <Make>Mercedes-Benz</Make>
+      <Model>Sprinter</Model>
+      <Year>2012</Year>
+      <RegNo>12-OY-12053</RegNo>
+      <Mileage>246433</Mileage>
+      <Colour>Yellow</Colour>
+    </VehicleDetails>
+
+  </Vehicle>
+
+  <Vehicle VehicleID="1246" NeedsService="NO" isBeingServiced="NO">
+
+    <VehicleDetails>
+      <Type>Garda Car</Type>
+      <Make>Hyundai</Make>
+      <Model>i40</Model>
+      <Year>2015</Year>
+      <RegNo>151-D-16</RegNo>
+      <Mileage>125977</Mileage>
+      <Colour>White</Colour>
+    </VehicleDetails>
+
+  </Vehicle>
+
+  <Vehicle VehicleID="4958" NeedsService="YES" isBeingServiced="YES">
+
+    <VehicleDetails>
+      <Type>Garda Car</Type>
+      <Make>Audi</Make>
+      <Model>Q7</Model>
+      <Year>2017</Year>
+      <RegNo>171-L-589</RegNo>
+      <Mileage>57932</Mileage>
+      <Colour>Black</Colour>
+    </VehicleDetails>
+
+  </Vehicle>
+
+</Vehicle_Management>
