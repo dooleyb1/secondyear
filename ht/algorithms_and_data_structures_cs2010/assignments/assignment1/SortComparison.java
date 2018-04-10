@@ -29,6 +29,8 @@ import java.util.Scanner;
  *
  */
 
+ /* Adapted from Sedgeick & Wayne - https://algs4.cs.princeton.edu/home/ */
+
 /**
  *  This class contains static methods that implementing sorting of an array of numbers
  *  using different sort algorithms.

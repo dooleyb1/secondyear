@@ -33,6 +33,8 @@ import org.junit.runners.JUnit4;
  *
  */
 
+ /* Adapted from Sedgeick & Wayne - https://algs4.cs.princeton.edu/home/ */
+
 //-------------------------------------------------------------------------
 /**
  *  Test class for SortComparison.java
