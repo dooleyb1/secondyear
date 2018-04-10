@@ -45,15 +45,9 @@ begin
     process(RESET, CLK)
     
     variable current : std_logic_vector(7 downto 0);
-    variable temp_current : integer;
-    variable temp_currentpp : std_logic_vector(7 downto 0);
     begin
         if(RESET = '1') then current := x"C0";
         elsif(A = '1' and CLK = '1') then current := B;
---            temp_current := conv_integer(current);
---            temp_current := temp_current + conv_integer(1);
---            temp_currentpp := conv_std_logic_vector(temp_current, 8);
---            current := temp_currentpp;
         end if;
         Z <= current after 10ns;
     end process;

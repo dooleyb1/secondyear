@@ -28,7 +28,10 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity microprogrammed_control is
     Port ( 
-        Vflag, Cflag, Nflag, Zflag : in std_logic;
+        Vflag : in std_logic;
+        Cflag : in std_logic;
+        Nflag : in std_logic; 
+        Zflag : in std_logic;
         
         instruction: in std_logic_vector(15 downto 0);
         clk : in std_logic;
@@ -146,7 +149,7 @@ architecture Behavioral of microprogrammed_control is
     
     component Extend
         Port ( 
-            DR_SA_SB : in std_logic_vector(8 downto 0);
+            DR_SB : in std_logic_vector(5 downto 0);
             Ext : out std_logic_vector(15 downto 0)
         );
     end component;
@@ -156,16 +159,13 @@ architecture Behavioral of microprogrammed_control is
     signal NA_out : std_logic_vector(7 downto 0);
     
     
---    signal IL : std_logic; 
---    siganl MC : std_logic; 
+ 
     signal MUXS_OUT : std_logic; 
     signal notC : std_logic; 
     signal notZ : std_logic;
---    signal MS : std_logic_vector(2 downto 0); 
     signal DR_PC : std_logic_vector(2 downto 0); 
     signal SA_PC : std_logic_vector(2 downto 0);
     signal SB_PC : std_logic_vector(2 downto 0);
---    signal NA : std_logic_vector(7 downto 0); 
     signal IN_CAR : std_logic_vector(7 downto 0);
     signal MUXC_OUT : std_logic_vector(7 downto 0);
     signal Opcode : std_logic_vector(6 downto 0);
@@ -247,9 +247,8 @@ begin
         
     ext0: Extend
         port map(
-            DR_SA_SB(2 downto 0) => SB_PC,
-            DR_SA_SB(5 downto 3) => SA_PC,
-            DR_SA_SB(8 downto 6) => DR_PC,
+            DR_SB(2 downto 0) => SB_PC,
+            DR_SB(5 downto 3) => DR_PC,
             Ext => PCin
         );
  
@@ -272,5 +271,5 @@ begin
     DR <= DR_PC;
     SA <= SA_PC;
     SB <= SB_PC;
--- add a signal that holds the last PC so when clk and not load is called its not rea
+
 end Behavioral;

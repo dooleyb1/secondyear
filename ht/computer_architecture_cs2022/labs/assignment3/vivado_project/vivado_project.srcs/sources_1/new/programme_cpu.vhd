@@ -87,7 +87,10 @@ architecture Behavioral of programme_cpu is
 	-- Microprogrammed Control
     component microprogrammed_control
         Port(
-        Vflag, Cflag, Nflag, Zflag : in std_logic;
+        Vflag : in std_logic; 
+        Cflag : in std_logic; 
+        Nflag : in std_logic; 
+        Zflag : in std_logic;
         
         instruction: in std_logic_vector(15 downto 0);
         clk : in std_logic;
@@ -106,7 +109,6 @@ architecture Behavioral of programme_cpu is
         MM : out std_logic;
         MW : out std_logic;
         
-        --for testing
         PL : out std_logic;
         PI : out std_logic;
         IL : out std_logic;

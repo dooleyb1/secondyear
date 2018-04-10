@@ -41,20 +41,24 @@ architecture Behavioral of PC is
 
 begin
 
-    process (RESET, PL, PI, Clk)
+    process (Clk)
     variable pc : std_logic_vector(15 downto 0);
     variable temp_pc : integer;
     variable temp_inc_pc : std_logic_vector(15 downto 0);
     
     begin
-        if(reset = '1' and clk = '1') then pc := x"0000";
+        if(reset = '1' and clk = '1') then 
+        	pc := x"0000";
+        
         elsif(PL = '1' and clk = '1') then
             pc := pc + PC_IN;
+        
         elsif(PI = '1' and clk = '1') then
             temp_pc := conv_integer(pc);
             temp_pc := temp_pc + conv_integer(1);
             temp_inc_pc := conv_std_logic_vector(temp_pc, 16);
             pc := temp_inc_pc;
+        
         end if;
         PC_OUT <= pc after 10ns;
     end process;

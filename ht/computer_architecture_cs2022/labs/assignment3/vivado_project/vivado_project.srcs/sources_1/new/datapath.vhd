@@ -183,7 +183,7 @@ architecture Behavioral of datapath is
 		In0 => BOut,
 		In1 => ConIn,
 		s => MB,
-		Z => data_out
+		Z => BBus
 	);
 
 	-- MUX D
@@ -207,5 +207,7 @@ architecture Behavioral of datapath is
          SB => SB,
          zeroFill => ConIn
     ); 
+    
+    data_out <= BBus;
 	 
 end Behavioral;

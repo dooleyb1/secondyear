@@ -44,14 +44,14 @@ end mux9_16bit;
 
 architecture Behavioral of mux9_16bit is
 begin
-	Z <= In0 after 1ns when src="0000" else
-		 In1 after 1ns when src="0001" else
-		 In2 after 1ns when src="0010" else
-		 In3 after 1ns when src="0011" else
-		 In4 after 1ns when src="0100" else
-		 In5 after 1ns when src="0101" else
-		 In6 after 1ns when src="0110" else
-		 In7 after 1ns when src="0111" else
-	     In8 after 1ns when src ="1000" else
-	     x"0000" after 1ns;
+	Z <= In0 after 5ns when src="0000" else
+		 In1 after 5ns when src="0001" else
+		 In2 after 5ns when src="0010" else
+		 In3 after 5ns when src="0011" else
+		 In4 after 5ns when src="0100" else
+		 In5 after 5ns when src="0101" else
+		 In6 after 5ns when src="0110" else
+		 In7 after 5ns when src="0111" else
+	     In8 after 5ns when src ="1000" else
+	     x"0000" after 5ns;
 end Behavioral;
