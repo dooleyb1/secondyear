@@ -1,0 +1,58 @@
+#define NUM_PHIL 5
+
+bool pthinking[NUM_PHIL] = false;
+bool phungry[NUM_PHIL] = false;
+bool peating[NUM_PHIL] = false;
+int forks[NUM_PHIL] = -1;
+
+init{
+	atomic{
+		int i = 0;
+
+		do
+		:: i < NUM_PHIL ->
+			run P(i);
+			i++;
+
+		:: else -> 
+			break;
+		od;
+	}
+}
+
+proctype P(int i){
+	
+	int right = i;
+	int left = (i+1)%NUM_PHIL;
+
+think:
+	atomic{
+		peating[i] = false;
+		pthinking[i] = true;
+	};
+
+hungry:
+	atomic{
+		pthinking[i] = false;
+		phungry[i] = true;
+	};
+	if
+	:: skip;
+		atomic { forks[left] == -1 -> forks[left] = i};
+		atomic { forks[right] == -1 -> forks[right] = i};
+	:: skip;
+		atomic { forks[right] == -1 -> forks[right] = i};
+		atomic { forks[left] == -1 -> forks[left] = i};
+	fi;
+
+eating:
+	atomic {
+		phungry[i] = false;
+		peating[i] = true;
+	};
+
+done:
+	forks[right] = -1;
+	forks[left] = -1;
+	goto think;
+}
