@@ -216,4 +216,5 @@ architecture Behavioral of register_file is
 	reg5 <= reg5_q;
 	reg6 <= reg6_q;
 	reg7 <= reg7_q;
+	
 end Behavioral;

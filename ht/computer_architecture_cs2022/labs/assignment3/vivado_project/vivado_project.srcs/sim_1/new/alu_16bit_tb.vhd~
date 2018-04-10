@@ -61,74 +61,74 @@ begin
     Gsel <= "0000";
     A <= x"0001";
     B <= x"0041";
-    wait for 80ns;
+    wait for 16ns;
     
     --Test Gsel = 0001 (F=A+1) = 0x0007 **
     Gsel <= "0001";
     A <= x"0006";
     B <= x"0027";
-    wait for 80ns;
+    wait for 16ns;
     
    --Test Gsel = 0010 (F=A+B) = 0x0005 **
    Gsel <= "0010";
    A <= x"0002";
    B <= x"0003";
-   wait for 80ns;
+   wait for 16ns;
     
    --Test Gsel = 0011 (F=A+B+1) = 0x000A **
    Gsel <= "0011";
    A <= x"0007";
    B <= x"0002";
-   wait for 80ns;
+   wait for 16ns;
     
    --Test Gsel = 0100 (F=A+B') = 0x0003 **
    Gsel <= "0100";
    A <= x"0001";
    B <= x"FFFD";
-   wait for 80ns;
+   wait for 16ns;
     
    --Test Gsel = 0101 (F=A+B'+1) = 0x0004 **
    Gsel <= "0101";
    A <= x"0001";
    B <= x"FFFD";
-   wait for 80ns;
+   wait for 16ns;
     
-   --Test Gsel = 0101 (F=A-1) = 0x0002 **
+   --Test Gsel = 0101 (F=A-1) = 0x0002 ??
    Gsel <= "0110";
    A <= x"0003";
    B <= x"0128";
-   wait for 80ns;
+   wait for 16ns;
     
    --Test Gsel = 0111 (F=A) = 0x00F7 **
    Gsel <= "0111";
    A <= x"00F7";
    B <= x"0128";
-   wait for 80ns;
+   wait for 16ns;
     
   --**LOGIC**--
   --Test Gsel = 1000 (F=A^B)= 0x0429 **
   Gsel <= "1000";
   A <= x"0569";
   B <= x"0EB9";
-  wait for 80ns;
+  wait for 16ns;
     
   --Test Gsel = 1010 (F=AorB) = 0xFF7F **
   Gsel <= "1010";
   A <= x"FE63";
   B <= x"013D";
-  wait for 80ns;
+  wait for 16ns;
     
   --Test Gsel = 1100 (F=AxorB) = 0xD736 **
   Gsel <= "1100";
   A <= x"B59D";
   B <= x"62AB";
-  wait for 80ns;
+  wait for 16ns;
     
   --Test Gsel = 1110 (F=A') = 0xFFF4 **
   Gsel <= "1110";
   A <= x"000B";
   B <= x"0002";
-  wait for 80ns;
+  wait for 16ns;
     
   --**FLAG TESTS**--
     
@@ -138,13 +138,13 @@ begin
   Gsel <= "0010";
   A <= x"FFFF";
   B <= x"8000";  
-  wait for 80ns;
+  wait for 16ns;
     
   -- 0xF000 + 0x00BC = 0xF0BC -> V = 0 **
   Gsel <= "0010";
   A <= x"F000";
   B <= x"00BC";  
-  wait for 80ns; 
+  wait for 16ns; 
     
   --Test C Flag--
     
@@ -152,13 +152,13 @@ begin
   Gsel <= "0010";
   A <= x"F000";
   B <= x"8000";  
-  wait for 80ns;
+  wait for 16ns;
     
   -- 0x1405 + 0x00BC = 0x14C1 -> C = 0 **
   Gsel <= "0010";
   A <= x"1405";
   B <= x"00BC";  
-  wait for 80ns;
+  wait for 16ns;
   
  -- Test N Flag --
 
@@ -166,13 +166,13 @@ begin
   Gsel <= "0010";
   A <= x"F405";
   B <= x"00BC";  
-  wait for 80ns; 
+  wait for 16ns; 
   
   -- 0x1405 + 0x00BC = 0x14C1 -> N = 0 **
   Gsel <= "0010";
   A <= x"1405";
   B <= x"00BC";  
-  wait for 80ns;
+  wait for 16ns;
   
  -- Test Z Flag --
  
@@ -180,13 +180,13 @@ begin
    Gsel <= "0010";
    A <= x"0000";
    B <= x"0000";  
-   wait for 80ns; 
+   wait for 16ns; 
    
    -- 0x1405 + 0x00BC = 0x14C1 -> Z = 0 **
    Gsel <= "0010";
    A <= x"1405";
    B <= x"00BC";  
-   wait for 80ns;
+   wait for 16ns;
        
 end process;
     

@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 04/06/2018 11:38:57 AM
+-- Create Date: 02/14/2018 12:19:35 PM
 -- Design Name: 
--- Module Name: mux2_8bit - Behavioral
+-- Module Name: comb_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,11 +31,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity mux2_8bit is
+entity comb_tb is
 --  Port ( );
-end mux2_8bit;
+end comb_tb;
 
-architecture Behavioral of mux2_8bit is
+architecture Behavioral of comb_tb is
 
 begin
 

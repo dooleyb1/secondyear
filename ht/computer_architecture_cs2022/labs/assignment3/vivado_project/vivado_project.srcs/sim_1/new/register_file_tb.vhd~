@@ -10,13 +10,18 @@ architecture Behavioral of register_file_tb is
     -- declare component to test
     component register_file is
         Port ( 
-		    a_sel: in std_logic_vector(2 downto 0);	
-			b_sel : in std_logic_vector(2 downto 0);
-			d_sel : in std_logic_vector(2 downto 0);
-			load : in std_logic;
+		    DA: in std_logic_vector(3 downto 0);	
+			AA : in std_logic_vector(3 downto 0);
+			BA : in std_logic_vector(3 downto 0);
+			
+			Clk : in std_logic;
+			RW : in std_logic;
+			
 			data : in std_logic_vector(15 downto 0);
+			
 			a_out : out std_logic_vector(15 downto 0);
 			b_out : out std_logic_vector(15 downto 0);
+			
 			reg0out : out std_logic_vector(15 downto 0);
 			reg1out : out std_logic_vector(15 downto 0);
 			reg2out : out std_logic_vector(15 downto 0);
@@ -24,17 +29,21 @@ architecture Behavioral of register_file_tb is
 			reg4out : out std_logic_vector(15 downto 0);
 			reg5out : out std_logic_vector(15 downto 0);
 			reg6out : out std_logic_vector(15 downto 0);
-			reg7out : out std_logic_vector(15 downto 0)
+			reg7out : out std_logic_vector(15 downto 0);
+			reg8out : out std_logic_vector(15 downto 0)
 		);
     end component;
     
     -- signals for tests (initialise to 0)
         
         --inputs
-        signal a_sel : std_logic_vector(2 downto 0) := "000";
-        signal b_sel : std_logic_vector(2 downto 0) := "000";
-        signal d_sel : std_logic_vector(2 downto 0) := "000";
-        signal load : std_logic := '0';
+        signal AA : std_logic_vector(3 downto 0) := "0000";
+        signal BA : std_logic_vector(3 downto 0) := "0000";
+        signal DA : std_logic_vector(3 downto 0) := "0000";
+        
+        signal Clk : std_logic := '0';
+        signal RW : std_logic := '0';
+        
         signal data : std_logic_vector(15 downto 0):= x"0000";
         
         --outputs
@@ -50,19 +59,25 @@ architecture Behavioral of register_file_tb is
         signal reg5out : std_logic_vector(15 downto 0):= x"0000";
         signal reg6out : std_logic_vector(15 downto 0):= x"0000";
         signal reg7out : std_logic_vector(15 downto 0):= x"0000";
-                
+        signal reg8out : std_logic_vector(15 downto 0):= x"0000";
+                   
 begin
 
     -- instantiate component for test, connect ports to internal signals
     UUT: register_file
     Port Map(
-        a_sel => a_sel,
-        b_sel => b_sel,
-        d_sel => d_sel,
-        load => load,
+        DA => DA,
+        AA => AA,
+        BA => BA,
+        
+        Clk => Clk,
+        RW => RW,
+        
         data => data,
+        
         a_out => a_out,
         b_out => b_out,
+        
         reg0out => reg0out,
         reg1out => reg1out,
         reg2out => reg2out,
@@ -70,83 +85,111 @@ begin
         reg4out => reg4out,
         reg5out => reg5out,
         reg6out => reg6out,
-        reg7out => reg7out        
+        reg7out => reg7out,
+        reg8out => reg8out       
     );
     
 simulation_process :process
 begin
         --Load all registers with values
-        load <= '1';
+        RW <= '1';
         
         --reg0
-        d_sel <= "000";
-        wait for 5ns;
         data <= x"00FA";
-        wait for 5ns;
+        DA <= "0000";
+        wait for 10ns;
+        Clk <= '1';
+        wait for 10ns;
+        Clk <= '0';
         
         --reg1
-        d_sel <= "001";
-        wait for 5ns;
         data <= x"00FB";
-        wait for 5ns;
+        DA <= "0001";
+        wait for 10ns;
+        Clk <= '1';
+        wait for 10ns;
+        Clk <= '0';
         
-        --reg2 = 0x00FC    
-        d_sel <= "010";
-        wait for 5ns;
+        --reg2
         data <= x"00FC";
-        wait for 5ns;
+        DA <= "0010";
+        wait for 10ns;
+        Clk <= '1';
+        wait for 10ns;
+        Clk <= '0';
         
         --reg3
-        d_sel <= "011";
-        wait for 5ns;
         data <= x"00FD";
-        wait for 5ns;
-
+        DA <= "0011";
+        wait for 10ns;
+        Clk <= '1';
+        wait for 10ns;
+        Clk <= '0';
+        
         --reg4
-        d_sel <= "100";
-        wait for 5ns;
         data <= x"00FE";
-        wait for 5ns;
+        DA <= "0100";
+        wait for 10ns;
+        Clk <= '1';
+        wait for 10ns;
+        Clk <= '0';
         
         --reg5
-        d_sel <= "101";
-        wait for 5ns;
         data <= x"00FF";
-        wait for 5ns;
+        DA <= "0101";
+        wait for 10ns;
+        Clk <= '1';
+        wait for 10ns;
+        Clk <= '0';
         
         --reg6
-        d_sel <= "110";
-        wait for 5ns;
         data <= x"0FAA";
-        wait for 5ns;
+        DA <= "0110";
+        wait for 10ns;
+        Clk <= '1';
+        wait for 10ns;
+        Clk <= '0';
         
         --reg7
-        d_sel <= "111";
-        wait for 5ns;
         data <= x"0FBB";
-        wait for 5ns;
-        d_sel <= "000";
+        DA <= "0111";
+        wait for 10ns;
+        Clk <= '1';
+        wait for 10ns;
+        Clk <= '0';
         
-        
+        --reg7
+        data <= x"0FCC";
+        DA <= "1000";
+        wait for 10ns;
+        Clk <= '1';
+        wait for 10ns;
+        Clk <= '0';
+      
         --Aout should be reg0 = 0x00FA and Bout should be reg1 = 0x00FB
-        a_sel <= "000";
-        b_sel <= "001";
-        wait for 5ns;
+        AA <= "0000";
+        BA <= "0001";
+        wait for 10ns;
         
        --Aout should be reg2 = 0x00FC and Bout should be reg3 = 0x00FD
-       a_sel <= "010";
-       b_sel <= "011";
-       wait for 5ns;
+       AA <= "0010";
+       BA <= "0011";
+       wait for 10ns;
     
        --Aout should be reg4 = 0x00FE and Bout should be reg5 = 0x00FF
-       a_sel <= "100";
-       b_sel <= "101";
-       wait for 5ns;
+       AA <= "0100";
+       BA <= "0101";
+       wait for 10ns;
 
        --Aout should be reg6 = 0x0FAA and Bout should be reg7 = 0x0FBB
-       a_sel <= "110";
-       b_sel <= "111";
-       wait for 5ns;
+       AA <= "0110";
+       BA <= "0111";
+       wait for 10ns;
+       
+       --Aout should be reg8 (temp reg) = 0x0FAB and Bout should be reg8 (temp reg) = 0x0FAB
+       AA <= "1000";
+       BA <= "1000";
+       wait for 10ns;       
         
      wait;   
      end process;

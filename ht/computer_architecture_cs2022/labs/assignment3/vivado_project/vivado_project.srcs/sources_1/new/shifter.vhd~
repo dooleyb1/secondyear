@@ -17,9 +17,9 @@ architecture Behavioral of shifter is
 
 begin
 
-	Z <= In0 after 5 ns when S="00" else
-		In1 after 5 ns when S="01" else
-		In2 after 5 ns when S="10" else
-		'0' after 5 ns;
+	Z <= In0 after 1ns when S="00" else
+		In1 after 1ns when S="01" else
+		In2 after 1ns when S="10" else
+		'0' after 1ns;
 	
 end Behavioral;

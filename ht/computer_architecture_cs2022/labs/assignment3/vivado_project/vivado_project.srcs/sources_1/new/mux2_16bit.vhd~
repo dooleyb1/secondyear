@@ -14,7 +14,7 @@ end mux2_16bit;
 
 architecture Behavioral of mux2_16bit is
 begin
-	Z <= In0 after 5 ns when S='0' else
-		 In1 after 5 ns when S='1'else
-		 "0000000000000000" after 5 ns;
+	Z <= In0 after 1ns when S='0' else
+		 In1 after 1ns when S='1'else
+		 "0000000000000000" after 1ns;
 end Behavioral;

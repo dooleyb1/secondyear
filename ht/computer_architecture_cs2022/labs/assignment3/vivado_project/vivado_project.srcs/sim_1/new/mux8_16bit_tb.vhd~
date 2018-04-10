@@ -69,35 +69,35 @@ begin
         
         --Select line 0 and send 0x00AA to output line Z
         src <= "000";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 1 and send 0x00BB to output line Z
         src <= "001";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 2 and send 0x00CC to output line Z
         src <= "010";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 3 and send 0x00DD to output line Z
         src <= "011";
-        wait for 5ns;
+        wait for 1ns;
  
          --Select line 4 and send 0x00EE to output line Z
         src <= "100";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 5 and send 0x00FF to output line Z
         src <= "101";
-        wait for 5ns; 
+        wait for 1ns; 
        
         --Select line 6 and send 0x0AAA to output line Z
         src <= "110";
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 7 and send 0x0BBB to output line Z
         src <= "111";
-        wait for 5ns;
+        wait for 1ns;
      end process;
     
 end Behavioral;

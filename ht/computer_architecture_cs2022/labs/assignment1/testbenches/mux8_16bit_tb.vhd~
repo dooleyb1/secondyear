@@ -62,8 +62,8 @@ begin
         Z => Z
     );
     
-    simulation_process :process
-    begin
+simulation_process :process
+begin
         In0 <= x"00AA";
         In1 <= x"00BB";
         In2 <= x"00CC";

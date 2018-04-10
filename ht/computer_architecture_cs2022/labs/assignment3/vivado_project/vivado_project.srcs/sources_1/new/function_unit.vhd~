@@ -58,11 +58,10 @@ architecture Behavioral of function_unit is
 	-- signals
 	signal ALU_out, shifter_out, mux_out : std_logic_vector(15 downto 0);
 	
-	begin
-	-- port maps ;-)
-	
+begin
 	-- Arithmetic Logic Unit (ALU)
-	alu: alu_16bit Port MAP(
+	alu: alu_16bit 
+	Port Map(
 		A => A,
 		B => B,
 		Gsel(0) => FS(0),
@@ -73,10 +72,12 @@ architecture Behavioral of function_unit is
 		V => V,
 		C => C,
 		N => N, 
-		Z => Z);
+		Z => Z
+	);
 	
 	-- 16 Bit Shifter
-	shifter: shifter_16bit Port MAP(
+	shifter: shifter_16bit 
+	Port Map(
 		B => B,
 		FS => FS,
 		Lr => '0',
@@ -85,7 +86,8 @@ architecture Behavioral of function_unit is
 	);
 	
 	-- 2 to 1 mux
-	MUXF: mux2_16bit Port MAP(
+	MUXF: mux2_16bit 
+	Port Map(
 		In0 => ALU_out,
 		In1 => shifter_out,
 		s => FS(4),

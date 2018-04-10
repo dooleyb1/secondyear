@@ -48,15 +48,15 @@ begin
        	In1 <= '0';
        	In2 <= '1';
        	s <= "00";
-        wait for 5ns;
+        wait for 1ns;
         
         --Check that select 1 selects line 1 (1)
        	s <= "01";
-        wait for 5ns;
+        wait for 1ns;
         
         ---Check that select 2 selects line 2 (1)
        	s <= "10";
-        wait for 5ns;
+        wait for 1ns;
 
      end process;
     

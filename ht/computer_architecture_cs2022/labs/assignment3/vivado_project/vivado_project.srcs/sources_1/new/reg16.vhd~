@@ -7,7 +7,7 @@ entity reg16 is
 	Port( 
 		D : in std_logic_vector(15 downto 0);
 		load : in std_logic;
-		d_sel : in std_logic;
+		Clk : in std_logic;
 		Q : out std_logic_vector(15 downto 0)
 	);
 end reg16;
@@ -16,7 +16,14 @@ architecture Behavioral of reg16 is
 
 begin
 
-	Q <= D after 5 ns when load='1' and d_sel='1';
+process(Clk)
+	begin
+	if (rising_edge(Clk)) then
+		if load='1' then
+			Q <= D after 5 ns;
+		end if;
+	end if;
+end process;
 	
 end Behavioral;
 

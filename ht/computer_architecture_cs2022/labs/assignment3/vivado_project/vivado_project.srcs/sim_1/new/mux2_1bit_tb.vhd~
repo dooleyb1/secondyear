@@ -40,11 +40,11 @@ begin
         
         --Select line 1 and send '1' to output line mux_out
         Sel <= '0';
-        wait for 5ns;
+        wait for 1ns;
         
         --Select line 0 and send '0' to output line mux_out
         Sel <= '1';
-        wait for 5ns;
+        wait for 1ns;
      
      end process;
     
