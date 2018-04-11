@@ -1,2 +1,4 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "U:/Computer Architecture/Assignment Final/vivado_project/vivado_project.srcs/sim_1/new/mux2_8bit_tb.vhd" into library xil_defaultlib
-INFO: [VRFC 10-307] analyzing entity mux2_8bit_tb
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/brandon/github/secondyear/ht/computer_architecture_cs2022/labs/assignment3/vivado_project/vivado_project.srcs/sources_1/new/control_memory.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity control_memory
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/brandon/github/secondyear/ht/computer_architecture_cs2022/labs/assignment3/vivado_project/vivado_project.srcs/sources_1/new/memory.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity memory

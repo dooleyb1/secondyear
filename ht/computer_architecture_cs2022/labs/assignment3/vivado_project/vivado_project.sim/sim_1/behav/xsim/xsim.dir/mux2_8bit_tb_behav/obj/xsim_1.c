@@ -43,7 +43,6 @@
 #define alloca _alloca
 #endif
 typedef void (*funcp)(char *, char *);
-extern int main(int, char**);
 extern void execute_8(char*, char *);
 extern void execute_7(char*, char *);
 extern void vhdl_transfunc_eventcallback(char*, char*, unsigned, unsigned, unsigned, char *);
@@ -81,6 +80,12 @@ void relocate(char *);
 void sensitize(char *);
 
 void simulate(char *);
+
+extern SYSTEMCLIB_IMP_DLLSPEC void local_register_implicit_channel(int, char*);
+extern void implicit_HDL_SCinstatiate();
+
+extern int xsim_argc_copy ;
+extern char** xsim_argv_copy ;
 
 int main(int argc, char **argv)
 {

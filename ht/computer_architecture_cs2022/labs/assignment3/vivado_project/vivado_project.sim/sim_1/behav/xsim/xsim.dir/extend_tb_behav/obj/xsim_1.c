@@ -43,7 +43,6 @@
 #define alloca _alloca
 #endif
 typedef void (*funcp)(char *, char *);
-extern int main(int, char**);
 extern void execute_12(char*, char *);
 extern void execute_9(char*, char *);
 extern void execute_10(char*, char *);
@@ -55,8 +54,8 @@ const int NumRelocateId= 5;
 void relocate(char *dp)
 {
 	iki_relocate(dp, "xsim.dir/extend_tb_behav/xsim.reloc",  (void **)funcTab, 5);
-	iki_vhdl_file_variable_register(dp + 2248);
-	iki_vhdl_file_variable_register(dp + 2304);
+	iki_vhdl_file_variable_register(dp + 2240);
+	iki_vhdl_file_variable_register(dp + 2296);
 
 
 	/*Populate the transaction function pointer field in the whole net structure */
@@ -83,6 +82,12 @@ void relocate(char *);
 void sensitize(char *);
 
 void simulate(char *);
+
+extern SYSTEMCLIB_IMP_DLLSPEC void local_register_implicit_channel(int, char*);
+extern void implicit_HDL_SCinstatiate();
+
+extern int xsim_argc_copy ;
+extern char** xsim_argv_copy ;
 
 int main(int argc, char **argv)
 {

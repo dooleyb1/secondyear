@@ -1,7 +1,7 @@
-Running: xsim.dir/microprogrammed_control_tb_behav/xsimk.exe -simmode gui -wdb microprogrammed_control_tb_behav.wdb -simrunnum 0 -socket 52363
+Running: xsim.dir/microprogrammed_control_tb_behav/xsimk -simmode gui -wdb microprogrammed_control_tb_behav.wdb -simrunnum 0 -socket 49040
 Design successfully loaded
-Design Loading Memory Usage: 6948 KB (Peak: 6948 KB)
-Design Loading CPU Usage: 30 ms
+Design Loading Memory Usage: 42360 KB (Peak: 42360 KB)
+Design Loading CPU Usage: 10 ms
 Simulation completed
-Simulation Memory Usage: 7572 KB (Peak: 7572 KB)
-Simulation CPU Usage: 46 ms
+Simulation Memory Usage: 128200 KB (Peak: 189636 KB)
+Simulation CPU Usage: 20 ms
