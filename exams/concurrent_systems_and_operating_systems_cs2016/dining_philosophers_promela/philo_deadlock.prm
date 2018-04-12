@@ -1,28 +1,34 @@
 #define NUM_PHIL 5
+int forks[NUM_PHIL] = -1;
 
+//Initialise all philosophers status' to false
 bool pthinking[NUM_PHIL] = false;
 bool phungry[NUM_PHIL] = false;
 bool peating[NUM_PHIL] = false;
-int forks[NUM_PHIL] = -1;
+
+
 
 init{
 	atomic{
 		int i = 0;
 
+		//Create each philosopher, run P
 		do
 		:: i < NUM_PHIL ->
 			run P(i);
 			i++;
 
-		:: else -> 
+		:: else ->
 			break;
 		od;
 	}
 }
 
 proctype P(int i){
-	
+
+	//Right fork at index i
 	int right = i;
+	//Left fork at (i+1)%N
 	int left = (i+1)%NUM_PHIL;
 
 think:
@@ -36,12 +42,19 @@ hungry:
 		pthinking[i] = false;
 		phungry[i] = true;
 	};
+
+	//Un-deterministically decide whether to check left/right first
 	if
 	:: skip;
+		//Attempt to pickup left fork
 		atomic { forks[left] == -1 -> forks[left] = i};
+		//Attempt to pickup right fork
 		atomic { forks[right] == -1 -> forks[right] = i};
+
 	:: skip;
+		//Attempt to pickup right fork
 		atomic { forks[right] == -1 -> forks[right] = i};
+		//Attempt to pickup left fork
 		atomic { forks[left] == -1 -> forks[left] = i};
 	fi;
 
