@@ -31,6 +31,9 @@
 ** Headers **
 --------------------------------------------------
 
+NOTE : #include "myownheaderfile.h" is used instead
+of <myownheaderfile.h> when the header files
+are found in the same directory.
     ---------------------------------------------
     [bucky.h]
     ---------------------------------------------
@@ -42,7 +45,7 @@
     ---------------------------------------------
     #include <stdio.h>
     #include <stdlib.h>
-    #include <bucky.h>
+    #include "bucky.h"
 
     int main() {
 
