@@ -1,56 +1,54 @@
-; Definitions  -- references to 'UM' are to the User Manual.
-; Timer Stuff -- UM, Table 173
-
-; MIT License
-;
-; Copyright (c) 2017 Brandon Dooley - dooleyb1@tcd.ie
-; 
-;  Permission is hereby granted, free of charge, to any person obtaining a copy
-;  of this software and associated documentation files (the "Software"), to deal
-;  in the Software without restriction, including without limitation the rights
-;  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-;  copies of the Software, and to permit persons to whom the Software is
-;  furnished to do so, subject to the following conditions:
-; 
-;  The above copyright notice and this permission notice shall be included in
-;  all copies or substantial portions of the Software.
-; 
-;  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-;  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-;  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-;  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-;  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-;  THE SOFTWARE.
-; 
-;
+// MIT License
+//
+// Copyright (c) 2017 Brandon Dooley - dooleyb1@tcd.ie
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without reSTRiction, including without limitation the rights
+//  to use, copy, modify, merge, publish, diSTRibute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
+//
 
 
-T0	equ	0xE0004000								; Timer 0 Base Address
-T1	equ	0xE0008000								; Timer 1 Base Address
+T0	EQU	0xE0004000									//Timer 0 Base Address
+T1	EQU	0xE0008000									//Timer 1 Base Address
 
-IR	equ	0										; Add this to a timer's base address to get actual register address
-TCR	equ	4 										; Timer Command Reset Register offset 
-MCR	equ	0x14 									; Timer Mode Reset and Interrupt Offset
-MR0	equ	0x18 									; Match Register (counter) offset
+IR	EQU	0														// Add this to a timer's base address to get actual register address
+TCR	EQU	4 													// Timer Command Reset Register offset
+MCR	EQU	0x14 												// Timer Mode Reset and Interrupt Offset
+MR0	EQU	0x18 												// Match Register (counter) offset
 
-TimerCommandReset			equ	2				; Reset timer 
-TimerCommandRun				equ	1		    	; Run timer
-TimerModeResetAndInterrupt	equ	3				; Reset timer mode and interrupt
-TimerResetTimer0Interrupt	equ	1 				; Reset timer 0 and interrupt
-TimerResetAllInterrupts		equ	0xFF 			; Reset all timer interrupts
+TimerCommandReset			EQU	2					// Reset timer
+TimerCommandRun				EQU	1		    	// Run timer
+TimerModeResetAndInterrupt	EQU	3		// Reset timer mode and interrupt
+TimerResetTimeR0Interrupt	EQU	1 		// Reset timer 0 and interrupt
+TimerResetAllInterrupts		EQU	0xFF 	// Reset all timer interrupts
 
-; VIC Stuff -- UM, Table 41
-VIC	equ	0xFFFFF000								; VIC Base Address
-IntEnable	equ	0x10 							; Interrupt Enable
-VectAddr	equ	0x30 							;
-VectAddr0	equ	0x100 							; Vectored Interrupt 0
-VectCtrl0	equ	0x200 							; Vectored Interrupt Control 0
+// VIC Stuff -- UM, Table 41
+VIC	EQU	0xFFFFF000									// VIC Base Address
+IntEnable	EQU	0x10 									// Interrupt Enable
+VectAddr	EQU	0x30 									//
+VectAddR0	EQU	0x100 								// Vectored Interrupt 0
+VectCtrl0	EQU	0x200 								// Vectored Interrupt Control 0
 
-Timer0ChannelNumber	equ	4						; UM, Table 63
-Timer0Mask			equ	1<<Timer0ChannelNumber	; UM, Table 63
-IRQslot_en			equ	5						; UM, Table 58
+TimeR0ChannelNumber	EQU	4						// UM, Table 63
+TimeR0Mask			EQU	1<<TimeR0ChannelNumber	// UM, Table 63
+IRQslot_en			EQU	5								// UM, Table 58
 
+//Labels & Values
 IO1DIR	EQU	0xE0028018
 IO1SET	EQU	0xE0028014
 IO1CLR	EQU	0xE002801C
@@ -59,108 +57,112 @@ IO1PIN	EQU	0xE0028010
 	AREA	InitialisationAndMain, CODE, READONLY
 	IMPORT	main
 
-; (c) Mike Brady, 2014â€“2016.
+// (c) Mike Brady, 2014â€“2016.
 
 	EXPORT	start
 start
 
-; initialisation code
-	ldr	r1,=IO1DIR			
-	ldr	r2,=0x000f0000							;select P1.19--P1.16
-	str	r2,[r1]									;make them outputs
-	ldr	r6,=IO1SET								;R6 = OFF
-	str	r2,[r6]									;set them to turn the LEDs off
-	ldr	r7,=IO1CLR								;R7 = ON
+// initialisation code
+	LDR R1,=IO1DIR
+	LDR	R2,=0x000f0000								//select P1.19--P1.16
+	STR	R2,[R1]												//make them outputs
+	LDR	R6,=IO1SET										//R6 = LED OFF
+	STR	R2,[R6]												//Turn off all LEDS
+	LDR	R7,=IO1CLR										//R7 = ON
 
-	ldr	r5,=0x00100000							; end when the mask reaches this value
-	ldr	r3,=0x00010000							; start with P1.16.
-	str	r3,[r7]	   								; clear the bit -> turn on the LED
+	LDR	R5,=0x00100000								//endMask
+	LDR	R3,=0x00010000								//start with P1.16.
+	STR	R3,[R7]	   										//clear the bit -> turn on the LED
 
-	ldr r1, =ticks
-	ldr r0, =0
-	str ro, [r1]
+	LDR R1, =ticks										//Used to count to a second
+	LDR R0, =0
+	STR R0, [R1]
 
+// Steps to setup the VIC
 
-; Initialise the VIC
-	ldr	r0,=VIC									; looking at you, VIC!
+//	1. Link our Interrupt Handler (irqhan) with an interrupt (Vectored Interrupt 0)
+//  2. Make Timer 0's interrupts the source of Vectored Interrupt 0
+//  3. Enable Timer 0's interrupts to be recognised by the VIC
+//  4. Clear any pending interrupts (unnecessary)
 
-	ldr	r1,=irqhan								; IRQ Handler
-	str	r1,[r0,#VectAddr0] 						; associate our interrupt handler with Vectored Interrupt 0
+// Initialise the VIC
+	LDR	R0,=VIC												//Looking at you, VIC!
 
-	mov	r1,#Timer0ChannelNumber+(1<<IRQslot_en)
-	str	r1,[r0,#VectCtrl0] 						; make Timer 0 interrupts the source of Vectored Interrupt 0
+	LDR	R1,=irqhan										//IRQ Handler
+	STR	R1,[R0,#VectAddR0] 						//Associate our interrupt handler with Vectored Interrupt 0
 
-	mov	r1,#Timer0Mask
-	str	r1,[r0,#IntEnable]						; enable Timer 0 interrupts to be recognised by the VIC
+	MOV	R1,#TimeR0ChannelNumber+(1<<IRQslot_en)
+	STR	R1,[R0,#VectCtrl0] 						//Make Timer 0 interrupts the source of Vectored Interrupt 0
 
-	mov	r1,#0
-	str	r1,[r0,#VectAddr]   					; remove any pending interrupt (may not be needed)
+	MOV	R1,#TimeR0Mask
+	STR	R1,[R0,#IntEnable]						//Enable Timer 0 interrupts to be recognised by the VIC
 
-	; Initialise Timer 0
-	ldr	r0,=T0									; looking at you, Timer 0!
+	MOV	R1,#0
+	STR	R1,[R0,#VectAddr]   					//Remove any pending interrupt (may not be needed)
 
-	mov	r1,#TimerCommandReset			
-	str	r1,[r0,#TCR]
+// Initialise Timer 0
+	LDR	R0,=T0												//Looking at you, Timer 0!
 
-	mov	r1,#TimerResetAllInterrupts
-	str	r1,[r0,#IR]
+	MOV	R1,#TimerCommandReset
+	STR	R1,[R0,#TCR]									//Reset the timer
 
-	ldr	r1,=(14745600/200)-1	 				; 5 ms = 1/200 second
-	str	r1,[r0,#MR0]
+	MOV	R1,#TimerResetAllInterrupts
+	STR	R1,[R0,#IR]										//Reset all interrupts from the timer
 
-	mov	r1,#TimerModeResetAndInterrupt
-	str	r1,[r0,#MCR]
+	LDR	R1,=(14745600/200)-1	 				//5 ms = 1/200 second
+	STR	R1,[R0,#MR0]									//Match Register 0 = 5ms
 
-	mov	r1,#TimerCommandRun
-	str	r1,[r0,#TCR]
+	MOV	R1,#TimerModeResetAndInterrupt
+	STR	R1,[R0,#MCR]									//Timer Mode Reset and Interrupt offset
 
+	MOV	R1,#TimerCommandRun
+	STR	R1,[R0,#TCR]									//Run timer()
 
-xloop	
-	
-	ldr r1, =ticks
-	ldr r0, [r1]								; r0 = ticks
+//Mainline
+xloop
 
-	cmp r0, #200								; if(ticks == 200)
-	blt xloop									; {
-	str	r3,[r6]									;   set the bit -> turn off the LED
-	mov	r3,r3,lsl #1							;   shift up to next bit. P1.16 -> P1.17 etc.
-	
-	cmp	r3,r5									;	if(currentPin == endMask)
-	bne skip									;	{
-	ldr	r3,=0x00010000							; 		reset to P1.16
-												;	}
+	LDR R1, =ticks
+	LDR R0, [R1]											//R0 = ticks
+
+	CMP R0, #200											//if(ticks == 200)
+	BLT xloop													//
+	STR	R3,[R6]												//   set the bit -> turn off the LED
+	MOV	R3,R3,lsl #1									//   shift up to next bit. P1.16 -> P1.17 etc.
+
+	CMP	R3,R5													//	if(currentPin == endMask)
+	BNE skip													//
+	LDR	R3,=0x00010000								// 		reset to P1.16
+
 skip
-	str	r3,[r7]		   							;   clear the bit -> turn on the LED
-	ldr r0, =0									;   reset ticks
-	str r0, [r1]								;   store new ticks val
-	b	xloop  									; 	}
-												; }
-												; main program execution will never drop below the statement above.
+	STR	R3,[R7]		   									//   clear the bit -> turn on the LED
+	LDR R0, =0												//   reset ticks
+	STR R0, [R1]											//   store new ticks val
+	B	xloop
 
+//THIS IS OUR INTERRUPT HANDLER
 	AREA	InterruptStuff, CODE, READONLY
-irqhan	sub	lr,lr,#4
-	stmfd	sp!,{r0-r1,lr}						; the lr will be restored to the pc
 
-	ldr r1,=ticks
-	ldr r0, [r1]
-	add r0, r0, #1
-	str r0, [r1]	
-	
-		
-	;this is where we stop the timer from making the interrupt request to the VIC
-	;i.e. we 'acknowledge' the interrupt
+irqhan
+	SUB LR, LR, #4										//Adjust the LR to last location
+	STMFD SP!,{R0-R1,LR}							//Preserve registers on the stack
 
-	ldr	r0,=T0
-	mov	r1,#TimerResetTimer0Interrupt
-	str	r1,[r0,#IR]	   	; remove MR0 interrupt request from timer
+	LDR R1,=ticks
+	LDR R0, [R1]
+	ADD R0, R0, #1										//Ticks++
+	STR R0, [R1]
 
-	;here we stop the VIC from making the interrupt request to the CPU:
-	ldr	r0,=VIC
-	mov	r1,#0
-	str	r1,[r0,#VectAddr]	; reset VIC
+//RESET TIMER
+	LDR	R0,=T0
+	MOV	R1,#TimerResetTimeR0Interrupt
+	STR	R1,[R0,#IR]	   								//Remove MR0 interrupt request from timer
 
-	ldmfd	sp!,{r0-r1,pc}^	; return from interrupt, restoring pc from lr
-							; and also restoring the CPSR
+	LDR	R0,=VIC
+	MOV	R1,#0													//Stop VIC from making interrupt to CPU
+	STR	R1,[R0,#VectAddr]							//Reset VIC
+
+//POP  OFF STACK 
+	LDMFD SP!,{R0-R1,PC}^							//Load values off stack, LR loaded into PC
+																		//And also restoring the CPSR (what the ^ does)
 
 	AREA	Subroutines, CODE, READONLY
 
