@@ -3,16 +3,16 @@
 --------------------------------------------------
     #include <stdio.h>
     #include <stdlib.h>
-    
+
     int main(int argc, char **argv)
     {
         int tuna = 10;
 
-        //This will print out the address of tuna 
+        //This will print out the address of tuna
         printf ( “%p”, &tuna );
-        //This will print out the name of tuna 
+        //This will print out the name of tuna
         printf ( “%s”, “tuna”);
-        //This will print out the value of tuna 
+        //This will print out the value of tuna
         printf ( “%d”, tuna );
 
 
@@ -49,13 +49,13 @@ are found in the same directory.
 
     int main() {
 
-        //This will print out MY_NAME from bucky.h 
+        //This will print out MY_NAME from bucky.h
         printf ( “My name is %s”,  MY_NAME );
-        
-        //This will use MY_AGE from bucky.h 
+
+        //This will use MY_AGE from bucky.h
         int girlsAge = (MY_AGE / 2 ) + 7;
         printf(“ %s can date girls aged %d or older” ,  MY_NAME , girlsAge);
-    }   
+    }
 
 
 
@@ -64,7 +64,7 @@ are found in the same directory.
 --------------------------------------------------
 
 Structs and typdefs are used to represent a data
-structure and to make life easier when handling 
+structure and to make life easier when handling
 large sets of data with shared properties.
 
     ---------------------------------------------
@@ -96,7 +96,7 @@ large sets of data with shared properties.
     #include <bucky.h>
 
     int main() {
-        
+
         struct user brandon;
         struct user john;
 
@@ -104,7 +104,7 @@ large sets of data with shared properties.
 
         brandon.userID = 21;
         john.userID = 18;
-    } 
+    }
 
 
 --------------------------------------------------
@@ -118,10 +118,10 @@ When a program is compiled source files ( main.c )
 are compiled into object files ( main.o )
 which are then further compiled into executables ( output ).
 
-When using multiple source files, each individual 
+When using multiple source files, each individual
 source file is compiled into individiual object files
 ( main.o , partb.o, partc.o ) these are then linked
-together with any C libraries used and combined 
+together with any C libraries used and combined
 together into one executable.
 
 
@@ -145,7 +145,7 @@ together into one executable.
     ---------------------------------------------
     #include <stdio.h>
     #include <stdlib.h>
-    
+
     int main(int argc, char **argv)
     {
         char *x=malloc(100);
@@ -175,7 +175,7 @@ together into one executable.
         points = ( int *) malloc (5 * sizeof ( int ) );
         //Frees up memory back to PC
         free( points )
-    } 
+    }
 
 --------------------------------------------------
 ** User Input **
@@ -183,12 +183,14 @@ together into one executable.
 
 
 To read input from the user, you will need to use
-the printf function aswell as the scanf function 
+the printf function aswell as the scanf function
 to both print and read to/from the user.
 
-    ---------------------------------------------
-    [inputread.c]
-    ---------------------------------------------
+    ------------------------------------------------
+    [inputread.c]:
+
+    ** This method uses the broken 'scanf' approach**
+    -------------------------------------------------
 
     #include <stdio.h>
     #include <stdlib.h>
@@ -196,10 +198,107 @@ to both print and read to/from the user.
     int main() {
 
         int a;
-        
-        printf(  “ Please enter an integer value :  ” ); 
-        scanf(  “%d ”, &a); 
-        printf(  “ You entered: %d ” , a); 
+
+        printf(  “ Please enter an integer value :  ” );
+        scanf(  “%d ”, &a);
+        printf(  “ You entered: %d ” , a);
 
         return 0;
-    } 
+    }
+
+    ------------------------------------------------
+    [inputread2.c]:
+
+    **This method uses the better 'fgets' approach**
+    ------------------------------------------------
+
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int main() {
+
+      printf("Enter a string: ");
+
+      char buf[200];
+      fgets(buf, 200, stdin);
+
+      //Remove newline if present
+      i = strlen(buf)-1;
+	  	if( buf[ i ] == '\n')
+		  	buf[i] = '\0';
+
+
+      printf( "\nYou entered: %s", buf);
+
+    }
+
+    ------------------------------------------------
+    [inputread3.c]:
+
+    **This method processes command line args**
+    ------------------------------------------------
+
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    int main() {
+
+      printf("Enter a string: ");
+
+      char buf[200];
+      fgets(buf, 200, stdin);
+
+      //Remove newline if present
+      i = strlen(buf)-1;
+	  	if( buf[ i ] == '\n')
+		  	buf[i] = '\0';
+
+
+      printf( "\nYou entered: %s", buf);
+
+    }
+
+
+    //Process command line args
+  	for(n=i=1;i<argc;i=n) {
+  		n++;
+  		//If arg starts with '-' do this
+  		if (argv[i][0] == '-' && argv[i][1]) {
+        //Process what letter comes after -
+        for(j=1;argv[i][j];j++) {
+    			switch(argv[i][j]) {
+      			case 'h':
+      			  hostflag = true;
+      			  memcpy(host, argv[i+1], strlen(argv[i+1])+1);
+      			  break;
+      			case 'p':
+      			  portflag = true;
+      			  port = atoi(argv[i+1]);
+      			  break;
+      			case 'H':
+      			  helpflag = true;
+      			  break;
+      			case 'w':
+      			  webflag = true;
+      			  memcpy(resource_path, argv[i+1], strlen(argv[i+1])+1);
+      			  break;
+      			case 'f':
+      			  fileflag = true;
+      			  f.open(argv[i+1],ios::out);
+      			  break;
+      			case '?':
+      			  helpflag = true;
+      			  break;
+      			default:
+      			  //If no flag has been set, then invalid input
+      			  if(!hostflag && !portflag && !helpflag && !webflag && !fileflag) {
+      				  fprintf(stderr,"knock: Invalid argument -`%c'.\n",argv[i][j]);
+      				  usage(1);
+      				  exit(1);
+      				  break;
+      			  }
+      		}
+  		  }
+  		}
+    }
+    -
