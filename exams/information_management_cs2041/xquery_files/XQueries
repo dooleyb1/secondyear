@@ -1,0 +1,180 @@
+----------------------------------------------------------------------------------------------
+QUERY 1 - Returns Payroll Information for all Mechanics (Brandon)
+-----------------------------------------------------------------------------------------------
+declare function local:get_mechanics_payroll_info()
+{
+  let $c:= doc("secondyear/mt/infoman_cs2041/assignments/assignment_2_XML/mechanics_info.XML")
+ for $m in $c/Mechanics_Info/Mechanic
+  let $firstname := $m/name/first_name/text()
+  let $surname := $m/name/surname/text()
+  let $fullname := concat($firstname," ",$surname)
+ return
+ <payroll_info>
+   <mechanic id ="{ $m/@mechanic_id }" >
+      <name> {$fullname} </name>
+       {$m/details/bank_details}
+   </mechanic>
+ </payroll_info>
+};
+
+<Mechanics_Payroll_Info>
+{local:get_mechanics_payroll_info()}
+</Mechanics_Payroll_Info>
+
+-----------------------------------------------------------------------------------------------
+QUERY 2 - Returns all free Mechanics (Brandon)
+-----------------------------------------------------------------------------------------------
+
+declare function local:get_free_mechanics()
+{
+let $c:= doc("secondyear/mt/infoman_cs2041/assignments/assignment_2_XML/mechanics_info.XML")
+ for $m in $c/Mechanics_Info/Mechanic
+  where $m/is_servicing/text() = "false"
+  let $firstname := $m/name/first_name/text()
+  let $surname := $m/name/surname/text()
+  let $fullname := concat($firstname," ",$surname)
+
+ return
+   <mechanic id ="{ $m/@mechanic_id }" >
+      <name> {$fullname} </name>
+   </mechanic>
+};
+
+<Free_Mechanics>
+{local:get_free_mechanics()}
+</Free_Mechanics>
+
+-----------------------------------------------------------------------------------------------
+QUERY 3 - Get service history for mechanic x (Brandon)
+-----------------------------------------------------------------------------------------------
+
+declare function local:get_service_history_for($mechanicname as xs:string)
+{
+  let $c:= doc("secondyear/mt/infoman_cs2041/assignments/assignment_2_XML/mechanics_info.XML")
+ for $m in $c/Mechanics_Info/Mechanic
+  let $fullname := concat($m/name/first_name/text()," ",$m/name/surname/text())
+  where $fullname = $mechanicname
+ return
+   <mechanic id ="{ $m/@mechanic_id }" >
+      <name> {$fullname} </name>
+       {$m/vehicles_serviced}
+   </mechanic>
+};
+
+<Service_History>
+{local:get_service_history_for("Mark O'Sullivan")}
+</Service_History>
+
+-----------------------------------------------------------------------------------------------
+QUERY 4 - High priority services that need to be done (Cian)
+-----------------------------------------------------------------------------------------------
+
+for $s in /services/service,
+    $v in /vehicleMaintenance/service
+
+where $v/priority = "high"
+where $v/string(@id) = $s/string(@id)
+return
+<high_priority>
+  {$s/vehicleID}
+  {$s/serviceDescripton}
+  {$s/serviceType}
+</high_priority>
+
+-----------------------------------------------------------------------------------------------
+QUERY 5 - Check stock for a part in inventory (Cian)
+-----------------------------------------------------------------------------------------------
+
+for $s in /partsInventory/part
+
+where contains($s/@category,"clutch")
+return
+<part_details>
+  {string($s/@category)}
+  {$s/name}
+  {$s/partDescription}
+  {string($s/@stock)}
+  {$s/RRP}
+  {string($s/@id)}
+</part_details>
+
+-----------------------------------------------------------------------------------------------
+QUERY 6 - Return all vehicles that need servicing (Arthur)
+-----------------------------------------------------------------------------------------------
+
+for $j in /vehicleMaintenance/service,
+    $i in /services/service,
+    $x in /Vehicle_Management/Vehicle
+
+where $j/string(@id) = $i/string(@id)
+where $i/string(vehicleID) = $x/string(@VehicleID)
+
+return
+<Needs_Service>
+  {$i/vehicleID}
+  {$x/VehicleDetails}
+</Needs_Service>
+
+-----------------------------------------------------------------------------------------------
+QUERY 7 - Check for parts in stock for a particular service (Michael)
+-----------------------------------------------------------------------------------------------
+
+declare function local:partsInStock($service_id as xs:string) {
+
+  for $servicesInMaintenance in doc("vehicle_maintenance.xml")/vehicleMaintenance/service[@id = $service_id],
+      $services in doc("services.xml")/services/service,
+      $partsInStock in doc("parts_inventory.xml")/partsInventory/part
+
+  where $servicesInMaintenance/@id = $services/@id
+  where $services/partsNeeded/part/@id = $partsInStock/@id
+
+  return $partsInStock
+};
+
+<parts>
+  {local:partsInStock("40292")}
+</parts>
+
+
+-----------------------------------------------------------------------------------------------
+QUERY 8 - For Vehicle x print mechanics who’ve serviced it (Michael)
+-----------------------------------------------------------------------------------------------
+
+declare function local:mechanicsServiced($vehicle_id as xs:string) {
+
+  for $mechanic in doc("Mechanics_Info.xml")/Mechanics_Info/Mechanic
+
+  where $mechanic/vehicles_serviced/Vehicle/string(@VehicleID) = $vehicle_id
+
+  return
+  <mechanic>
+    {$mechanic/name}
+    <mechanicID>{$mechanic/string(@mechanic_id)}</mechanicID>
+  </mechanic>
+};
+
+<mechanics>
+{local:mechanicsServiced("2019")}
+</mechanics>
+
+
+-----------------------------------------------------------------------------------------------
+QUERY 9 - Check if admin has privileges for mechanic
+-----------------------------------------------------------------------------------------------
+
+declare function local:checkPrivileges($adminid as xs:string, $mechid as xs:string) {
+
+  let $admin := doc("Admin_Info.xml")/Admin_Info/Admin[@user_id = $adminid]
+
+  for $mechanicIds in $admin/user_privileges/mechanic_ids/mechanic_id
+
+  where contains(string($mechanicIds), $mechid)
+
+  return
+    if ($mechanicIds)
+      then "true"
+    else
+      "false"
+};
+
+local:checkPrivileges("102", "40391")
