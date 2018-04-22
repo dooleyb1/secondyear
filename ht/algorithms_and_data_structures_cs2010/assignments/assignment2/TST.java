@@ -67,13 +67,13 @@ public class TST<Value> {
 
    * 7. IS the word "BLAH" present?
    *    No.
-   
+
    * 8. How many words are there that start with "TEST"?
    *    38
    */
 
   //Implemented using Sedgewick and Waynes version found here https://algs4.cs.princeton.edu/52trie/TST.java.html
-  
+
 
   /* A Node in your trie containing a Value val and a pointer to its children */
   private static class TrieNode<Value> {
@@ -150,7 +150,7 @@ public class TST<Value> {
   		return get(x.mid, key, d+1);
 
   	//Otherwise, at end. Return x
-  	else 
+  	else
   		return x;
   }
 
@@ -168,7 +168,7 @@ public class TST<Value> {
   private TrieNode<Value> put(TrieNode<Value> x, String key, Value val, int d){
   	char c = key.charAt(d);
 
-  	//If null node, create new node for char c 
+  	//If null node, create new node for char c
   	if(x == null){
   		x = new TrieNode<Value>();
   		x.c = c;
@@ -187,7 +187,7 @@ public class TST<Value> {
   		x.mid = put(x.mid, key, val, d+1);
 
   	//Otherwise return current node
-  	else 
+  	else
   		x.val = val;
 
   	return x;

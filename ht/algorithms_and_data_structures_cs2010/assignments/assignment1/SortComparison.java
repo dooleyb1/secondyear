@@ -37,8 +37,8 @@ import java.util.Scanner;
  *
  *  @author Brandon Dooley
  *  @version HT 2018
- *  
- *  
+ *
+ *
  */
 
  class SortComparison {
@@ -57,12 +57,12 @@ import java.util.Scanner;
 
         //Iterate through input array
         for(int i=0; i<n; i++)
-        {       
+        {
             double temp = a[i];
             //Compare a[i] with a[i-1]
             int j = i-1;
-            
-            //Iterate through all possible comparisons and swap accordingly 
+
+            //Iterate through all possible comparisons and swap accordingly
             while(j>=0 && a[j] > temp)
             {
                 a[j+1] = a[j];
@@ -82,14 +82,14 @@ import java.util.Scanner;
      *
      */
     static double [] quickSort (double a[]){
-    
+
         int low = 0;
         int high = a.length-1;
-        
+
         qSort(a, low, high);
         return a;
     }
-    
+
     /**
      * This method implements quickSort recursively for a given array of doubles.
      * @param a: Unsorted array of doubles.
@@ -97,18 +97,18 @@ import java.util.Scanner;
      * @param high: High index.
      */
     private static void qSort(double a[], int low, int high) {
- 
+
         if (low >= high)
             return;
- 
+
         //Find pivot value
         int middle = low + (high - low) / 2;
         double pivot = a[middle];
-        
+
         //Sort values < pivot to left and > pivot to right
         int i = low;
         int j = high;
-        
+
         while(i<=j) {
             //Find low value !< pivot
             while (a[i] < pivot) {
@@ -118,7 +118,7 @@ import java.util.Scanner;
             while(a[j] > pivot) {
                 j--;
             }
-            
+
             if(i <= j) {
                 double tmp = a[i];
                 a[i] = a[j];
@@ -127,14 +127,14 @@ import java.util.Scanner;
                 j--;
             }
         }
-        
+
         //Recursively quicksort two sub parts
         if(low < j)
             qSort(a, low, j);
-        
+
         if(high > i)
             qSort(a, i, high);
-        
+
     }
 
     /**
@@ -148,12 +148,12 @@ import java.util.Scanner;
     static double [] mergeSort (double a[]){
 
          double tmp[] = new double[a.length];
-         
+
          mSort(a, tmp,  0,  a.length - 1);
          return a;
-    
+
     }
-    
+
     /**
      * Performs mergesort recursively within the given indices low and high
      * @param a: An unsorted array of doubles
@@ -162,7 +162,7 @@ import java.util.Scanner;
      * @param high: Higher index
      */
     private static void mSort(double a[], double tmp[], int low, int high) {
-        
+
         if(low < high)
         {
             int middle = (low + high) / 2;
@@ -170,9 +170,9 @@ import java.util.Scanner;
             mSort(a, tmp, middle + 1, high);
             merge(a, tmp, low, middle + 1, high);
         }
-        
+
     }
-    
+
     /**
      * Combines recursive mergesorts into the one larger array
      * Algorithm implemented using http://www.vogella.com/tutorials/JavaAlgorithmsMergesort/article.html
@@ -214,26 +214,26 @@ import java.util.Scanner;
      *
      */
     static double [] shellSort (double a[]){
-    
+
          int n = a.length;
-         
+
          //Start with a gap of a.length/2, keep reducing by half
          for(int gap = n/2; gap > 0; gap /= 2) {
-             
-             //Perform insertion sort within the gaps 
+
+             //Perform insertion sort within the gaps
              for(int i = gap; i < n; i += 1) {
-                
+
                  //Store a[i] into tmp
                  double tmp = a[i];
-                 
+
                  //Shift earlier gap-sorted elements up until a[i] position is found
                  int j;
                  for(j=i; j>=gap && a[j-gap] > tmp; j -= gap) {
-                     
+
                      a[j] = a[j-gap];
-                     
+
                  }
-                 
+
                  //Place tmp in its correct location
                  a[j] = tmp;
              }
@@ -250,19 +250,19 @@ import java.util.Scanner;
      *
      */
     static double [] selectionSort (double a[]){
- 
+
         int n = a.length;
         double tmp;
-        
+
         //Increment the unsorted array index by one
          for(int i = 0; i < n-1; i++) {
-             //Find index of min element 
+             //Find index of min element
              int min = i;
              for(int j = i+1; j < n; j++) {
                  if(a[j] < a[min])
                      min = j;
              }
-             
+
              //Swap the found min with the element a[i]
              tmp = a[min];
              a[min] = a[i];
@@ -281,18 +281,18 @@ import java.util.Scanner;
      *
      */
     static double [] bubbleSort (double a[]){
-        
+
          int n = a.length;
          int i, j;
          double tmp;
          boolean swapped;
-         
+
          //Increment over entire array
          for(i = 0; i < n; i++) {
-             
+
              swapped = false;
              for(j = 0; j < n-i-1; j++) {
-                 
+
                  //Swap a[j] with a[j+1] if larger
                  if(a[j] > a[j+1]) {
                      tmp = a[j];
@@ -301,18 +301,18 @@ import java.util.Scanner;
                      swapped = true;
                  }
              }
-             
+
              //If no elements swapped during inner loop, break
              if(!swapped)
                  break;
          }
          return a;
-         
+
     }
-    
-    
+
+
 public static void main(String[] args) throws FileNotFoundException {
-    
+
     }
 
  }//end class
