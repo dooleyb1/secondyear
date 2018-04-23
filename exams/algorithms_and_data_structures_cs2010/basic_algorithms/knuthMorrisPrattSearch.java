@@ -30,32 +30,28 @@ import java.nio.file.Paths;
 
 public class KMPSearch {
 
-  /*
-   * Bus Service Questions:
+  // ----------------------------------------------------------
+  /**
+   * Knuth-Morris-Pratt substring search method allows for substrings
+   * to be found using a Deterministic Finite State Automoton which
+   * allows us to keep track of which state we are currently in and
+   * where to transition to upon next letter.
    *
-   * 1. How many total vehicles is there information on?
-   *    987
+   * @param txt: String to search.
+   * @param pat: Pattern to search for.
+   * @return True/False depending on whether pat was found in txt.
    *
-   * 2. Does the file contain information about the vehicle number 16555?
-   *    Yes
+   * ----------------------------------------------------------
    *
-   * 3. Locate the first record about a bus heading to HAMPTON PARK
-   *    Index 19774
+   * Approximate Mathematical Performance:
+   * -------------------------------------
+   *  Using an appropriate cost model, give the performance of your algorithm.
+   *  Explain your answer.
    *
-   * 4. Does the file contain information about the vehicle number 9043409?
-   *    No
+   *  Performance: Worst case - M + N
+   *
+   *
    */
-
-   /*
-    * Code partially taken from https://algs4.cs.princeton.edu/53substring/KMP.java.html
-    * and https://www.geeksforgeeks.org/searching-for-patterns-set-2-kmp-algorithm/
-  /
-
-   /*
-    * The method checks whether a pattern pat occurs at least once in String txt.
-    *
-    */
-
   public static int[][] dfa;       // the KMP automoton
 
   public static boolean contains(String txt, String pat) {
@@ -79,7 +75,9 @@ public class KMPSearch {
         int m = pat.length();
         dfa = new int[R][m];
         dfa[pat.charAt(0)][0] = 1;
+
         for (int x = 0, j = 1; j < m; j++) {
+          
             for (int c = 0; c < R; c++)
                 dfa[c][j] = dfa[c][x];     // Copy mismatch cases.
             dfa[pat.charAt(j)][j] = j+1;   // Set match case.
