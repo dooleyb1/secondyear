@@ -28,11 +28,10 @@
     //Pre-compute index of rightmose occurence of character c in pattern
     int[] right = new int[M];
 
-    for (int c = 0; c < R; c++)
+    for (int c = 0; c < M; c++)
       right[c] = -1;
     for (int j = 0; j < M; j++)
       right[pat.charAt(j)] = j;
-
 
     //Iterate over txt, incrementing by skip
     for(int i = 0; i < N-M; i += skip){

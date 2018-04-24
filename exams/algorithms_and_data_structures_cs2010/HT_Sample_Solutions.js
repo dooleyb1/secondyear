@@ -299,10 +299,155 @@
            Worst - O(7 * N))
            Space (Worst) - O(M)
 
-   /*  f) List 4 algorithms you could use to search for a substring in a larger
-    *     string. Compare performance in time and space of these algorithms.
-    *     Discuss situations where one approach is preffered over another.
+   /*  f) Explain what a DFA is and how it is used in KMP substring search
+    *      algorithm.
     */
+
+    A DFA is a Deterministic Finite State Automaton, which is an array
+    representation of a finite state machine. The elements of the array
+    represent the transitions of the machine and the indices represent the
+    states.
+
+    A DFA is used in Knuth-Morris-Pratt substring search algorithm to prevent
+    the need for a backup buffer. It allows the algorithm to keep track of
+    current states and how to transition from one state to another.
+
+    /*  g) Build a DFA for the state transitions to be used in the KMP search
+     *    when searching for a substring "BANANA" in an alphabet consisting
+     *    only of the letters A, B, C, N, G
+     */
+
+    ------------------------------------------
+    How to construct a DFA:
+    -----------------------------------------
+    1)Include one state for each character in pattern
+    2)Advance to next state if c == pat.charAt(j)
+    3)Back up if c != pat.charAt(j)
+
+
+                j |  0  |  1  |  2  |  3  |  4  |  5  |  6
+                --------------------------------------------
+    pat.charAt(j) |  B  |  A  |  N  |  A  |  N  |  A  |
+                --------------------------------------------
+                A |  0  |  2  |  0  |  4  |  0  |  6  |
+       dfa[][j] B |  1  |  1  |  1  |  1  |  1  |  1  |
+                C |  0  |  0  |  0  |  0  |  0  |  0  |
+                N |  0  |  0  |  3  |  0  |  5  |  0  |
+                G |  0  |  0  |  0  |  0  |  0  |  0  |
+
+  /*  h) Using the above DFA provide a trace of state transitions that KMP
+   *     algorithm would construct when searching for a substring "BANANA"
+   *     in a string "ABCNGBANCG"
+   */
+
+        states |  0  |  1  |  2  |  3  |  4  |  5  |  6
+   -------------------------------------------------------
+   stringLetter|  A  |  B  |  C  |  N  |  G  |  B  |  A  |  N  |  C  |  G
+   currentState|  0  |  1  |  0  |  0  |  0  |  1  |  2  |  3  |  0  |  0
+
+   /*  h) You are given a string searchIn = "teststringjoananomatch" and
+    *     a string searchFor = "ivana". How many character comparisons in
+    *     total will Boyer-Moore make searching. List the trace of skip
+    *     variable for thie search?
+    */
+
+    Boyer-Moore search algorithm uses the following structure:
+
+    public static int indexOf(String txt, String pat){
+      //Iterate over txt, incrementing by skip
+      for(int i = 0; i < (txt.length()-pat.length()); i += skip){
+        skip = 0;
+
+        //Iterate backwards over pattern, searching for last letter first
+        for(int j = pat.length()-1; j >= 0; j--){
+          //If letters do not match, update skip
+          if(pat.charAt(j) != txt.charAt(i+j)){
+            skip = Math.max(1, j - right[txt.charAt(i+j)]);
+            break;
+          }
+        }
+
+        //Match
+        if(skip == 0)
+          return i;
+      }
+    }
+
+    So, when searching for "ivana" in "teststringjoananomatch", the following
+    steps occur:
+
+    1) First Comparison will be as follows, ("a") from pat will be compared
+       with ("s") from txt.
+
+        [t][e][s][t][s][t][r][i][n][g][j][o][a][n][a][n][o][m][a][t][c][h]
+        [i][v][a][n][a]
+
+
+    2) No match, skip now = righmost occurance of character ("s") in pattern.
+       Since ("s") does not exist in pattern, skip is now = 4 - (-1) = 5..
+
+    3) Second comparison will be as follows, ("a") from pat will be compared
+       with ("g") from txt.
+
+        skip = 5;
+
+        [t][e][s][t][s][t][r][i][n][g][j][o][a][n][a][n][o][m][a][t][c][h]
+                       [i][v][a][n][a]
+
+        skip = 0;
+
+    4) No match, skip now = rightmost occurance of character ("g") in pattern.
+       Since ("g") does not exist in pattern, skip is now = 4 - (-1) = 5.
+
+    5) Third comparison will be as follows, ("a") from pat will be compared
+       with ("a") from txt.
+
+         skip = 5;
+
+         [t][e][s][t][s][t][r][i][n][g][j][o][a][n][a][n][o][m][a][t][c][h]
+                                       [i][v][a][n][a]
+
+         skip = 0;
+
+    6) Match.
+    7) Fourth comparison, ("n") from pat will be compared with ("n") from txt.
+    8) Match.
+    9) Fifth comparison, ("a") from pat will be compared with ("a") from txt.
+    10) Match.
+    11) Sixth comparison, ("v") from pat will be compared with ("o") from txt.
+
+    12) No match, skip now = rightmost occurance of character ("o") in pattern.
+       Since ("o") does not exist in pattern, skip is now = 1 - (-1) = 2.
+
+    13) Seventh comparison will be as follows, ("a") from pat will be compared
+       with ("o") from txt.
+
+        skip = 2;
+
+        [t][e][s][t][s][t][r][i][n][g][j][o][a][n][a][n][o][m][a][t][c][h]
+                                            [i][v][a][n][a]
+
+        skip = 0;
+
+    14) No match, skip now = rightmost occurance of character ("o") in pattern.
+       Since ("o") does not exist in pattern, skip is now = 4 - (-1) = 5.
+
+    13) Eight comparison will be as follows, ("a") from pat will be compared
+        with ("h") from txt.
+
+       skip = 5;
+
+       [t][e][s][t][s][t][r][i][n][g][j][o][a][n][a][n][o][m][a][t][c][h]
+                                                          [i][v][a][n][a]
+
+       skip = 0;
+
+     14) No match, skip now = rightmost occurance of character ("h") in pattern.
+        Since ("h") does not exist in pattern, skip is now = 4 - (-1) = 5.
+
+     15) Pattern not found in txt.
+         8 Comparisons in total.
+
 
 --------------------------------------------------------------------------
 ** Question 3 ** - Shortest Paths
