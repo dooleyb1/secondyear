@@ -102,8 +102,8 @@
         v.    Algorithm A runs in O(n^2 log10(n)),
   */
 
-  i = False, since O(n^3) is n times larger or worse than O (n^2) and thus
-      larger than O(n^2 log2(n).
+  i = True, since the exppressed time given O(n^2 log2(n)) is lower than this
+      bounds thus therefore in theory running within these boundarys.
 
   ii = False, since O(n^2 log2(n)) is smaller than O(n^2) since log2n is
       increasing.
@@ -209,7 +209,7 @@
         //First check minval on left
         if(rt.right.key > maxval)
           if(checkMax(rt.right, maxval))
-            return true;;
+            return true;
 
       }
 
@@ -242,11 +242,11 @@
 
   1) Postoder:
 
-      G F D E B C A
+      G F C E D B A
 
   2) Topological Sort:
 
-      A C B E D F G
+      A B D E C F G 
 
 /*  d) Give the postoder and topological sort of the vertices of the following
  *      graph.
