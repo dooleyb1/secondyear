@@ -192,20 +192,20 @@
   Original, unsorted list:
   170, 45, 75, 90, 802, 24, 2, 66
 
-  //Sorting by least significant digit (1s place) gives:
+  Sorting by least significant digit (1s place) gives:
   //[*Notice that we keep 802 before 2, because 802 occurred before 2 in
   // the original list, and similarly for pairs 170 & 90 and 45 & 75.]
-
+    ↓   ↓    ↓  ↓   ↓   ↓   ↓   ↓
   170, 90, 802, 2, 24, 45, 75, 66
 
-  //Sorting by next digit (10s place) gives:
+  Sorting by next digit (10s place) gives:
   //[*Notice that 802 again comes before 2 as 802 comes before 2 in
   // the previous list.]
-
+   ↓  ↓   ↓   ↓   ↓    ↓   ↓   ↓
   802, 2, 24, 45, 66, 170, 75, 90
 
   Sorting by most significant digit (100s place) gives:
-
+ ↓  ↓   ↓   ↓   ↓   ↓    ↓    ↓
   2, 24, 45, 66, 75, 90, 170, 802
 
   Examples: Most-Significant-Digit (MSD) Radix Sort
@@ -216,7 +216,7 @@
 
    1) Least Significant Digit (LSD) Radix Sort:
 
-   This is a fast stable sorting algorithm which can be used to sort keys in
+   This is a fast STABLE sorting algorithm which can be used to sort keys in
    integer representation order. Keys may be a string of characters, or numerical
    digits within a given radix. The processing of keys begins at the least
    significant digit and proceeds to the most significant digit.
@@ -226,7 +226,7 @@
 
    2) Most Significant Digit (MSD) Radix Sort:
 
-   This is a fast stable sorting algorithm which can be used to sort keys in
+   This is a fast UN-STABLE sorting algorithm which can be used to sort keys in
    lexicographic order (e.g 1,10,12,2,20,30). Unlike a LSD radix sort, MSD
    DOES NOT preserve the original order of duplicate keys. An MSD sort starts
    processing keys from the most significant digit and proceeds to the least
@@ -241,6 +241,7 @@
 
     LSD radix sort serves as an alternative high-performance sorting algorithm
     to the likes of heapsort and mergesort that require O(n log n) comparisons.
+
     Comparison sorts can do no better than O(n log n) execution time but offer
     the flexibility of being able to sort with respect to more complicated
     orderings than a lexicographic one.
@@ -378,6 +379,7 @@
     1) First Comparison will be as follows, ("a") from pat will be compared
        with ("s") from txt.
 
+         →  →  →  →  X
         [t][e][s][t][s][t][r][i][n][g][j][o][a][n][a][n][o][m][a][t][c][h]
         [i][v][a][n][a]
 
@@ -390,6 +392,7 @@
 
         skip = 5;
 
+         →  →  →  →  →  →  →  →  →  X
         [t][e][s][t][s][t][r][i][n][g][j][o][a][n][a][n][o][m][a][t][c][h]
                        [i][v][a][n][a]
 
@@ -402,7 +405,7 @@
        with ("a") from txt.
 
          skip = 5;
-
+          →  →  →  →  →  →  →  →  →  →  →  →  →  →  X
          [t][e][s][t][s][t][r][i][n][g][j][o][a][n][a][n][o][m][a][t][c][h]
                                        [i][v][a][n][a]
 
@@ -423,6 +426,7 @@
 
         skip = 2;
 
+         →  →  →  →  →  →  →  →  →  →  →  →  →  →  →  →  X
         [t][e][s][t][s][t][r][i][n][g][j][o][a][n][a][n][o][m][a][t][c][h]
                                             [i][v][a][n][a]
 
@@ -436,6 +440,7 @@
 
        skip = 5;
 
+        →  →  →  →  →  →  →  →  →  →  →  →  →  →  →  →  →  →  →  →  →  X
        [t][e][s][t][s][t][r][i][n][g][j][o][a][n][a][n][o][m][a][t][c][h]
                                                           [i][v][a][n][a]
 
@@ -755,4 +760,4 @@
                   -> We keep the value of dist[i][j] as it is.
 
               b)  k is an intermediate vertex in shortest path from i to j.
-                  -> We update the value of dist[i][j] as dist[i][k] + dist[k][j].    
+                  -> We update the value of dist[i][j] as dist[i][k] + dist[k][j].
