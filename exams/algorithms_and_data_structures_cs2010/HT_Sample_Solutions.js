@@ -130,7 +130,7 @@
   1) Stable Algorithm:
 
     A sorting algorithm is said to be stable if, when two elements of
-    the same value appear in an array, they maintain their respective order
+    the same value appear in an array, they DO maintain their respective order
     even after sorting has occurred.
 
     Examples :  Insertion Sort, Merge Sort, Bubble Sort
@@ -138,8 +138,7 @@
   2) Unstable Algorithm:
 
      A sorting algorithm is said to be unstable if, when two elements of
-     the same value appear in a Sort, Bubble Sort
-                      n array, they DO NOT maintain their respective
+     the same value appear in an array, they DO NOT maintain their respective
      order after sorting has occurred.
 
      Examples : Heap Sort, Quick Sort
@@ -232,8 +231,8 @@
    processing keys from the most significant digit and proceeds to the least
    significant digit.
 
-   You would use this sort when you want elements to be returned within a
-   numerical order e.g 1,2,3,4,5,6
+   You would use this sort when you want elements to be returned within a specific
+   numerical order e.g 1,10,12,2,20,30
 
 /*  d) Discuss the performance of LSD compared to the performance of Insert
 *     or merge or quick sort.
@@ -263,8 +262,8 @@
         Effecient for small haystacks with small needles. This method involves
         keeping a backup buffer of previously matched characters.
 
-        Worst - O(M * N)
-        Space (Worst) - O(M)
+        Worst - O(NEEDLE * HAYSTACK)
+        Space (Worst) - O(NEEDLE)
 
       ------------------------------------------------------------------------
       2) Knuth-Morris-Pratt (KMP):
@@ -274,8 +273,8 @@
          Automaton (DFA). This keeps track of states, and transitions between
          states.
 
-         Worst - O(M + N)
-         Space (Worst) - O(R*M)
+         Worst - O(NEEDLE + HAYSTACK)
+         Space (Worst) - O(RADIX * NEEDLE) *for DFA
 
        ------------------------------------------------------------------------
        3) Boyer-Moore:
@@ -286,8 +285,8 @@
           back and looks at the last character in the pattern first and see if
           its a match. Uses a backup buffer.
 
-          Worst - O(M * N)
-          Space (Worst) - O(M)
+          Worst - O(NEEDLE * HAYSTACK)
+          Space (Worst) - O(NEEDLE)
 
         ------------------------------------------------------------------------
         4) Rabin-Karp:
