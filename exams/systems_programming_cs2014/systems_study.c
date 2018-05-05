@@ -325,7 +325,7 @@ certain points in an attempt to find the bug.
 
     void buggy(int x) {
       int i;
-      
+
       for (i = 0; i < x; i++) {
 
         #if DEBUG_INFO
@@ -335,3 +335,110 @@ certain points in an attempt to find the bug.
       ... /* do buggy stuff with i and a */
       }
     }
+
+Probably the best method of all is to use the GNU Debugger
+(GDB). GDB allows you to invoke it upon your binary file.
+It includes functionality such as setting breakpoints,
+finding memory leaks, printing variables and much more.
+
+    -----------------------------------------
+    1. Compile your C file to a binary file
+    -----------------------------------------
+
+      $ gcc foo.c -o foo
+
+    -----------------------------------------
+    2. Invoke gdb once your binary file
+    -----------------------------------------
+
+      $ gdb foo
+
+        ...gdb startup information...
+        (gdb)
+
+    -----------------------------------------
+    3. Run gdb
+    -----------------------------------------
+
+      $ (gdb) run
+        Starting program: foo...
+
+        Program received signal SIGSEGV, Segmentation fault.
+        0x08048546 in add_num (lst=0xbffff3c4, num=3) at numlist.c:16
+        16 lst->tail->next = n;
+
+    -----------------------------------------
+    4. Check surrounding code of error
+    -----------------------------------------
+
+      $ (gdb) list
+
+      [shows 10 lines of code]
+      11 void add_num(list *lst, int num) {
+      12 node *n = (node *) malloc(sizeof(node));
+      13 n->value = num;
+      14 n->next = NULL;
+      15
+      16 lst->tail->next = n;
+      17
+      18 lst->tail = n;
+      19 lst->size++;
+      20 }
+
+    -----------------------------------------
+    5. Check variable values around error
+    -----------------------------------------
+
+      $ (gdb) print lst
+
+      [Hmm, lst looks okay...]
+      $1 = (list *) 0xbffff3c4
+      (gdb) print *lst
+      $2 = {head = 0x0, tail = 0x0, size = 0}
+      (gdb) print lst->tail
+      [Ah ha! lst->tail is NULL.]
+      $3 = (node *) 0x0
+      (gdb) print n
+      $4 = (node *) 0x804b008
+      (gdb) print *n
+      [Well, at least n is okay...]
+      $5 = {value = 3, next = 0x0}
+
+    -----------------------------------------
+    6. Set breakpoints
+    -----------------------------------------
+
+      $ gdb foo
+
+      ...gdb startup information...
+
+      //Set breakpoint in reverse():
+      $ (gdb) break reverse
+
+      Breakpoint 1 at 0x80485eb: file numlist.c, line 50.
+
+    -----------------------------------------
+    7. Run to breakpoint
+    -----------------------------------------
+
+      $ (gdb) run
+        Starting program: nummain...
+
+        Original list: 3 1 4 1 5
+        Breakpoint 1, reverse (lst=0xbffff3c4) at numlist.c:50
+        50 prev = NULL;
+
+      //Step over
+      $ (gdb) next
+
+        51 curr = lst->head;
+
+      //Step over
+      $ (gdb) next
+
+        53 while (curr != NULL) {
+          
+      //Step over
+      $ (gdb) next
+
+        54 next = curr->next;
