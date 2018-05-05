@@ -301,4 +301,37 @@ to both print and read to/from the user.
   		  }
   		}
     }
-    -
+
+
+
+--------------------------------------------------
+** Debugging **
+--------------------------------------------------
+
+A basic way of debugging your C programs is through
+the use of assert() statements.
+
+
+    #include <assert.h>
+    assert(condition expected to be true);
+
+
+You can also use various printf statements throughout
+your program to print the value of variables at
+certain points in an attempt to find the bug.
+
+    /* Set to 0 to disable debug output, nonzero to enable. */
+    #define DEBUG_INFO 1
+
+    void buggy(int x) {
+      int i;
+      
+      for (i = 0; i < x; i++) {
+
+        #if DEBUG_INFO
+          printf(“i = %d, a[i] = %s\n”, i, a[i]);
+          fflush(stdout);
+        #endif
+      ... /* do buggy stuff with i and a */
+      }
+    }
