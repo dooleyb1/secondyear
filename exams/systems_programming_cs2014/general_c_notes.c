@@ -437,7 +437,7 @@ finding memory leaks, printing variables and much more.
       $ (gdb) next
 
         53 while (curr != NULL) {
-          
+
       //Step over
       $ (gdb) next
 
