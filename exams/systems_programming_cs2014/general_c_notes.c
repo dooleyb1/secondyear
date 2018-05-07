@@ -305,7 +305,7 @@ to both print and read to/from the user.
 
 
 --------------------------------------------------
-** Debugging **
+** Debugging - GDB **
 --------------------------------------------------
 
 A basic way of debugging your C programs is through
@@ -442,3 +442,33 @@ finding memory leaks, printing variables and much more.
       $ (gdb) next
 
         54 next = curr->next;
+
+
+    --------------------------------------------------
+    ** Debugging - Valgrind **
+    --------------------------------------------------
+
+    Valgrind is a tool that can be used to check memory
+    allocation within your program and to ensure that
+    there are no memory leaks or incorrect memory writes
+    present.
+
+    -If you normally run your program like this:
+
+      $ myprog arg1 arg2
+
+    -Use this command line:
+
+      $ valgrind --leak-check=yes myprog arg1 arg2
+
+    -This may produce an error message that looks like this:
+
+      $ valgrind --leak-check=yes myprog arg1 arg2
+      
+      ==19182== Invalid write of size 4
+      ==19182==    at 0x804838F: f (example.c:6)
+      ==19182==    by 0x80483AB: main (example.c:11)
+      ==19182==  Address 0x1BA45050 is 0 bytes after a block of size 40 allocd
+      ==19182==    at 0x1B8FF5CD: malloc (vg_replace_malloc.c:130)
+      ==19182==    by 0x8048385: f (example.c:5)
+      ==19182==    by 0x80483AB: main (example.c:11)
