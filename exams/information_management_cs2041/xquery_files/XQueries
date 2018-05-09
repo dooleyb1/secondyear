@@ -1,21 +1,38 @@
 ----------------------------------------------------------------------------------------------
 QUERY 1 - Returns Payroll Information for all Mechanics (Brandon)
 -----------------------------------------------------------------------------------------------
+/*
+ *  Returns the payroll info for all mechnis in 'mechanics_info.XML'
+ *
+ *  <payroll_info>
+ *    <mechanic id="1234">
+ *      <name> Brandon Dooley </name>
+ *      <bank_details>
+ *        ...
+ *      </bank_details>
+ *    </mechanic>
+ *  </payroll_info>
+ */
+
 declare function local:get_mechanics_payroll_info()
 {
   let $c:= doc("secondyear/mt/infoman_cs2041/assignments/assignment_2_XML/mechanics_info.XML")
- for $m in $c/Mechanics_Info/Mechanic
+
+  for $m in $c/Mechanics_Info/Mechanic
+
   let $firstname := $m/name/first_name/text()
   let $surname := $m/name/surname/text()
   let $fullname := concat($firstname," ",$surname)
- return
- <payroll_info>
-   <mechanic id ="{ $m/@mechanic_id }" >
-      <name> {$fullname} </name>
-       {$m/details/bank_details}
-   </mechanic>
- </payroll_info>
-};
+
+  return
+
+   <payroll_info>
+     <mechanic id ="{ $m/@mechanic_id }" >
+        <name> {$fullname} </name>
+         {$m/details/bank_details}
+     </mechanic>
+   </payroll_info>
+ };
 
 <Mechanics_Payroll_Info>
 {local:get_mechanics_payroll_info()}
@@ -24,20 +41,32 @@ declare function local:get_mechanics_payroll_info()
 -----------------------------------------------------------------------------------------------
 QUERY 2 - Returns all free Mechanics (Brandon)
 -----------------------------------------------------------------------------------------------
+/*
+ *  Returns a list of all the free mechanics within the system
+ *
+ *  <Free_Mechanics>
+ *    <mechanic id="1234">
+ *      <name> Brandon Dooley </name>
+ *    </mechanic>
+ *  </Free_Mechanics>
+ */
 
 declare function local:get_free_mechanics()
 {
-let $c:= doc("secondyear/mt/infoman_cs2041/assignments/assignment_2_XML/mechanics_info.XML")
- for $m in $c/Mechanics_Info/Mechanic
+  let $c:= doc("secondyear/mt/infoman_cs2041/assignments/assignment_2_XML/mechanics_info.XML")
+
+  for $m in $c/Mechanics_Info/Mechanic
   where $m/is_servicing/text() = "false"
+
   let $firstname := $m/name/first_name/text()
   let $surname := $m/name/surname/text()
   let $fullname := concat($firstname," ",$surname)
 
- return
-   <mechanic id ="{ $m/@mechanic_id }" >
-      <name> {$fullname} </name>
-   </mechanic>
+  return
+
+  <mechanic id ="{ $m/@mechanic_id }" >
+    <name> {$fullname} </name>
+  </mechanic>
 };
 
 <Free_Mechanics>
@@ -47,18 +76,34 @@ let $c:= doc("secondyear/mt/infoman_cs2041/assignments/assignment_2_XML/mechanic
 -----------------------------------------------------------------------------------------------
 QUERY 3 - Get service history for mechanic x (Brandon)
 -----------------------------------------------------------------------------------------------
+/*
+ *  Returns the service history for a given mechanic x
+ *
+ *  <Service_History>
+ *    <mechanic id="1234">
+ *      <name> Brandon Dooley </name>
+ *      <vehicles_serviced>
+ *        ...
+ *      </vehicles_serviced>
+ *    </mechanic>
+ *  </Service_History>
+ */
 
 declare function local:get_service_history_for($mechanicname as xs:string)
 {
   let $c:= doc("secondyear/mt/infoman_cs2041/assignments/assignment_2_XML/mechanics_info.XML")
- for $m in $c/Mechanics_Info/Mechanic
+
+  for $m in $c/Mechanics_Info/Mechanic
+
   let $fullname := concat($m/name/first_name/text()," ",$m/name/surname/text())
   where $fullname = $mechanicname
- return
-   <mechanic id ="{ $m/@mechanic_id }" >
+
+  return
+
+  <mechanic id ="{ $m/@mechanic_id }" >
       <name> {$fullname} </name>
-       {$m/vehicles_serviced}
-   </mechanic>
+      {$m/vehicles_serviced}
+  </mechanic>
 };
 
 <Service_History>
@@ -74,7 +119,9 @@ for $s in /services/service,
 
 where $v/priority = "high"
 where $v/string(@id) = $s/string(@id)
+
 return
+
 <high_priority>
   {$s/vehicleID}
   {$s/serviceDescripton}
@@ -88,7 +135,9 @@ QUERY 5 - Check stock for a part in inventory (Cian)
 for $s in /partsInventory/part
 
 where contains($s/@category,"clutch")
+
 return
+
 <part_details>
   {string($s/@category)}
   {$s/name}
@@ -110,6 +159,7 @@ where $j/string(@id) = $i/string(@id)
 where $i/string(vehicleID) = $x/string(@VehicleID)
 
 return
+
 <Needs_Service>
   {$i/vehicleID}
   {$x/VehicleDetails}
