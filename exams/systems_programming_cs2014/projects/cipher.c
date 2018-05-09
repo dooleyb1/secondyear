@@ -21,7 +21,7 @@
 
 /*
  * Adapted for CS2014, https://down.dsg.cs.tcd.ie/2014
- * Original source is $TOP/mbedtls-2.6.0/programs/aes/aescrypt2.c 
+ * Original source is $TOP/mbedtls-2.6.0/programs/aes/aescrypt2.c
  * 20171004, stephen.farrell@cs.tcd.ie
  */
 
@@ -136,15 +136,13 @@ int main( int argc, char *argv[] )
      */
     char* modeNum;
     modeNum = argv[1];
- 
+
     if(strcasestr("encryption", modeNum))
-    {
       mode = 0;
-    }
+
     else if(strcasestr("decryption", modeNum))
-    {
-	mode = 1;
-    }
+	     mode = 1;
+
     memset( IV,     0, sizeof( IV ) );
     memset( key,    0, sizeof( key ) );
     memset( digest, 0, sizeof( digest ) );

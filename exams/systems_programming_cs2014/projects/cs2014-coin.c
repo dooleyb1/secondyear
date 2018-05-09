@@ -144,9 +144,11 @@ int cs2014coin_make(int bits, unsigned char *buf, int *buflen)
   mbedtls_pk_context key;
   mbedtls_entropy_context entropy;
   mbedtls_ctr_drbg_context ctr_drbg;
+
   mbedtls_pk_init( &key );
   mbedtls_ctr_drbg_init( &ctr_drbg );
   mbedtls_entropy_init( &entropy );
+	
   const char *pers = "gen_key";
 
   //Seeding random number generator
