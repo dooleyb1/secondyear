@@ -499,10 +499,10 @@ uchar reached2 [] = {
 uchar *loopstate2;
 
 short src_ln1 [] = {
-	  0,  30,  31,  29,  36,  37,  35,  40, 
-	 41,  41,  41,  42,  42,  42,  43,  44, 
-	 44,  44,  45,  45,  45,  39,  48,  50, 
-	 51,  49,  55,  56,  57,  58,   0, };
+	  0,  34,  35,  33,  40,  41,  39,  47, 
+	 49,  49,  49,  51,  51,  51,  53,  55, 
+	 55,  55,  57,  57,  57,  46,  60,  62, 
+	 63,  61,  67,  68,  69,  70,   0, };
 S_F_MAP src_file1 [] = {
 	{ "-", 0, 0 },
 	{ "philo_no_deadlock.prm", 1, 29 },
@@ -516,8 +516,8 @@ uchar reached1 [] = {
 uchar *loopstate1;
 
 short src_ln0 [] = {
-	  0,  12,  13,  14,  15,  17,  18,  12, 
-	 20,  12,   9,  21,   0, };
+	  0,  14,  15,  16,  17,  19,  20,  14, 
+	 22,  14,  10,  23,   0, };
 S_F_MAP src_file0 [] = {
 	{ "-", 0, 0 },
 	{ "philo_no_deadlock.prm", 1, 11 },
@@ -14095,6 +14095,12 @@ c_globals(void)
 	{	int l_in;
 		for (l_in = 0; l_in < 5; l_in++)
 		{
+			printf("	int    forks[%d]:	%d\n", l_in, now.forks[l_in]);
+		}
+	}
+	{	int l_in;
+		for (l_in = 0; l_in < 5; l_in++)
+		{
 			printf("	bit    phungry[%d]:	%d\n", l_in, now.phungry[l_in]);
 		}
 	}
@@ -14102,12 +14108,6 @@ c_globals(void)
 		for (l_in = 0; l_in < 5; l_in++)
 		{
 			printf("	bit    peating[%d]:	%d\n", l_in, now.peating[l_in]);
-		}
-	}
-	{	int l_in;
-		for (l_in = 0; l_in < 5; l_in++)
-		{
-			printf("	int    forks[%d]:	%d\n", l_in, now.forks[l_in]);
 		}
 	}
 }

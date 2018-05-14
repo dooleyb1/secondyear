@@ -99,7 +99,7 @@
 		_m = 3; goto P999; /* 0 */
 
 		 /* PROC P */
-	case 6: // STATE 1 - philo_no_deadlock.prm:30 - [peating[i] = 0] (0:6:2 - 1)
+	case 6: // STATE 1 - philo_no_deadlock.prm:34 - [peating[i] = 0] (0:6:2 - 1)
 		IfNotBlocked
 		reached[1][1] = 1;
 		(trpt+1)->bup.ovals = grab_ints(2);
@@ -118,7 +118,7 @@
 #endif
 		;
 		_m = 3; goto P999; /* 1 */
-	case 7: // STATE 4 - philo_no_deadlock.prm:36 - [pthinking[i] = 0] (0:21:2 - 1)
+	case 7: // STATE 4 - philo_no_deadlock.prm:40 - [pthinking[i] = 0] (0:21:2 - 1)
 		IfNotBlocked
 		reached[1][4] = 1;
 		(trpt+1)->bup.ovals = grab_ints(2);
@@ -137,13 +137,13 @@
 #endif
 		;
 		_m = 3; goto P999; /* 1 */
-	case 8: // STATE 7 - philo_no_deadlock.prm:40 - [((left<right))] (0:0:0 - 1)
+	case 8: // STATE 7 - philo_no_deadlock.prm:47 - [((left<right))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][7] = 1;
 		if (!((((P1 *)this)->left<((P1 *)this)->right)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 9: // STATE 8 - philo_no_deadlock.prm:41 - [((forks[left]==-(1)))] (13:0:1 - 1)
+	case 9: // STATE 8 - philo_no_deadlock.prm:49 - [((forks[left]==-(1)))] (13:0:1 - 1)
 		IfNotBlocked
 		reached[1][8] = 1;
 		if (!((now.forks[ Index(((P1 *)this)->left, 5) ]== -(1))))
@@ -157,7 +157,7 @@
 #endif
 		;
 		_m = 3; goto P999; /* 1 */
-	case 10: // STATE 11 - philo_no_deadlock.prm:42 - [((forks[right]==-(1)))] (25:0:1 - 1)
+	case 10: // STATE 11 - philo_no_deadlock.prm:51 - [((forks[right]==-(1)))] (25:0:1 - 1)
 		IfNotBlocked
 		reached[1][11] = 1;
 		if (!((now.forks[ Index(((P1 *)this)->right, 5) ]== -(1))))
@@ -174,13 +174,13 @@
 		reached[1][22] = 1;
 		;
 		_m = 3; goto P999; /* 2 */
-	case 11: // STATE 14 - philo_no_deadlock.prm:43 - [((right<left))] (0:0:0 - 1)
+	case 11: // STATE 14 - philo_no_deadlock.prm:53 - [((right<left))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[1][14] = 1;
 		if (!((((P1 *)this)->right<((P1 *)this)->left)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 12: // STATE 15 - philo_no_deadlock.prm:44 - [((forks[right]==-(1)))] (20:0:1 - 1)
+	case 12: // STATE 15 - philo_no_deadlock.prm:55 - [((forks[right]==-(1)))] (20:0:1 - 1)
 		IfNotBlocked
 		reached[1][15] = 1;
 		if (!((now.forks[ Index(((P1 *)this)->right, 5) ]== -(1))))
@@ -194,7 +194,7 @@
 #endif
 		;
 		_m = 3; goto P999; /* 1 */
-	case 13: // STATE 18 - philo_no_deadlock.prm:45 - [((forks[left]==-(1)))] (25:0:1 - 1)
+	case 13: // STATE 18 - philo_no_deadlock.prm:57 - [((forks[left]==-(1)))] (25:0:1 - 1)
 		IfNotBlocked
 		reached[1][18] = 1;
 		if (!((now.forks[ Index(((P1 *)this)->left, 5) ]== -(1))))
@@ -211,7 +211,7 @@
 		reached[1][22] = 1;
 		;
 		_m = 3; goto P999; /* 2 */
-	case 14: // STATE 23 - philo_no_deadlock.prm:50 - [phungry[i] = 0] (0:26:2 - 1)
+	case 14: // STATE 23 - philo_no_deadlock.prm:62 - [phungry[i] = 0] (0:26:2 - 1)
 		IfNotBlocked
 		reached[1][23] = 1;
 		(trpt+1)->bup.ovals = grab_ints(2);
@@ -230,7 +230,7 @@
 #endif
 		;
 		_m = 3; goto P999; /* 1 */
-	case 15: // STATE 26 - philo_no_deadlock.prm:55 - [forks[right] = -(1)] (0:0:1 - 1)
+	case 15: // STATE 26 - philo_no_deadlock.prm:67 - [forks[right] = -(1)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][26] = 1;
 		(trpt+1)->bup.oval = now.forks[ Index(((P1 *)this)->right, 5) ];
@@ -240,7 +240,7 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 16: // STATE 27 - philo_no_deadlock.prm:56 - [forks[left] = -(1)] (0:0:1 - 1)
+	case 16: // STATE 27 - philo_no_deadlock.prm:68 - [forks[left] = -(1)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[1][27] = 1;
 		(trpt+1)->bup.oval = now.forks[ Index(((P1 *)this)->left, 5) ];
@@ -252,7 +252,7 @@
 		_m = 3; goto P999; /* 0 */
 
 		 /* PROC :init: */
-	case 17: // STATE 1 - philo_no_deadlock.prm:12 - [i = 0] (0:0:1 - 1)
+	case 17: // STATE 1 - philo_no_deadlock.prm:14 - [i = 0] (0:0:1 - 1)
 		IfNotBlocked
 		reached[0][1] = 1;
 		(trpt+1)->bup.oval = ((P0 *)this)->_1_1_i;
@@ -262,19 +262,19 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 18: // STATE 2 - philo_no_deadlock.prm:13 - [((i<5))] (0:0:0 - 1)
+	case 18: // STATE 2 - philo_no_deadlock.prm:15 - [((i<5))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[0][2] = 1;
 		if (!((((P0 *)this)->_1_1_i<5)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 19: // STATE 3 - philo_no_deadlock.prm:14 - [(run P(i))] (0:0:0 - 1)
+	case 19: // STATE 3 - philo_no_deadlock.prm:16 - [(run P(i))] (0:0:0 - 1)
 		IfNotBlocked
 		reached[0][3] = 1;
 		if (!(addproc(II, 1, 1, ((P0 *)this)->_1_1_i)))
 			continue;
 		_m = 3; goto P999; /* 0 */
-	case 20: // STATE 4 - philo_no_deadlock.prm:15 - [i = (i+1)] (0:0:1 - 1)
+	case 20: // STATE 4 - philo_no_deadlock.prm:17 - [i = (i+1)] (0:0:1 - 1)
 		IfNotBlocked
 		reached[0][4] = 1;
 		(trpt+1)->bup.oval = ((P0 *)this)->_1_1_i;
@@ -284,7 +284,7 @@
 #endif
 		;
 		_m = 3; goto P999; /* 0 */
-	case 21: // STATE 11 - philo_no_deadlock.prm:21 - [-end-] (0:0:0 - 1)
+	case 21: // STATE 11 - philo_no_deadlock.prm:23 - [-end-] (0:0:0 - 1)
 		IfNotBlocked
 		reached[0][11] = 1;
 		if (!delproc(1, II)) continue;
